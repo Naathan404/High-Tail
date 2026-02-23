@@ -1,16 +1,26 @@
 using UnityEngine;
 
-public class PlayerData : MonoBehaviour
+[CreateAssetMenu(fileName = "Player Stats",menuName = "High Tail/Player Stats")]
+public class PlayerData : ScriptableObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    // chỉ số
+    public float maxMoveSpeed;
+    public float jumpForce;
+    public float dashForce;
+    public int maxHP;
+    public int maxEnergy;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // game feel
+    public float jumpBufferTime;
+    public float coyoteTime;
+    public float gravityScale;
+    public float fallMultiplier;
+    public float acceleration;
+    public float decceleration;
+    public float velocityPower;
+
+    // năng lượng
+    public int energyCostJump;
+    public int energyCostDash;
+    public int energyRegenPerSecond;
 }
