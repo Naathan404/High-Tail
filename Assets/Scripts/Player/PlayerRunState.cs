@@ -15,7 +15,7 @@ public class PlayerRunState : PlayerState
     {
         base.LogicUpdate();
 
-        _player.CheckIfShoundFlip(_player.MoveX);
+        _player.CheckFlip(_player.MoveX);
 
         if(Mathf.Abs(_player.MoveX) < 0.01f && Mathf.Abs(_player.Rb.linearVelocity.x) < 0.1f)
         {

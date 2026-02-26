@@ -14,8 +14,7 @@ public class PlayerFallState : PlayerState
 
     public override void LogicUpdate() {
         base.LogicUpdate();
-        //_player.CheckIfShoundFlip(_player.MoveX);
-
+        _player.CheckFlip(_player.MoveX);
         // Kiểm tra tiếp đất
         if (_player.IsOnGround()) {
             if (Mathf.Abs(_player.MoveX) > 0.01f)
@@ -25,6 +24,7 @@ public class PlayerFallState : PlayerState
             else
             {
                 _stateMachine.ChangeState(_player.IdleState);
+                _player.Rb.linearVelocity = new Vector2(0f, _player.Rb.linearVelocity.y);
             }
         }
 
@@ -49,6 +49,8 @@ public class PlayerFallState : PlayerState
 
     public override void PhysicsUpdate() {
         base.PhysicsUpdate();
+
+        _player.HandleAirMovement();
         
         // Tăng trọng lực khi rơi
         if (_player.Rb.linearVelocity.y < 0) {

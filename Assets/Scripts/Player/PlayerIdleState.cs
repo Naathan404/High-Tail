@@ -11,7 +11,6 @@ public class PlayerIdleState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào idle state");
-        _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
     }
 
     public override void HandleInput()
@@ -32,7 +31,7 @@ public class PlayerIdleState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        _player.CheckIfShoundFlip(_player.MoveX);
+        _player.CheckFlip(_player.MoveX);
     }
 
     public override void PhysicsUpdate()
