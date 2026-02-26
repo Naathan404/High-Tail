@@ -22,6 +22,11 @@ public class PlayerIdleState : PlayerState
             _stateMachine.ChangeState(_player.JumpState);
         }
 
+        if(_player.DashPressed && _player.CanDash)
+        {
+            _stateMachine.ChangeState(_player.DashState);
+        }
+
         if (Mathf.Abs(_player.MoveX) > 0.01f)
         {
             _stateMachine.ChangeState(_player.RunState);

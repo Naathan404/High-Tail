@@ -953,12 +953,13 @@ MonoBehaviour:
   _coyoteCounter: 0
   _isFacingRight: 0
   _isGround: 0
+  CanDash: 1
   _groundLayerMask:
     serializedVersion: 2
     m_Bits: 64
   _castDistance: 0.1
   _footSize: {x: 0.9, y: 0.1}
-  _footPosition: {x: 0, y: -0.4, z: 0}
+  _footPosition: {x: 0, y: -0.36, z: 0}
 --- !u!212 &1350514418
 SpriteRenderer:
   serializedVersion: 2

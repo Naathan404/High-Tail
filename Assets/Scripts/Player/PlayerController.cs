@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private bool _isGround;
+    public bool CanDash = true;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -73,10 +74,10 @@ public class PlayerController : MonoBehaviour
         _isGround = GroundCheck();
 
         // Lấy input từ bàn phím
-        MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;
-        JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();
-        JumpHeld = _controls.Movement.Jump.IsPressed();
-        DashPressed = _controls.Movement.Jump.WasPressedThisFrame();
+        MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
+        JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();    // nhay
+        JumpHeld = _controls.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
+        DashPressed = _controls.Movement.Dash.WasPressedThisFrame();    // dash
 
         // Check điều kiện nhảy
         if(_isGround)
@@ -125,6 +126,7 @@ public class PlayerController : MonoBehaviour
     public void UseJumpBuffer() => _jumpBufferCounter = 0;
     public void SetJumpBufferTimer() => _jumpBufferCounter = Data.jumpBufferTime;
     public bool IsOnGround() => _isGround;
+    public bool IsFacingRight() => _isFacingRight;
 
     public bool GroundCheck()
     {

@@ -27,6 +27,15 @@ public class PlayerJumpState : PlayerState
         }
     }
 
+    public override void HandleInput()
+    {
+        base.HandleInput();
+        if(_player.DashPressed && _player.CanDash)
+        {
+            _stateMachine.ChangeState(_player.DashState);
+        }
+    }    
+
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
