@@ -14,7 +14,7 @@ public class PlayerFallState : PlayerState
 
     public override void LogicUpdate() {
         base.LogicUpdate();
-        _player.CheckIfShoundFlip(_player.MoveX);
+        //_player.CheckIfShoundFlip(_player.MoveX);
 
         // Kiểm tra tiếp đất
         if (_player.IsOnGround()) {
@@ -50,7 +50,7 @@ public class PlayerFallState : PlayerState
     public override void PhysicsUpdate() {
         base.PhysicsUpdate();
         
-        // Tăng trọng lực khi rơi để cảm giác chắc chắn hơn 
+        // Tăng trọng lực khi rơi
         if (_player.Rb.linearVelocity.y < 0) {
             _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
         }
