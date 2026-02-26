@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public Animator Anim;
     public Rigidbody2D Rb;
     private PlayerControls _controls;
+    public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
     public PlayerIdleState IdleState { get; private set; }
@@ -17,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public PlayerDashState DashState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerFallState FallState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerAirGlideState AirGlideState { get; private set; }
 
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
@@ -29,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private bool _isGround;
+    public bool CanDash = true;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -45,6 +50,8 @@ public class PlayerController : MonoBehaviour
         JumpState = new PlayerJumpState(this, _stateMachine);
         DashState = new PlayerDashState(this, _stateMachine);
         FallState = new PlayerFallState(this, _stateMachine);
+        WallSlideState = new PlayerWallSlideState(this, _stateMachine);
+        AirGlideState = new PlayerAirGlideState(this, _stateMachine);
 
         _controls = new PlayerControls();
     }
@@ -73,10 +80,10 @@ public class PlayerController : MonoBehaviour
         _isGround = GroundCheck();
 
         // Lấy input từ bàn phím
-        MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;
-        JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();
-        JumpHeld = _controls.Movement.Jump.IsPressed();
-        DashPressed = _controls.Movement.Jump.WasPressedThisFrame();
+        MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
+        JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();    // nhay
+        JumpHeld = _controls.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
+        DashPressed = _controls.Movement.Dash.WasPressedThisFrame();    // dash
 
         // Check điều kiện nhảy
         if(_isGround)
@@ -125,6 +132,7 @@ public class PlayerController : MonoBehaviour
     public void UseJumpBuffer() => _jumpBufferCounter = 0;
     public void SetJumpBufferTimer() => _jumpBufferCounter = Data.jumpBufferTime;
     public bool IsOnGround() => _isGround;
+    public bool IsFacingRight() => _isFacingRight;
 
     public bool GroundCheck()
     {

@@ -10,6 +10,7 @@ public class PlayerJumpState : PlayerState
         base.Enter();
         Debug.Log("Vào jump state");
         _player.UseJumpBuffer();
+        _player.Visual.ApplySquashStretch(new Vector3(0.8f, 1.3f, 1f));
 
         float boost = Mathf.Abs(_player.MoveX) > 0.9f ? _player.Data.boostVelocity : 1f;
         // _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, _player.Data.jumpForce);
@@ -26,6 +27,15 @@ public class PlayerJumpState : PlayerState
             _stateMachine.ChangeState(_player.FallState);
         }
     }
+
+    public override void HandleInput()
+    {
+        base.HandleInput();
+        if(_player.DashPressed && _player.CanDash)
+        {
+            _stateMachine.ChangeState(_player.DashState);
+        }
+    }    
 
     public override void PhysicsUpdate()
     {

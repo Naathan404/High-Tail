@@ -46,6 +46,14 @@ public class PlayerFallState : PlayerState
         }
     }
 
+    public override void HandleInput()
+    {
+        base.HandleInput();
+        if(_player.DashPressed && _player.CanDash)
+        {
+            _stateMachine.ChangeState(_player.DashState);
+        }
+    }
 
     public override void PhysicsUpdate() {
         base.PhysicsUpdate();
@@ -59,5 +67,11 @@ public class PlayerFallState : PlayerState
         
         // // Air control
         // _player.HandleAirMovement();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
     }
 }
