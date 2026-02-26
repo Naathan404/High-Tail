@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Player Stats
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   maxMoveSpeed: 8
-  jumpForce: 20
+  jumpForce: 16
   dashForce: 10
   maxHP: 5
   maxEnergy: 100
@@ -22,7 +22,7 @@ MonoBehaviour:
   gravityScale: 1
   fallMultiplier: 5
   acceleration: 50
-  decceleration: 50
+  decceleration: 100
   velocityPower: 0.9
   energyCostJump: 4
   energyCostDash: 20

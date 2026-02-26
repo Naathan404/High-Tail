@@ -21,13 +21,21 @@ public class PlayerController : MonoBehaviour
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
     public bool JumpPressed { get; private set; }
+    public bool JumpHeld { get; private set; }
     public bool DashPressed { get; private set; }
 
     [Header("Player Variables")]
-    [SerializeField] private bool _isGround;
     [SerializeField] private float _jumpBufferCounter;
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
+    [SerializeField] private bool _isGround;
+
+    [Header("Ground Check")]
+    [SerializeField] private LayerMask _groundLayerMask;
+    [SerializeField] private float _castDistance;
+    [SerializeField] private Vector2 _footSize;
+    [SerializeField] private Vector3 _footPosition;
+
 
     private void Awake()
     {
@@ -60,9 +68,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // ground check
+        _isGround = GroundCheck();
+
         // Lấy input từ bàn phím
         MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;
         JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();
+        JumpHeld = _controls.Movement.Jump.IsPressed();
         //DashPressed = Input.GetKeyDown(KeyCode.Z);
 
         // Check điều kiện nhảy
@@ -101,33 +113,39 @@ public class PlayerController : MonoBehaviour
     public void SetJumpBufferTimer() => _jumpBufferCounter = Data.jumpBufferTime;
     public bool IsOnGround() => _isGround;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public bool GroundCheck()
     {
-        if(collision.gameObject.tag == "Ground")
-        {
-            _isGround = true;
-        }
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if(collision.gameObject.tag == "Ground")
-        {
-            _isGround = false;
-        }
+        RaycastHit2D hit = Physics2D.BoxCast
+        (
+            this.transform.position + _footPosition, 
+            _footSize, 
+            0f, 
+            Vector2.down, 
+            _castDistance, 
+            _groundLayerMask
+        );
+
+        return hit.collider != null;
     }
 
     public void CheckIfShoundFlip(float moveX)
     {
+        Vector2 scale = this.transform.localScale;
         if(moveX > 0 && !_isFacingRight)
         {
             _isFacingRight = !_isFacingRight;
-            this.transform.localScale = new Vector2(1f, 1f);
+            this.transform.localScale = new Vector2(Mathf.Abs(scale.x), scale.y);
         }
         else if(moveX < 0 && _isFacingRight)
         {
             _isFacingRight = !_isFacingRight;
-            this.transform.localScale = new Vector2(-1f, 1f);            
+            this.transform.localScale = new Vector2(Mathf.Abs(scale.x) * -1f, scale.y);            
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = _isGround ? Color.green : Color.red;
+        Gizmos.DrawWireCube(this.transform.position + _footPosition + (Vector3.down * _castDistance), _footSize);
+    }
 }
