@@ -68,4 +68,10 @@ public class PlayerFallState : PlayerState
         // // Air control
         // _player.HandleAirMovement();
     }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+    }
 }

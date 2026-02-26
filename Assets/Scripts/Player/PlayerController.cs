@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -10,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public Animator Anim;
     public Rigidbody2D Rb;
     private PlayerControls _controls;
+    public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
     public PlayerIdleState IdleState { get; private set; }
@@ -17,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public PlayerDashState DashState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerFallState FallState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerAirGlideState AirGlideState { get; private set; }
 
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
@@ -46,6 +50,8 @@ public class PlayerController : MonoBehaviour
         JumpState = new PlayerJumpState(this, _stateMachine);
         DashState = new PlayerDashState(this, _stateMachine);
         FallState = new PlayerFallState(this, _stateMachine);
+        WallSlideState = new PlayerWallSlideState(this, _stateMachine);
+        AirGlideState = new PlayerAirGlideState(this, _stateMachine);
 
         _controls = new PlayerControls();
     }
