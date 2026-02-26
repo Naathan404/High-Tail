@@ -203,6 +203,56 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Camera",
+            "id": "8a9e9961-a401-46a4-9a05-8e190ec1c82d",
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "1a379d38-133c-48ae-902d-83a74733b959",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "Hold(duration=0.2,pressPoint=0.2)",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "1D Axis",
+                    "id": "515e8e59-363b-4a3d-aff7-ba876049d0b7",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "a9625a8a-1a86-4b73-af38-ffafd8d8819f",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "ea7924e1-d915-42a1-b0b5-091a459beeb4",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
         }
     ],
     "controlSchemes": []
