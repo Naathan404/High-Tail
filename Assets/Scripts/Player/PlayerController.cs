@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
         _stateMachine.InitStateMachine(IdleState);
 
         _isFacingRight = true;
+        Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
     }
 
     private void OnEnable()
@@ -103,6 +104,9 @@ public class PlayerController : MonoBehaviour
         float targetSpeed = MoveX * Data.maxMoveSpeed;
         // nếu có nhấn nút thì dùng acceleration, nếu buông nút thì dùng decceleration
         float accelerationRate = (Mathf.Abs(MoveX) > 0.01f) ? Data.acceleration : Data.decceleration;
+
+        // ***NOTE***: Mathf.MoveToward(current, target, maxDelta) để di chuyển giá trị từ current đến target
+        // theo một khoảng giá trị tối đa maxDelta có thể thay đổi trong một khung hình --> Tốc độ * deltaTime
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
 
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
@@ -128,7 +132,7 @@ public class PlayerController : MonoBehaviour
         return hit.collider != null;
     }
 
-    public void CheckIfShoundFlip(float moveX)
+    public void CheckFlip(float moveX)
     {
         Vector2 scale = this.transform.localScale;
         if(moveX > 0 && !_isFacingRight)
@@ -143,6 +147,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Vẽ gizmos ra scene
     private void OnDrawGizmos()
     {
         Gizmos.color = _isGround ? Color.green : Color.red;

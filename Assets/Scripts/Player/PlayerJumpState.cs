@@ -19,7 +19,7 @@ public class PlayerJumpState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        _player.CheckFlip(_player.MoveX);
         if(_player.Rb.linearVelocity.y < 0f)
         {
             _stateMachine.ChangeState(_player.FallState);
@@ -29,6 +29,13 @@ public class PlayerJumpState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        // di chuyển ngang khi giữ nút di chuyển
+        float targetSpeed = _player.MoveX * _player.Data.maxMoveSpeed;
+        float accelerationRate = Mathf.Abs(_player.MoveX) > 0.1f ? _player.Data.acceleration : 0f;
+        float newVelocityX = Mathf.MoveTowards(_player.Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+        _player.Rb.linearVelocity = new Vector2(newVelocityX, _player.Rb.linearVelocity.y);
+
+        // dynamic jump
         if(!_player.JumpHeld && _player.Rb.linearVelocity.y > 0f)
         {
             _player.Rb.linearVelocity += Vector2.up * Physics2D.gravity.y * _player.Data.fallMultiplier * Time.fixedDeltaTime;
