@@ -11,8 +11,9 @@ public class PlayerJumpState : PlayerState
         Debug.Log("Vào jump state");
         _player.UseJumpBuffer();
 
+        float boost = Mathf.Abs(_player.MoveX) > 0.9f ? _player.Data.boostVelocity : 1f;
         // _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, _player.Data.jumpForce);
-        _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, 0);
+        _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
         _player.Rb.AddForce(Vector2.up * _player.Data.jumpForce, ForceMode2D.Impulse);
     }
 
@@ -29,12 +30,8 @@ public class PlayerJumpState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        // di chuyển ngang khi giữ nút di chuyển
-        float targetSpeed = _player.MoveX * _player.Data.maxMoveSpeed;
-        float accelerationRate = Mathf.Abs(_player.MoveX) > 0.1f ? _player.Data.acceleration : 0f;
-        float newVelocityX = Mathf.MoveTowards(_player.Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
-        _player.Rb.linearVelocity = new Vector2(newVelocityX, _player.Rb.linearVelocity.y);
-
+        
+        _player.HandleAirMovement();
         // dynamic jump
         if(!_player.JumpHeld && _player.Rb.linearVelocity.y > 0f)
         {

@@ -24,6 +24,7 @@ public class PlayerFallState : PlayerState
             else
             {
                 _stateMachine.ChangeState(_player.IdleState);
+                _player.Rb.linearVelocity = new Vector2(0f, _player.Rb.linearVelocity.y);
             }
         }
 
@@ -49,11 +50,7 @@ public class PlayerFallState : PlayerState
     public override void PhysicsUpdate() {
         base.PhysicsUpdate();
 
-        // di chuyển ngang khi giữ nút di chuyển
-        float targetSpeed = _player.MoveX * _player.Data.maxMoveSpeed;
-        float accelerationRate = Mathf.Abs(_player.MoveX) > 0.1f ? _player.Data.acceleration : 0f;
-        float newVelocityX = Mathf.MoveTowards(_player.Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
-        _player.Rb.linearVelocity = new Vector2(newVelocityX, _player.Rb.linearVelocity.y);
+        _player.HandleAirMovement();
         
         // Tăng trọng lực khi rơi
         if (_player.Rb.linearVelocity.y < 0) {

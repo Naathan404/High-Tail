@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c888ce374e546d49a1fa397dec45be9, type: 3}
   m_Name: Player Stats
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
-  maxMoveSpeed: 8
-  jumpForce: 16
+  maxMoveSpeed: 10
+  jumpForce: 20
   dashForce: 10
   maxHP: 5
   maxEnergy: 100
   jumpBufferTime: 0.15
-  coyoteTime: 0.05
+  coyoteTime: 0.1
   gravityScale: 1
   fallMultiplier: 5
   acceleration: 50
   decceleration: 100
+  boostVelocity: 1.2
   velocityPower: 0.9
+  dashDuration: 0
   energyCostJump: 4
   energyCostDash: 20
   energyRegenPerSecond: 1
