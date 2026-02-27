@@ -14,7 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   maxMoveSpeed: 10
   jumpForce: 25
-  dashForce: 40
+  jumpWallForce: 12
+  dashForce: 30
+  wallSlideGravityScale: 0.5
+  airGlideGravityScale: 0.3
+  maxGlideSpeed: 4
   maxHP: 5
   maxEnergy: 100
   jumpBufferTime: 0.15
@@ -22,11 +26,13 @@ MonoBehaviour:
   gravityScale: 1
   fallMultiplier: 8
   acceleration: 50
-  decceleration: 100
+  decceleration: 75
   boostVelocity: 1.2
   velocityPower: 0.9
   dashDuration: 0.15
-  squashStretchDuration: 0.2
+  bounceHorizontalForce: 10
+  bounceVerticalForce: 5
+  glideAccelaration: 5
   energyCostJump: 4
   energyCostDash: 20
   energyRegenPerSecond: 1

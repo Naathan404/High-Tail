@@ -7,7 +7,11 @@ public class PlayerData : ScriptableObject
     [Header("Player Stats")]
     public float maxMoveSpeed;
     public float jumpForce;
+    public float jumpWallForce;
     public float dashForce;
+    public float wallSlideGravityScale;
+    public float airGlideGravityScale;
+    public float maxGlideSpeed;
     public int maxHP;
     public int maxEnergy;
 
@@ -22,6 +26,9 @@ public class PlayerData : ScriptableObject
     public float boostVelocity;
     public float velocityPower;
     public float dashDuration;
+    public float bounceHorizontalForce;
+    public float bounceVerticalForce;
+    public float glideAccelaration;
 
     // năng lượng
     [Header("Enery Consumption & Regeneration")]

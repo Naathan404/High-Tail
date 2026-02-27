@@ -32,13 +32,22 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SlideGlide",
+                    "type": "Button",
+                    "id": "317cae35-f867-4c80-a5f5-7fb08e8eff40",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "71cfec0a-48f1-4b83-ae88-6f1eb12150a9",
-                    "path": "<Keyboard>/z",
+                    "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -49,11 +58,22 @@
                 {
                     "name": "",
                     "id": "e653a247-05de-443a-9ef4-7fa3b486202b",
-                    "path": "<Keyboard>/leftShift",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdb8dd77-b1a7-49b8-b786-d09edbf39c52",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "SlideGlide",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

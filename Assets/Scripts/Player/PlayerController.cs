@@ -1,6 +1,8 @@
 using System;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SearchService;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,14 +21,23 @@ public class PlayerController : MonoBehaviour
     public PlayerDashState DashState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerFallState FallState { get; private set; }
+    public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
 
+    [Header("Skills Unlock")]
+    public bool WallJumpUnlocked;
+    public bool WallSlideUnlocked;
+    public bool DashUnlocked;
+    public bool AirGlideUnlocked;
+
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
+    public float MoveY { get; private set; }
     public bool JumpPressed { get; private set; }
     public bool JumpHeld { get; private set; }
     public bool DashPressed { get; private set; }
+    public bool SlideGlideHeld { get; private set; }
 
     [Header("Player Variables")]
     [SerializeField] private float _jumpBufferCounter;
@@ -34,12 +45,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private bool _isGround;
     public bool CanDash = true;
+    public Vector2 DashDirection;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private float _castDistance;
     [SerializeField] private Vector2 _footSize;
     [SerializeField] private Vector3 _footPosition;
+
+    [Header("Wall Check")]
+    [SerializeField] private LayerMask _wallLayerMask;
+    [SerializeField] private Vector2 _wallCheckSize;
+    [SerializeField] private Transform _wallCheck;
 
 
     private void Awake()
@@ -51,6 +68,7 @@ public class PlayerController : MonoBehaviour
         DashState = new PlayerDashState(this, _stateMachine);
         FallState = new PlayerFallState(this, _stateMachine);
         WallSlideState = new PlayerWallSlideState(this, _stateMachine);
+        WallJumpState = new PlayerWallJumpState(this, _stateMachine);
         AirGlideState = new PlayerAirGlideState(this, _stateMachine);
 
         _controls = new PlayerControls();
@@ -81,9 +99,21 @@ public class PlayerController : MonoBehaviour
 
         // Lấy input từ bàn phím
         MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
+        MoveY = _controls.Movement.Move.ReadValue<Vector2>().y;         // lấy input trên dưới để tính hướng dash
         JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();    // nhay
         JumpHeld = _controls.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
         DashPressed = _controls.Movement.Dash.WasPressedThisFrame();    // dash
+        SlideGlideHeld = _controls.Movement.SlideGlide.IsPressed();     // giữ nút để trượt tường hoặc thả dù
+
+        // tính toán hướng dash
+        // if(new Vector2(MoveX, MoveY).magnitude > 0f)
+        // {
+        //     DashDirection = new Vector2(MoveX, MoveY).normalized;
+        // }
+        // else
+        // {
+        //     DashDirection = _isFacingRight ? Vector2.right : Vector2.left;
+        // }
 
         // Check điều kiện nhảy
         if(_isGround)
@@ -94,9 +124,8 @@ public class PlayerController : MonoBehaviour
             _jumpBufferCounter = Data.jumpBufferTime;
         else
             _jumpBufferCounter -= Time.deltaTime;
-        
-        
-        // Xử lý ở state hiện tại
+
+        // xử lý ở state hiện tại
         _stateMachine.CurrentState.HandleInput();
         _stateMachine.CurrentState.LogicUpdate();
     }
@@ -120,9 +149,10 @@ public class PlayerController : MonoBehaviour
 
     public void HandleAirMovement()
     {
+        if(Mathf.Abs(MoveX) < 0.1f) return;
         // di chuyển ngang khi giữ nút di chuyển
         float targetSpeed = MoveX * Data.maxMoveSpeed;
-        float accelerationRate = Mathf.Abs(MoveX) > 0.1f ? Data.acceleration : 0f;
+        float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
         
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
@@ -149,6 +179,11 @@ public class PlayerController : MonoBehaviour
         return hit.collider != null;
     }
 
+    public bool IsTouchingWall()
+    {
+        return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
+    }
+
     public void CheckFlip(float moveX)
     {
         Vector2 scale = this.transform.localScale;
@@ -169,5 +204,8 @@ public class PlayerController : MonoBehaviour
     {
         Gizmos.color = _isGround ? Color.green : Color.red;
         Gizmos.DrawWireCube(this.transform.position + _footPosition + (Vector3.down * _castDistance), _footSize);
+
+        Gizmos.color = IsTouchingWall() ? Color.green : Color.red;
+        Gizmos.DrawWireCube(_wallCheck.transform.position, _wallCheckSize);
     }
 }
