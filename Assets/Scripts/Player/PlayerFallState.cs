@@ -49,10 +49,23 @@ public class PlayerFallState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(_player.DashPressed && _player.CanDash)
+        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
         }
+        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        {
+            _stateMachine.ChangeState(_player.WallJumpState);
+        }
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        {
+            _stateMachine.ChangeState(_player.WallSlideState);
+        }
+        if(_player.AirGlideUnlocked && !_player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        {
+            _stateMachine.ChangeState(_player.AirGlideState);
+        }
+                                
     }
 
     public override void PhysicsUpdate() {

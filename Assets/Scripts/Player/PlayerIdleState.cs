@@ -22,7 +22,7 @@ public class PlayerIdleState : PlayerState
             _stateMachine.ChangeState(_player.JumpState);
         }
 
-        if(_player.DashPressed && _player.CanDash)
+        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
         }
