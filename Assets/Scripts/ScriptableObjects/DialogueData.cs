@@ -18,6 +18,10 @@ public class DialogueData : ScriptableObject
         public string nameEN;
         public string getName()
         {
+            if (GeneralSetting.Instance.currentLanguage == GeneralSetting.Language.English)
+            {
+                return nameEN;
+            }
             return nameVI;
         }
     }
@@ -34,6 +38,10 @@ public class DialogueData : ScriptableObject
 
         public string GetText()
         {
+            if (GeneralSetting.Instance.currentLanguage == GeneralSetting.Language.English)
+            {
+                return textEN;
+            }
             return textVI;
         }
     }
