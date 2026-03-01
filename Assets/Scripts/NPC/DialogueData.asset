@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
+  m_Name: DialogueData
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  nameText:
+    nameVI: "Ng\u01B0\u1EDDi \u0111\u1ECF"
+    nameEN: Red people
+  dialogueLines:
+  - image: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    textVI: "T\xF4i \u0111ang n\xF3i chuy\u1EC7n"
+    textEN: I am talking
+    autoSkip: 0
+  - image: {fileID: 0}
+    textVI: "N\xF3i n\u1EEFa \u0111i, n\xF3i m\u1ED9t c\xE2u th\u1EADt d\xE0i \u0111\u1EC3
+      xem n\xF3i \u0111\u01B0\u1EE3c t\u1EDBi \u0111\xE2u"
+    textEN: Continue talking
+    autoSkip: 0
+  - image: {fileID: 0}
+    textVI: "D\u1EEBng \u0111i"
+    textEN: "Stop \u0111ii"
+    autoSkip: 0
+  endDialogue: 
+  autoProgressDelay: 1.5
+  typingSpeed: 0.05
+  voiceSound: {fileID: 0}
+  voicePitch: 1
