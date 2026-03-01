@@ -836,7 +836,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1037348173
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
@@ -1113,7 +1113,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1037348173
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
@@ -1345,13 +1345,13 @@ MonoBehaviour:
   DashDirection: {x: 0, y: 0}
   _groundLayerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 0
   _castDistance: 0.1
   _footSize: {x: 0.9, y: 0.1}
   _footPosition: {x: 0, y: -0.36, z: 0}
   _wallLayerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 0
   _wallCheckSize: {x: 0.1, y: 0.8}
   _wallCheck: {fileID: 377660228}
 --- !u!4 &1350514419
