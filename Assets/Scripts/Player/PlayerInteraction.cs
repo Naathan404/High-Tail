@@ -7,10 +7,14 @@ public class PlayerInteraction : MonoBehaviour
     //Để dành sau này làm button Interact, hiện tại thì bấm phím E
     //[SerializeField] private GameObject interactionIcon;
 
-    void Start()
+    private void Start()
     {
-        //if (interactionIcon != null)
-        //    interactionIcon.SetActive(false);
+        InputManager.Instance.Inputs.Interaction.Interact.started += OnInteract;
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.Inputs.Interaction.Interact.started -= OnInteract;
     }
 
 

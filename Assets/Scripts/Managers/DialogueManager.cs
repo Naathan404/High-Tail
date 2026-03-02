@@ -35,7 +35,16 @@ public class DialogueManager : MonoBehaviour
     private int _curDialogueIndex;
     private string _curDialogueText;
 
-    [SerializeField] private InputActionReference interactAction;
+
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        
+    }
 
     void Start()
     {
@@ -47,10 +56,10 @@ public class DialogueManager : MonoBehaviour
         if (!IsDialogueActive) return;
 
         // Kiểm tra an toàn xem thiết bị có tồn tại không và có được bấm trong frame này không
-        bool isLeftClick = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
-        bool isSpacePressed = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
+        bool isLeftClick = InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame();
+        //bool isSpacePressed = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
 
-        if (isLeftClick || isSpacePressed)
+        if (isLeftClick)
         {
             NextLine();
         }

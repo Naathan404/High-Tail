@@ -9,23 +9,29 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private float _lookDuration = 0.5f;
     [SerializeField] private Rigidbody2D _playerRb;
     [SerializeField] private CinemachineCamera _cineCam;
-
-    private PlayerControls _controls;
     private CinemachineFollow _followComponent;
     private float _targetYOffset;
     private Tween _lookTween;
 
     private void Awake()
     {
-        _controls = new PlayerControls();
         _followComponent = _cineCam.GetComponent<CinemachineFollow>();
 
-        _controls.Camera.Look.performed += OnLookPerformed;
-        _controls.Camera.Look.canceled += OnLookCanceled;  
     }
 
-    private void OnEnable() => _controls.Camera.Enable();
-    private void OnDisable() => _controls.Camera.Disable();
+    private void Start()
+    {
+        InputManager.Instance.Inputs.Camera.Look.performed += OnLookPerformed;
+        InputManager.Instance.Inputs.Camera.Look.canceled += OnLookCanceled;  
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.Inputs.Camera.Look.performed -= OnLookPerformed;
+        InputManager.Instance.Inputs.Camera.Look.canceled -= OnLookCanceled;       
+    }
+
+
 
     private void Update()
     {
