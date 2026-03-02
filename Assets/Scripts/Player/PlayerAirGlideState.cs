@@ -28,7 +28,7 @@ public class PlayerAirGlideState : PlayerState
         {
             _stateMachine.ChangeState(_player.IdleState);
         }
-        _player.CheckFlip(_player.MoveX);
+        _player.CheckFlip(_player.MoveX);   
     }
 
     public override void PhysicsUpdate()

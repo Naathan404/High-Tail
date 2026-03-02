@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [Header("Components")] //==========================================================
     public Animator Anim;
     public Rigidbody2D Rb;
-    private PlayerControls _controls;
     public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
@@ -58,7 +57,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 _wallCheckSize;
     [SerializeField] private Transform _wallCheck;
 
-
+    private PlayerControls Inputs => InputManager.Instance.Inputs;
     private void Awake()
     {
         _stateMachine = new PlayerStateMachine();
@@ -70,8 +69,6 @@ public class PlayerController : MonoBehaviour
         WallSlideState = new PlayerWallSlideState(this, _stateMachine);
         WallJumpState = new PlayerWallJumpState(this, _stateMachine);
         AirGlideState = new PlayerAirGlideState(this, _stateMachine);
-
-        _controls = new PlayerControls();
     }
 
     private void Start()
@@ -84,12 +81,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        _controls.Movement.Enable();
+
     }
 
     private void OnDisable()
     {
-        _controls.Movement.Disable();
+
     }
 
     private void Update()
@@ -98,12 +95,12 @@ public class PlayerController : MonoBehaviour
         _isGround = GroundCheck();
 
         // Lấy input từ bàn phím
-        MoveX = _controls.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
-        MoveY = _controls.Movement.Move.ReadValue<Vector2>().y;         // lấy input trên dưới để tính hướng dash
-        JumpPressed = _controls.Movement.Jump.WasPressedThisFrame();    // nhay
-        JumpHeld = _controls.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
-        DashPressed = _controls.Movement.Dash.WasPressedThisFrame();    // dash
-        SlideGlideHeld = _controls.Movement.SlideGlide.IsPressed();     // giữ nút để trượt tường hoặc thả dù
+        MoveX = Inputs.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
+        MoveY = Inputs.Movement.Move.ReadValue<Vector2>().y;         // lấy input trên dưới để tính hướng dash
+        JumpPressed = Inputs.Movement.Jump.WasPressedThisFrame();    // nhay
+        JumpHeld = Inputs.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
+        DashPressed = Inputs.Movement.Dash.WasPressedThisFrame();    // dash
+        SlideGlideHeld = Inputs.Movement.SlideGlide.IsPressed();     // giữ nút để trượt tường hoặc thả dù
 
         // tính toán hướng dash
         // if(new Vector2(MoveX, MoveY).magnitude > 0f)

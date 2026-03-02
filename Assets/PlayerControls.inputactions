@@ -183,6 +183,17 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "positive",
+                    "id": "7e19ee8e-e846-44fd-9e1d-7581631a94ea",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "negative",
                     "id": "a9625a8a-1a86-4b73-af38-ffafd8d8819f",
                     "path": "<Keyboard>/downArrow",
@@ -192,6 +203,56 @@
                     "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "negative",
+                    "id": "4f455669-2649-4126-8d60-a34f5c171fd3",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "Interaction",
+            "id": "423a5b25-0ab2-456b-8a8f-24efd398cd82",
+            "actions": [
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "6b2c4a13-65ee-419a-b4ee-918213e10ff6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e3e1e5ac-a370-46c4-bfd5-b1cf5d79c19f",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ad579cdc-277d-42f6-aca0-88070782450a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
