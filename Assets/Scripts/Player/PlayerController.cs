@@ -6,6 +6,7 @@ using UnityEngine.SearchService;
 
 public partial class PlayerController : MonoBehaviour
 {
+    #region Fields & Properties
     public PlayerData Data;
     private PlayerStateMachine _stateMachine;
 
@@ -24,7 +25,14 @@ public partial class PlayerController : MonoBehaviour
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
 
-    [Header("Skills Unlock")]
+    [Header("Player's Stats")] // ===================================================
+    private int _hp;
+    private int _energy;
+    public int CurrentHP => _hp;
+    public int CurrentEnergy => _energy;
+
+
+    [Header("Skills Unlock")]   // =========================================================
     public bool WallJumpUnlocked;
     public bool WallSlideUnlocked;
     public bool DashUnlocked;
@@ -58,6 +66,15 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private Transform _wallCheck;
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
+    #endregion
+
+    #region Events
+    public event Action OnPlayerHealed;
+    public event Action OnPlayerDamaged;
+    public event Action OnPlayerDied;
+    #endregion
+
+    #region Default Functions
     private void Awake()
     {
         _stateMachine = new PlayerStateMachine();
@@ -77,6 +94,8 @@ public partial class PlayerController : MonoBehaviour
 
         _isFacingRight = true;
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
+        _hp = Data.maxHP;
+        _energy = Data.maxEnergy;
     }
 
     private void OnEnable()
@@ -126,11 +145,12 @@ public partial class PlayerController : MonoBehaviour
         _stateMachine.CurrentState.HandleInput();
         _stateMachine.CurrentState.LogicUpdate();
     }
-
+    
     private void FixedUpdate()
     {
         _stateMachine.CurrentState.PhysicsUpdate();
     }
+    #endregion
 
     public void HandleHorizontalMovement()
     {
@@ -181,6 +201,18 @@ public partial class PlayerController : MonoBehaviour
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
 
+    // private void On
+    // {
+    // }
+
+    private void OnCollisionEnter2D(UnityEngine.Collision2D collision)
+    {        
+        if(collision.gameObject.GetComponent<IHarmful>() != null)
+        {
+            TakeDamage(1);
+        }
+    }
+
     public void CheckFlip(float moveX)
     {
         Vector2 scale = this.transform.localScale;
@@ -195,6 +227,32 @@ public partial class PlayerController : MonoBehaviour
             this.transform.localScale = new Vector2(Mathf.Abs(scale.x) * -1f, scale.y);            
         }
     }
+
+
+    #region HP and Energy
+    public void Heal(int amount)
+    {
+        _hp += amount;
+        if(_hp > Data.maxHP)
+        {
+            _hp = Data.maxHP;
+        }
+        Debug.Log("Hồi máu cho player");
+        OnPlayerHealed?.Invoke();
+    }
+
+    public void TakeDamage(int amount)
+    {
+        _hp -= amount;
+        if(_hp < 0)
+        {
+            OnPlayerDamaged?.Invoke();
+            OnPlayerDied?.Invoke();
+        }
+        Debug.Log("Người chơi nhận damage");
+        OnPlayerDamaged?.Invoke();
+    }
+    #endregion
 
     // Vẽ gizmos ra scene
     private void OnDrawGizmos()
