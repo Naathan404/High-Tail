@@ -35,6 +35,14 @@ public class PlayerRunState : PlayerState
         {
             _stateMachine.ChangeState(_player.DashState);
         }
+        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        {
+            _stateMachine.ChangeState(_player.WallJumpState);
+        }
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        {
+            _stateMachine.ChangeState(_player.WallSlideState);
+        }        
     }    
 
     public override void PhysicsUpdate()
