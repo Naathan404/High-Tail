@@ -25,9 +25,9 @@ public partial class PlayerController : MonoBehaviour
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
 
-    [Header("Player's Stats")] // ===================================================
-    private int _hp;
-    private int _energy;
+    [Header("HP and Energy")] // ===================================================
+    [SerializeField] private int _hp;
+    [SerializeField] private int _energy;
     public int CurrentHP => _hp;
     public int CurrentEnergy => _energy;
 
@@ -51,6 +51,7 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private bool _isGround;
+    [SerializeField] private MovingPlatform _activePlatform;
     public bool CanDash = true;
     public Vector2 DashDirection;
 
@@ -148,10 +149,15 @@ public partial class PlayerController : MonoBehaviour
     
     private void FixedUpdate()
     {
+        if(IsOnGround() && _activePlatform != null)
+        {
+            Rb.position += _activePlatform.DeltaPos;
+        }
         _stateMachine.CurrentState.PhysicsUpdate();
     }
     #endregion
 
+    #region Movement
     public void HandleHorizontalMovement()
     {
         float targetSpeed = MoveX * Data.maxMoveSpeed;
@@ -175,6 +181,9 @@ public partial class PlayerController : MonoBehaviour
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     }
 
+    #endregion
+
+    #region Check Conditions
     public bool CanJump() => _coyoteCounter > 0 && _jumpBufferCounter > 0;
     public void UseJumpBuffer() => _jumpBufferCounter = 0;
     public void SetJumpBufferTimer() => _jumpBufferCounter = Data.jumpBufferTime;
@@ -193,6 +202,12 @@ public partial class PlayerController : MonoBehaviour
             _groundLayerMask
         );
 
+        if(hit.collider != null)
+        {
+            _activePlatform = hit.collider.GetComponent<MovingPlatform>();
+            return true;
+        }
+
         return hit.collider != null;
     }
 
@@ -200,19 +215,42 @@ public partial class PlayerController : MonoBehaviour
     {
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
+    #endregion
 
     // private void On
     // {
     // }
 
+    #region Collision
     private void OnCollisionEnter2D(UnityEngine.Collision2D collision)
     {        
-        if(collision.gameObject.GetComponent<IHarmful>() != null)
+        if(collision.gameObject.TryGetComponent<IHarmful>(out IHarmful damager))
         {
-            TakeDamage(1);
+            ApplyHP(-damager.Damage);
+            ApplyKnockback(damager.Knockback);
+        }
+
+        if(collision.gameObject.tag == "Platform")
+        {
+            this.transform.parent = collision.transform;
         }
     }
 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Platform")
+        {
+            this.transform.parent = null;
+        }
+    }
+
+    public void ApplyKnockback(float knockback)
+    {
+        Rb.linearVelocity = new Vector2(MoveX * -knockback, knockback);
+    }
+    #endregion
+
+    #region Flip
     public void CheckFlip(float moveX)
     {
         Vector2 scale = this.transform.localScale;
@@ -227,31 +265,33 @@ public partial class PlayerController : MonoBehaviour
             this.transform.localScale = new Vector2(Mathf.Abs(scale.x) * -1f, scale.y);            
         }
     }
-
+    #endregion
 
     #region HP and Energy
-    public void Heal(int amount)
-    {
-        _hp += amount;
-        if(_hp > Data.maxHP)
+    public void ApplyHP(int amount)
+    { 
+        _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
+        if(amount >= 0)
         {
-            _hp = Data.maxHP;
+            OnPlayerHealed?.Invoke();
+            Debug.Log($"Hồi {_hp} máu cho player");
         }
-        Debug.Log("Hồi máu cho player");
-        OnPlayerHealed?.Invoke();
-    }
-
-    public void TakeDamage(int amount)
-    {
-        _hp -= amount;
-        if(_hp < 0)
+        else
         {
             OnPlayerDamaged?.Invoke();
-            OnPlayerDied?.Invoke();
+            Debug.Log("Người chơi nhận damage");
         }
-        Debug.Log("Người chơi nhận damage");
-        OnPlayerDamaged?.Invoke();
     }
+
+    public void ApplyEnergy(int amount)
+    {
+        _energy = Mathf.Clamp(_energy + amount, 0, Data.maxEnergy);
+        if(amount >= 0)
+            Debug.Log($"Người chơi hồi {amount} năng lượng");
+        else
+            Debug.Log($"Người chơi tiêu hao {amount} năng lượng");
+    }
+    
     #endregion
 
     // Vẽ gizmos ra scene
