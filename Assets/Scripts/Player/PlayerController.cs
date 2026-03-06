@@ -229,20 +229,22 @@ public partial class PlayerController : MonoBehaviour
             ApplyHP(-damager.Damage);
             ApplyKnockback(damager.Knockback);
         }
-
-        if(collision.gameObject.tag == "Platform")
-        {
-            this.transform.parent = collision.transform;
-        }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Platform")
+        if(collision.gameObject.TryGetComponent<IBouncy>(out IBouncy bouncer))
         {
-            this.transform.parent = null;
+            ApplyBounce(bouncer.BouncyForce);
+            bouncer.PlayBounceAnimation();   
         }
     }
+
+    private void ApplyBounce(float force)
+    {
+        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, force);
+        Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f)); 
+    }    
 
     public void ApplyKnockback(float knockback)
     {
