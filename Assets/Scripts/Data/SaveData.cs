@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -11,6 +13,9 @@ public class SaveData
     public GeneralSetting.Language currentLanguage;
     public bool autoSave;
     public bool autoCheckPoint;
+
+    [Header("Checkpoint data")]
+    public List<CheckpointData> checkpointDatas;
 
     public string saveState;
 }

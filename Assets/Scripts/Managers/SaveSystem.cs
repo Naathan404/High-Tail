@@ -1,11 +1,15 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class SaveSystem : MonoBehaviour
 {
     string _saveFilePath;
+    CheckPoint[] _checkPoints;
+
+
     public static SaveSystem Instance;
 
     void Awake()
@@ -26,10 +30,15 @@ public class SaveSystem : MonoBehaviour
         Init();
         LoadGame();
     }
+    private void OnApplicationQuit()
+    {
+        if (GeneralSetting.Instance.autoSave) SaveGame();
+    }
 
     private void Init()
     {
         _saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+        _checkPoints = FindObjectsByType<CheckPoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     public void SaveGame()
@@ -55,6 +64,9 @@ public class SaveSystem : MonoBehaviour
         saveData.autoSave = GeneralSetting.Instance.autoSave;
         saveData.autoCheckPoint = GeneralSetting.Instance.autoCheckPoint;
 
+        //Checkpoints
+        saveData.checkpointDatas = GetCheckPointsState();
+
         //Save to JSON
         string data = JsonUtility.ToJson(saveData);
         File.WriteAllText(_saveFilePath, data);
@@ -77,6 +89,9 @@ public class SaveSystem : MonoBehaviour
             //Load player position
             //Load the saved scene
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
+
+            //Checkpoints
+            LoadCheckPointsState(saveData.checkpointDatas);
         }
         else
         {
@@ -85,10 +100,33 @@ public class SaveSystem : MonoBehaviour
 
         Debug.Log("Game loaded from: " + _saveFilePath);
     }
-    
-    private void OnApplicationQuit()
+
+    private List<CheckpointData> GetCheckPointsState()
     {
-        if (GeneralSetting.Instance.autoSave) SaveGame();
+        List<CheckpointData> checkPointsState = new List<CheckpointData>();
+
+        foreach(CheckPoint checkpoint in _checkPoints)
+        {
+            CheckpointData data = new CheckpointData
+            {
+                CheckpointID = checkpoint.CheckpointID,
+                IsInteracted = checkpoint.IsInteracted
+            };
+            checkPointsState.Add(data);
+        }
+
+        return checkPointsState;
     }
 
+    private void LoadCheckPointsState(List<CheckpointData> data)
+    {
+        foreach (CheckpointData checkpointData in data)
+        {
+            CheckPoint checkpoint = _checkPoints.FirstOrDefault(cp => cp.CheckpointID == checkpointData.CheckpointID);
+            if (checkpoint != null)
+            {
+                checkpoint.SetInteracted(checkpointData.IsInteracted);
+            }
+        }
+    }
 }
