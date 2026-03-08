@@ -10,6 +10,7 @@ public class SaveData
     [Header("General settings")]
     public GeneralSetting.Language currentLanguage;
     public bool autoSave;
+    public bool autoCheckPoint;
 
     public string saveState;
 }

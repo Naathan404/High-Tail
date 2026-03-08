@@ -53,6 +53,7 @@ public class SaveSystem : MonoBehaviour
         //General settings
         saveData.currentLanguage = GeneralSetting.Instance.currentLanguage;
         saveData.autoSave = GeneralSetting.Instance.autoSave;
+        saveData.autoCheckPoint = GeneralSetting.Instance.autoCheckPoint;
 
         //Save to JSON
         string data = JsonUtility.ToJson(saveData);
@@ -71,6 +72,7 @@ public class SaveSystem : MonoBehaviour
             //Load general settings
             GeneralSetting.Instance.currentLanguage = saveData.currentLanguage;
             GeneralSetting.Instance.autoSave = saveData.autoSave;
+            GeneralSetting.Instance.autoCheckPoint = saveData.autoCheckPoint;
 
             //Load player position
             //Load the saved scene
