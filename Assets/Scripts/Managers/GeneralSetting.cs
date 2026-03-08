@@ -5,6 +5,7 @@ public class GeneralSetting : MonoBehaviour
 {
     public static GeneralSetting Instance;
     public Action<Language> OnLanguageChanged;
+    public bool autoSave = true;
 
     public enum Language { Vietnamese, English };
 

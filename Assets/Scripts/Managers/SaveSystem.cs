@@ -35,6 +35,8 @@ public class SaveSystem : MonoBehaviour
     public void SaveGame()
     {
         SaveData saveData = new SaveData();
+        
+        //Player
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null )
         {
@@ -48,6 +50,11 @@ public class SaveSystem : MonoBehaviour
         }
         saveData.currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
+        //General settings
+        saveData.currentLanguage = GeneralSetting.Instance.currentLanguage;
+        saveData.autoSave = GeneralSetting.Instance.autoSave;
+
+        //Save to JSON
         string data = JsonUtility.ToJson(saveData);
         File.WriteAllText(_saveFilePath, data);
 
@@ -58,8 +65,14 @@ public class SaveSystem : MonoBehaviour
     {
         if (File.Exists(_saveFilePath))
         {
-            SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(_saveFilePath)); //from JSON to CS (SaveData)
+            //From JSON to CS (SaveData)
+            SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(_saveFilePath)); 
 
+            //Load general settings
+            GeneralSetting.Instance.currentLanguage = saveData.currentLanguage;
+            GeneralSetting.Instance.autoSave = saveData.autoSave;
+
+            //Load player position
             //Load the saved scene
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
         }
@@ -73,7 +86,7 @@ public class SaveSystem : MonoBehaviour
     
     private void OnApplicationQuit()
     {
-        SaveGame();
+        if (GeneralSetting.Instance.autoSave) SaveGame();
     }
 
 }
