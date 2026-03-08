@@ -7,6 +7,7 @@ using UnityEngine.SearchService;
 public partial class PlayerController : MonoBehaviour
 {
     #region Fields & Properties
+    [Header("Data")]
     public PlayerData Data;
     private PlayerStateMachine _stateMachine;
 
@@ -120,6 +121,7 @@ public partial class PlayerController : MonoBehaviour
     private void Update()
     {
         // ground check liên tục mỗi frame
+        _wasGrounded = _isGround;
         _isGround = GroundCheck();
 
         // Lấy input từ bàn phím
@@ -153,6 +155,16 @@ public partial class PlayerController : MonoBehaviour
         // xử lý ở state hiện tại
         _stateMachine.CurrentState.HandleInput();
         _stateMachine.CurrentState.LogicUpdate();
+
+        if (!_isGround && Rb.linearVelocity.y < 0)
+        {
+            _lastFallVelocity = Rb.linearVelocity.y;
+        }
+
+        if (!_wasGrounded && _isGround)
+        {
+            OnLanded();
+        }
     }
     
     private void FixedUpdate()
