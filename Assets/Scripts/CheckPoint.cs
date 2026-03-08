@@ -33,6 +33,11 @@ public class CheckPoint : MonoBehaviour, IInteractable
     {
         IsInteracted = true;
         _spriteRenderer.color = Color.green; // Change color to indicate checkpoint is activated
+        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        if (player != null)
+        {
+            player.UpdateCheckPoint(this); // Update player's last checkpoint
+        }
     }
 
     public void OnInteract(bool on = true)

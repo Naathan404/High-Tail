@@ -16,6 +16,12 @@ public class SaveData
 
     [Header("Checkpoint data")]
     public List<CheckpointData> checkpointDatas;
+    public string lastCheckpointID;
+
+
+    //Hiện tại dữ liệu chưa cấu trúc theo level,
+    //danh sách checkpoint vẫn là một list chung, 
+    //nhưng nếu sau này muốn mở rộng thêm dữ liệu khác thì có thể cấu trúc lại theo level hoặc theo checkpoint ID cũng được
 
     public string saveState;
 }

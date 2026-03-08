@@ -51,11 +51,13 @@ public class SaveSystem : MonoBehaviour
         {
             saveData.playerPosition = player.transform.position;
             saveData.saveState = "Player found";
+            saveData.lastCheckpointID = player.GetComponent<PlayerController>()?.lastCheckPoint.CheckpointID;
         }
         else
         {
             saveData.saveState = "Player not found";
             saveData.playerPosition = Vector3.zero; // Default position if player is not found
+            saveData.lastCheckpointID = string.Empty;
         }
         saveData.currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
@@ -66,7 +68,7 @@ public class SaveSystem : MonoBehaviour
 
         //Checkpoints
         saveData.checkpointDatas = GetCheckPointsState();
-
+        
         //Save to JSON
         string data = JsonUtility.ToJson(saveData);
         File.WriteAllText(_saveFilePath, data);
@@ -87,8 +89,10 @@ public class SaveSystem : MonoBehaviour
             GeneralSetting.Instance.autoCheckPoint = saveData.autoCheckPoint;
 
             //Load player position
+            PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
             //Load the saved scene
-            GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
+            player.transform.position = saveData.playerPosition;
+            player.lastCheckPoint = _checkPoints.FirstOrDefault(cp => cp.CheckpointID == saveData.lastCheckpointID);
 
             //Checkpoints
             LoadCheckPointsState(saveData.checkpointDatas);

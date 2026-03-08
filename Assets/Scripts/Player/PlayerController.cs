@@ -97,6 +97,8 @@ public partial class PlayerController : MonoBehaviour
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
         _hp = Data.maxHP;
         _energy = Data.maxEnergy;
+
+        InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
     }
 
     private void OnEnable()
@@ -107,6 +109,11 @@ public partial class PlayerController : MonoBehaviour
     private void OnDisable()
     {
 
+    }
+
+    private void OnDestroy()
+    {
+        InputManager.Instance.Inputs.Respawn.Respawn.started -= Respawn;
     }
 
     private void Update()
