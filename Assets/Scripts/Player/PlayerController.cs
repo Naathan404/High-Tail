@@ -99,6 +99,7 @@ public partial class PlayerController : MonoBehaviour
         _energy = Data.maxEnergy;
 
         InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
+        OnPlayerDied += Respawn;
     }
 
     private void OnEnable()
@@ -280,7 +281,7 @@ public partial class PlayerController : MonoBehaviour
     public void ApplyHP(int amount)
     { 
         _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
-        if(amount >= 0)
+        if (amount >= 0)
         {
             OnPlayerHealed?.Invoke();
             Debug.Log($"Hồi {_hp} máu cho player");
@@ -289,6 +290,11 @@ public partial class PlayerController : MonoBehaviour
         {
             OnPlayerDamaged?.Invoke();
             Debug.Log("Người chơi nhận damage");
+            if (_hp <= 0)
+            {
+                Debug.Log("Bé đã chết");
+                OnPlayerDied?.Invoke();
+            }
         }
     }
 

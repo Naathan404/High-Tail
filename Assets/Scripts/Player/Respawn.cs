@@ -16,19 +16,27 @@ public partial class PlayerController : MonoBehaviour
         if (context.started)
         {
 
-            if (lastCheckPoint != null)
-            {
-                transform.position = lastCheckPoint.RespawnPosition;
-                // Reset player state if needed (e.g., health, inventory)
-            }
-            else
-            {
-                // Handle case where no checkpoint is set (e.g., respawn at start position)
-                transform.position = Vector3.zero; // Example: respawn at origin
-            }
-
-            Debug.Log("Bé đã hồi xuân");
+            Respawn();
         }
+    }
+
+    private void Respawn() //Used for auto respawn when player falls into a pit or something like that
+    {
+        if (lastCheckPoint != null)
+        {
+            transform.position = lastCheckPoint.RespawnPosition;
+            if (_hp <= 0)
+            {
+                _hp = Data.maxHP; // Reset HP to max when respawning
+            }
+        }
+        else
+        {
+            // Handle case where no checkpoint is set (e.g., respawn at start position)
+            transform.position = Vector3.zero; // Example: respawn at origin
+        }
+
+        Debug.Log("Bé đã hồi xuân");
     }
 
 }
