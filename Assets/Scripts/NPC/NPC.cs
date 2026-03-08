@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NPC : MonoBehaviour, IInteractable
 {
+    public string NPCID { get; private set; }
     public DialogueData[] dialogueData;
     public GameObject interactIcon;
     public int dialogueIndex = 0;
@@ -12,6 +13,10 @@ public class NPC : MonoBehaviour, IInteractable
         if (interactIcon != null)
         {
             interactIcon.SetActive(false);
+        }
+        if (string.IsNullOrEmpty(NPCID))
+        {
+            NPCID = GlobalHelper.GenerateUniqueID(gameObject);
         }
     }
     public bool CanInteract()

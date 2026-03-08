@@ -23,12 +23,14 @@ public class InputManager : MonoBehaviour
         Inputs.Movement.Enable();
         Inputs.Camera.Enable();
         Inputs.Interaction.Enable();
+        Inputs.Respawn.Enable();
     }
 
     private void OnDisable()
     {
         Inputs.Movement.Disable();
         Inputs.Camera.Disable();
-        Inputs.Interaction.Disable();        
+        Inputs.Interaction.Disable();
+        Inputs.Respawn.Disable();
     }
 }

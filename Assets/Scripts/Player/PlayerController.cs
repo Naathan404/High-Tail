@@ -7,6 +7,7 @@ using UnityEngine.SearchService;
 public partial class PlayerController : MonoBehaviour
 {
     #region Fields & Properties
+    [Header("Data")]
     public PlayerData Data;
     private PlayerStateMachine _stateMachine;
 
@@ -73,6 +74,7 @@ public partial class PlayerController : MonoBehaviour
     public event Action OnPlayerHealed;
     public event Action OnPlayerDamaged;
     public event Action OnPlayerDied;
+    public event Action OnPlayerHardLanded;
     #endregion
 
     #region Default Functions
@@ -97,6 +99,9 @@ public partial class PlayerController : MonoBehaviour
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
         _hp = Data.maxHP;
         _energy = Data.maxEnergy;
+
+        InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
+        OnPlayerDied += Respawn;
     }
 
     private void OnEnable()
@@ -109,9 +114,15 @@ public partial class PlayerController : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        InputManager.Instance.Inputs.Respawn.Respawn.started -= Respawn;
+    }
+
     private void Update()
     {
         // ground check liên tục mỗi frame
+        _wasGrounded = _isGround;
         _isGround = GroundCheck();
 
         // Lấy input từ bàn phím
@@ -145,6 +156,16 @@ public partial class PlayerController : MonoBehaviour
         // xử lý ở state hiện tại
         _stateMachine.CurrentState.HandleInput();
         _stateMachine.CurrentState.LogicUpdate();
+
+        if (!_isGround && Rb.linearVelocity.y < 0)
+        {
+            _lastFallVelocity = Rb.linearVelocity.y;
+        }
+
+        if (!_wasGrounded && _isGround)
+        {
+            OnLanded();
+        }
     }
     
     private void FixedUpdate()
@@ -269,32 +290,7 @@ public partial class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region HP and Energy
-    public void ApplyHP(int amount)
-    { 
-        _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
-        if(amount >= 0)
-        {
-            OnPlayerHealed?.Invoke();
-            Debug.Log($"Hồi {_hp} máu cho player");
-        }
-        else
-        {
-            OnPlayerDamaged?.Invoke();
-            Debug.Log("Người chơi nhận damage");
-        }
-    }
-
-    public void ApplyEnergy(int amount)
-    {
-        _energy = Mathf.Clamp(_energy + amount, 0, Data.maxEnergy);
-        if(amount >= 0)
-            Debug.Log($"Người chơi hồi {amount} năng lượng");
-        else
-            Debug.Log($"Người chơi tiêu hao {amount} năng lượng");
-    }
     
-    #endregion
 
     // Vẽ gizmos ra scene
     private void OnDrawGizmos()
