@@ -74,6 +74,7 @@ public partial class PlayerController : MonoBehaviour
     public event Action OnPlayerHealed;
     public event Action OnPlayerDamaged;
     public event Action OnPlayerDied;
+    public event Action OnPlayerHardLanded;
     #endregion
 
     #region Default Functions
@@ -289,37 +290,7 @@ public partial class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region HP and Energy
-    public void ApplyHP(int amount)
-    { 
-        _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
-        if (amount >= 0)
-        {
-            OnPlayerHealed?.Invoke();
-            Debug.Log($"Hồi {_hp} máu cho player");
-        }
-        else
-        {
-            OnPlayerDamaged?.Invoke();
-            Debug.Log("Người chơi nhận damage");
-            if (_hp <= 0)
-            {
-                Debug.Log("Bé đã chết");
-                OnPlayerDied?.Invoke();
-            }
-        }
-    }
-
-    public void ApplyEnergy(int amount)
-    {
-        _energy = Mathf.Clamp(_energy + amount, 0, Data.maxEnergy);
-        if(amount >= 0)
-            Debug.Log($"Người chơi hồi {amount} năng lượng");
-        else
-            Debug.Log($"Người chơi tiêu hao {amount} năng lượng");
-    }
     
-    #endregion
 
     // Vẽ gizmos ra scene
     private void OnDrawGizmos()

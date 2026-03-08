@@ -17,9 +17,51 @@ public partial class PlayerController
         if (_lastFallVelocity <= _fallDamageThreshold)
         {
             ApplyHP(-_fallDamageAmount); // Trừ máu
-            OnPlayerHardLanded.Invoke();
+            OnPlayerHardLanded?.Invoke();
         }
 
         _lastFallVelocity = 0f;
     }
+
+    #region HP and Energy
+    public void ApplyHP(int amount)
+    {
+        _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
+        if (amount >= 0)
+        {
+            OnPlayerHealed?.Invoke();
+            Debug.Log($"Hồi {_hp} máu cho player");
+        }
+        else
+        {
+            OnPlayerDamaged?.Invoke();
+            Debug.Log("Người chơi nhận damage");
+            if (_hp <= 0)
+            {
+                Debug.Log("Bé đã chết");
+                OnPlayerDied?.Invoke();
+            }
+        }
+    }
+
+    public void ApplyEnergy(int amount)
+    {
+        _energy = Mathf.Clamp(_energy + amount, 0, Data.maxEnergy);
+        if (amount >= 0)
+            Debug.Log($"Người chơi hồi {amount} năng lượng");
+        else
+            Debug.Log($"Người chơi tiêu hao {amount} năng lượng");
+    }
+
+    public void SetHP(int hp)
+    {
+        _hp = Mathf.Clamp(hp, 0, Data.maxHP);
+    }
+
+    public void SetEnergy(int energy)
+    {
+        _energy = Mathf.Clamp(energy, 0, Data.maxEnergy);
+    }
+
+    #endregion
 }

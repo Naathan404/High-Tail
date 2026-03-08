@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CheckPoint : MonoBehaviour, IInteractable
 {
-    public string CheckpointID;
+    public string CheckpointID { get; private set; }
     public bool IsInteracted { get; private set; } = false;
     public Vector3 RespawnPosition => transform.position + Vector3.right;
 
