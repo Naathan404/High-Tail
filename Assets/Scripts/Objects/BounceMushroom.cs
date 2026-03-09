@@ -10,7 +10,7 @@ public class BounceMushroom : MonoBehaviour, IBouncy
 
     private void Start()
     {
-        _originalScale = transform.localScale;
+        _originalScale = _visual.transform.localScale;
     }
 
     public void PlayBounceAnimation()

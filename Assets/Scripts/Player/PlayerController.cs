@@ -172,7 +172,7 @@ public partial class PlayerController : MonoBehaviour
     {
         if(IsOnGround() && _activePlatform != null)
         {
-            Rb.position += _activePlatform.DeltaPos;
+            Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
         }
         _stateMachine.CurrentState.PhysicsUpdate();
     }
