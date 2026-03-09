@@ -6,13 +6,13 @@ using UnityEngine;
 public class SaveData
 {
     [Header("General settings")]
-    public GeneralSetting.Language currentLanguage;
-    public bool autoSave;
-    public bool autoCheckPoint;
+    public GeneralSetting.Language currentLanguage = 0;
+    public bool autoSave = true;
+    public bool autoCheckPoint = true;
 
-    public PlayerSaveData playerSaveData;
-    public List<CheckpointData> checkpointDatas;
-    public List<NPCData> NPCDatas;
+    public PlayerSaveData playerSaveData = new PlayerSaveData();
+    public List<CheckpointData> checkpointDatas = new List<CheckpointData>();
+    public List<NPCData> NPCDatas = new List<NPCData>();
 
 
     //Hiện tại dữ liệu chưa cấu trúc theo level,
