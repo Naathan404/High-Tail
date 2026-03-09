@@ -977,7 +977,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1037348173
-  m_SortingLayer: 0
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
@@ -1254,7 +1254,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1037348173
-  m_SortingLayer: 0
+  m_SortingLayer: 1
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
@@ -1742,6 +1742,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdfa5b21ba9f822408e15501ad3a9807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  _fallDamageThreshold: -15
+  _fallDamageAmount: 3
   Data: {fileID: 11400000, guid: 9a11834553d6e944f88dfea37c10fffb, type: 2}
   Anim: {fileID: 1350514420}
   Rb: {fileID: 1350514421}
@@ -1904,8 +1906,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1428977469}
-  - component: {fileID: 1428977468}
   - component: {fileID: 1428977467}
+  - component: {fileID: 1428977468}
   - component: {fileID: 1428977470}
   m_Layer: 0
   m_Name: CheckPoint
@@ -1926,7 +1928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e8f585d578d854dba93196588c9f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckPoint
-  CheckpointID: 
   _spriteRenderer: {fileID: 1428977468}
 --- !u!212 &1428977468
 SpriteRenderer:
@@ -2125,8 +2126,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1457444933}
-  - component: {fileID: 1457444932}
   - component: {fileID: 1457444931}
+  - component: {fileID: 1457444932}
   - component: {fileID: 1457444930}
   m_Layer: 0
   m_Name: CheckPoint (1)
@@ -2184,7 +2185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e8f585d578d854dba93196588c9f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CheckPoint
-  CheckpointID: 
   _spriteRenderer: {fileID: 1457444932}
 --- !u!212 &1457444932
 SpriteRenderer:

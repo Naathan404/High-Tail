@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
+  m_Name: VillageChief_DialogueData
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  nameText:
+    nameVI: "Tr\u01B0\u1EDFng l\xE0ng"
+    nameEN: Village Chief
+  dialogueLines:
+  - image: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    textVI: "\xC0 Fu \u0111\xE2y r\u1ED3i"
+    textEN: Fu, there you are
+    autoSkip: 0
+  - image: {fileID: 0}
+    textVI: "T\xECnh c\u1EA3nh b\xE2y gi\u1EDD r\u1EA5t l\xE0 nguy hi\u1EC3m"
+    textEN: We're all on the edge
+    autoSkip: 0
+  - image: {fileID: 0}
+    textVI: "H\xE3y ti\xEAu di\u1EC7t h\u1EAFn \u0111\u1EC3 c\u1EE9u ch\xFAng ta"
+    textEN: Defeat him to save us
+    autoSkip: 0
+  endDialogue: 
+  autoProgressDelay: 1.5
+  typingSpeed: 0.05
+  voiceSound: {fileID: 0}
+  voicePitch: 1

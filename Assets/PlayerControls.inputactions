@@ -303,6 +303,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Respawn",
+            "id": "fa9c2867-3ace-498c-90f7-59be1725c107",
+            "actions": [
+                {
+                    "name": "Respawn",
+                    "type": "Button",
+                    "id": "94e8ad47-e320-4fa0-b86b-4ecb10fe69d7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "331eccb0-6bc6-494c-9f74-610b8a2ffdf0",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
