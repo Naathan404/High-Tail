@@ -306,12 +306,12 @@
         },
         {
             "name": "Respawn",
-            "id": "fa9c2867-3ace-498c-90f7-59be1725c107",
+            "id": "ed082389-863f-4f24-99a2-598b343f3539",
             "actions": [
                 {
                     "name": "Respawn",
                     "type": "Button",
-                    "id": "94e8ad47-e320-4fa0-b86b-4ecb10fe69d7",
+                    "id": "cb672269-8865-466b-ba14-096769f57283",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -321,8 +321,19 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "331eccb0-6bc6-494c-9f74-610b8a2ffdf0",
-                    "path": "<Keyboard>/r",
+                    "id": "9122779b-a040-43d2-8a79-5752693610d1",
+                    "path": "<Keyboard>/#(R)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Respawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "571f24a5-42ab-4dd8-afe2-31c7992f5084",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
