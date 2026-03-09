@@ -170,6 +170,7 @@ public class SaveSystem : MonoBehaviour
             {
                 playerController.SetHP(playerData.hp);
                 playerController.SetEnergy(playerData.energy);
+                playerController.lastCheckPoint = GetAllCheckPoints().FirstOrDefault(cp => cp.CheckpointID == playerData.lastCheckpointID); 
                 playerController.WallJumpUnlocked = playerData.WallJumpUnlocked;
                 playerController.WallSlideUnlocked = playerData.WallSlideUnlocked;
                 playerController.DashUnlocked = playerData.DashUnlocked;
