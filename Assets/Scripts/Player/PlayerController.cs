@@ -6,6 +6,8 @@ using UnityEngine.SearchService;
 
 public partial class PlayerController : MonoBehaviour
 {
+    #region Fields & Properties
+    [Header("Data")]
     public PlayerData Data;
     private PlayerStateMachine _stateMachine;
 
@@ -24,7 +26,14 @@ public partial class PlayerController : MonoBehaviour
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
 
-    [Header("Skills Unlock")]
+    [Header("HP and Energy")] // ===================================================
+    [SerializeField] private int _hp;
+    [SerializeField] private int _energy;
+    public int CurrentHP => _hp;
+    public int CurrentEnergy => _energy;
+
+
+    [Header("Skills Unlock")]   // =========================================================
     public bool WallJumpUnlocked;
     public bool WallSlideUnlocked;
     public bool DashUnlocked;
@@ -43,6 +52,7 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
     [SerializeField] private bool _isGround;
+    [SerializeField] private MovingPlatform _activePlatform;
     public bool CanDash = true;
     public Vector2 DashDirection;
 
@@ -58,6 +68,16 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private Transform _wallCheck;
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
+    #endregion
+
+    #region Events
+    public event Action OnPlayerHealed;
+    public event Action OnPlayerDamaged;
+    public event Action OnPlayerDied;
+    public event Action OnPlayerHardLanded;
+    #endregion
+
+    #region Default Functions
     private void Awake()
     {
         _stateMachine = new PlayerStateMachine();
@@ -77,6 +97,11 @@ public partial class PlayerController : MonoBehaviour
 
         _isFacingRight = true;
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
+        _hp = Data.maxHP;
+        _energy = Data.maxEnergy;
+
+        InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
+        OnPlayerDied += Respawn;
     }
 
     private void OnEnable()
@@ -89,9 +114,15 @@ public partial class PlayerController : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        InputManager.Instance.Inputs.Respawn.Respawn.started -= Respawn;
+    }
+
     private void Update()
     {
         // ground check liên tục mỗi frame
+        _wasGrounded = _isGround;
         _isGround = GroundCheck();
 
         // Lấy input từ bàn phím
@@ -125,13 +156,29 @@ public partial class PlayerController : MonoBehaviour
         // xử lý ở state hiện tại
         _stateMachine.CurrentState.HandleInput();
         _stateMachine.CurrentState.LogicUpdate();
-    }
 
+        if (!_isGround && Rb.linearVelocity.y < 0)
+        {
+            _lastFallVelocity = Rb.linearVelocity.y;
+        }
+
+        if (!_wasGrounded && _isGround)
+        {
+            OnLanded();
+        }
+    }
+    
     private void FixedUpdate()
     {
+        if(IsOnGround() && _activePlatform != null)
+        {
+            Rb.position += _activePlatform.DeltaPos;
+        }
         _stateMachine.CurrentState.PhysicsUpdate();
     }
+    #endregion
 
+    #region Movement
     public void HandleHorizontalMovement()
     {
         float targetSpeed = MoveX * Data.maxMoveSpeed;
@@ -155,6 +202,9 @@ public partial class PlayerController : MonoBehaviour
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     }
 
+    #endregion
+
+    #region Check Conditions
     public bool CanJump() => _coyoteCounter > 0 && _jumpBufferCounter > 0;
     public void UseJumpBuffer() => _jumpBufferCounter = 0;
     public void SetJumpBufferTimer() => _jumpBufferCounter = Data.jumpBufferTime;
@@ -173,6 +223,12 @@ public partial class PlayerController : MonoBehaviour
             _groundLayerMask
         );
 
+        if(hit.collider != null)
+        {
+            _activePlatform = hit.collider.GetComponent<MovingPlatform>();
+            return true;
+        }
+
         return hit.collider != null;
     }
 
@@ -180,7 +236,44 @@ public partial class PlayerController : MonoBehaviour
     {
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
+    #endregion
 
+    // private void On
+    // {
+    // }
+
+    #region Collision
+    private void OnCollisionEnter2D(UnityEngine.Collision2D collision)
+    {        
+        if(collision.gameObject.TryGetComponent<IHarmful>(out IHarmful damager))
+        {
+            ApplyHP(-damager.Damage);
+            ApplyKnockback(damager.Knockback);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.TryGetComponent<IBouncy>(out IBouncy bouncer))
+        {
+            ApplyBounce(bouncer.BouncyForce);
+            bouncer.PlayBounceAnimation();   
+        }
+    }
+
+    private void ApplyBounce(float force)
+    {
+        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, force);
+        Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f)); 
+    }    
+
+    public void ApplyKnockback(float knockback)
+    {
+        Rb.linearVelocity = new Vector2(MoveX * -knockback, knockback);
+    }
+    #endregion
+
+    #region Flip
     public void CheckFlip(float moveX)
     {
         Vector2 scale = this.transform.localScale;
@@ -195,6 +288,9 @@ public partial class PlayerController : MonoBehaviour
             this.transform.localScale = new Vector2(Mathf.Abs(scale.x) * -1f, scale.y);            
         }
     }
+    #endregion
+
+    
 
     // Vẽ gizmos ra scene
     private void OnDrawGizmos()
