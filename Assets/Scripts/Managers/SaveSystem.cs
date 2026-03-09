@@ -7,8 +7,6 @@ using UnityEngine;
 public class SaveSystem : MonoBehaviour
 {
     string _saveFilePath;
-    CheckPoint[] _checkPoints;
-    NPC[] _npcs;
 
 
     public static SaveSystem Instance;
@@ -35,12 +33,6 @@ public class SaveSystem : MonoBehaviour
     private void OnApplicationQuit()
     {
         if (GeneralSetting.Instance.autoSave) SaveGame();
-    }
-
-    private void Init()
-    {
-        _npcs = FindObjectsByType<NPC>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        //_checkPoints = FindObjectsByType<CheckPoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     public void SaveGame()
@@ -98,9 +90,9 @@ public class SaveSystem : MonoBehaviour
     private List<CheckpointData> GetCheckPointsState()
     {
         List<CheckpointData> checkPointsState = new List<CheckpointData>();
-        CheckPoint[] _checkPoints = GetAllCheckPoints();
+        CheckPoint[] checkPoints = GetAllCheckPoints();
 
-        foreach (CheckPoint checkpoint in _checkPoints)
+        foreach (CheckPoint checkpoint in checkPoints)
         {
             CheckpointData data = new CheckpointData
             {
@@ -115,10 +107,10 @@ public class SaveSystem : MonoBehaviour
 
     private void LoadCheckPointsState(List<CheckpointData> data)
     {
-        CheckPoint[] _checkPoints = GetAllCheckPoints();
+        CheckPoint[] checkPoints = GetAllCheckPoints();
         foreach (CheckpointData checkpointData in data)
         {
-            CheckPoint checkpoint = _checkPoints.FirstOrDefault(cp => cp.CheckpointID == checkpointData.CheckpointID);
+            CheckPoint checkpoint = checkPoints.FirstOrDefault(cp => cp.CheckpointID == checkpointData.CheckpointID);
             if (checkpoint != null)
             {
                 checkpoint.SetInteracted(checkpointData.IsInteracted);
@@ -197,9 +189,9 @@ public class SaveSystem : MonoBehaviour
     private List<NPCData> GetNPCsState()
     {
         List<NPCData> npcsState = new List<NPCData>();
-        _npcs = GetAllNPCs();
+        NPC[] npcs = GetAllNPCs();
 
-        foreach (NPC npc in _npcs)
+        foreach (NPC npc in npcs)
         {
             NPCData data = new NPCData
             {
@@ -214,10 +206,10 @@ public class SaveSystem : MonoBehaviour
 
     private void LoadNPCsState(List<NPCData> data)
     {
-        _npcs = GetAllNPCs();
+        NPC[] npcs = GetAllNPCs();
         foreach (NPCData npcData in data)
         {
-            NPC npc = _npcs.FirstOrDefault(n => n.NPCID == npcData.NPCID);
+            NPC npc = npcs.FirstOrDefault(n => n.NPCID == npcData.NPCID);
             if (npc != null)
             {
                 npc.dialogueIndex = npcData.dialogueIndex;
