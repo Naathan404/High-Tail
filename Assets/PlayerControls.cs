@@ -343,13 +343,22 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ]
         },
         {
-            ""name"": ""Respawn"",
-            ""id"": ""2d03b2f1-d957-4945-a9a0-1069d378a799"",
+            ""name"": ""Test"",
+            ""id"": ""0827a516-15db-4534-8e8f-3981cc8ddbfe"",
             ""actions"": [
                 {
-                    ""name"": ""Respawn"",
+                    ""name"": ""T"",
                     ""type"": ""Button"",
-                    ""id"": ""fb86bf69-0d3d-4ec9-a16f-ac08b51062c6"",
+                    ""id"": ""009f5322-3069-4074-b01f-3ba203df79df"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Y"",
+                    ""type"": ""Button"",
+                    ""id"": ""79aeaee9-2421-4bfe-a49b-14eaba449859"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -359,12 +368,23 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""711b1fa7-9bf9-4ba7-9f9c-ea23c22c01b5"",
-                    ""path"": ""<Keyboard>/#(R)"",
-                    ""interactions"": """",
+                    ""id"": ""5c94757c-719b-4caa-a857-84cfc5ac084a"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": ""Press(pressPoint=0.2)"",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Respawn"",
+                    ""action"": ""T"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4c1ad21f-1014-4d9e-afc0-bf88c8414e07"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": ""Press(pressPoint=0.2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Y"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -385,9 +405,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // Interaction
         m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
         m_Interaction_Interact = m_Interaction.FindAction("Interact", throwIfNotFound: true);
-        // Respawn
-        m_Respawn = asset.FindActionMap("Respawn", throwIfNotFound: true);
-        m_Respawn_Respawn = m_Respawn.FindAction("Respawn", throwIfNotFound: true);
+        // Test
+        m_Test = asset.FindActionMap("Test", throwIfNotFound: true);
+        m_Test_T = m_Test.FindAction("T", throwIfNotFound: true);
+        m_Test_Y = m_Test.FindAction("Y", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -395,7 +416,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_Movement.enabled, "This will cause a leak and performance issues, PlayerControls.Movement.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, PlayerControls.Camera.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Interaction.enabled, "This will cause a leak and performance issues, PlayerControls.Interaction.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Respawn.enabled, "This will cause a leak and performance issues, PlayerControls.Respawn.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Test.enabled, "This will cause a leak and performance issues, PlayerControls.Test.Disable() has not been called.");
     }
 
     /// <summary>
@@ -789,29 +810,34 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     /// </summary>
     public InteractionActions @Interaction => new InteractionActions(this);
 
-    // Respawn
-    private readonly InputActionMap m_Respawn;
-    private List<IRespawnActions> m_RespawnActionsCallbackInterfaces = new List<IRespawnActions>();
-    private readonly InputAction m_Respawn_Respawn;
+    // Test
+    private readonly InputActionMap m_Test;
+    private List<ITestActions> m_TestActionsCallbackInterfaces = new List<ITestActions>();
+    private readonly InputAction m_Test_T;
+    private readonly InputAction m_Test_Y;
     /// <summary>
-    /// Provides access to input actions defined in input action map "Respawn".
+    /// Provides access to input actions defined in input action map "Test".
     /// </summary>
-    public struct RespawnActions
+    public struct TestActions
     {
         private @PlayerControls m_Wrapper;
 
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public RespawnActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public TestActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Respawn/Respawn".
+        /// Provides access to the underlying input action "Test/T".
         /// </summary>
-        public InputAction @Respawn => m_Wrapper.m_Respawn_Respawn;
+        public InputAction @T => m_Wrapper.m_Test_T;
+        /// <summary>
+        /// Provides access to the underlying input action "Test/Y".
+        /// </summary>
+        public InputAction @Y => m_Wrapper.m_Test_Y;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get() { return m_Wrapper.m_Respawn; }
+        public InputActionMap Get() { return m_Wrapper.m_Test; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
         public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
@@ -819,9 +845,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
         /// <summary>
-        /// Implicitly converts an <see ref="RespawnActions" /> to an <see ref="InputActionMap" /> instance.
+        /// Implicitly converts an <see ref="TestActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(RespawnActions set) { return set.Get(); }
+        public static implicit operator InputActionMap(TestActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -829,14 +855,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
         /// </remarks>
-        /// <seealso cref="RespawnActions" />
-        public void AddCallbacks(IRespawnActions instance)
+        /// <seealso cref="TestActions" />
+        public void AddCallbacks(ITestActions instance)
         {
-            if (instance == null || m_Wrapper.m_RespawnActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_RespawnActionsCallbackInterfaces.Add(instance);
-            @Respawn.started += instance.OnRespawn;
-            @Respawn.performed += instance.OnRespawn;
-            @Respawn.canceled += instance.OnRespawn;
+            if (instance == null || m_Wrapper.m_TestActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TestActionsCallbackInterfaces.Add(instance);
+            @T.started += instance.OnT;
+            @T.performed += instance.OnT;
+            @T.canceled += instance.OnT;
+            @Y.started += instance.OnY;
+            @Y.performed += instance.OnY;
+            @Y.canceled += instance.OnY;
         }
 
         /// <summary>
@@ -845,21 +874,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
         /// </remarks>
-        /// <seealso cref="RespawnActions" />
-        private void UnregisterCallbacks(IRespawnActions instance)
+        /// <seealso cref="TestActions" />
+        private void UnregisterCallbacks(ITestActions instance)
         {
-            @Respawn.started -= instance.OnRespawn;
-            @Respawn.performed -= instance.OnRespawn;
-            @Respawn.canceled -= instance.OnRespawn;
+            @T.started -= instance.OnT;
+            @T.performed -= instance.OnT;
+            @T.canceled -= instance.OnT;
+            @Y.started -= instance.OnY;
+            @Y.performed -= instance.OnY;
+            @Y.canceled -= instance.OnY;
         }
 
         /// <summary>
-        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="RespawnActions.UnregisterCallbacks(IRespawnActions)" />.
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="TestActions.UnregisterCallbacks(ITestActions)" />.
         /// </summary>
-        /// <seealso cref="RespawnActions.UnregisterCallbacks(IRespawnActions)" />
-        public void RemoveCallbacks(IRespawnActions instance)
+        /// <seealso cref="TestActions.UnregisterCallbacks(ITestActions)" />
+        public void RemoveCallbacks(ITestActions instance)
         {
-            if (m_Wrapper.m_RespawnActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_TestActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
@@ -869,21 +901,21 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <remarks>
         /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
         /// </remarks>
-        /// <seealso cref="RespawnActions.AddCallbacks(IRespawnActions)" />
-        /// <seealso cref="RespawnActions.RemoveCallbacks(IRespawnActions)" />
-        /// <seealso cref="RespawnActions.UnregisterCallbacks(IRespawnActions)" />
-        public void SetCallbacks(IRespawnActions instance)
+        /// <seealso cref="TestActions.AddCallbacks(ITestActions)" />
+        /// <seealso cref="TestActions.RemoveCallbacks(ITestActions)" />
+        /// <seealso cref="TestActions.UnregisterCallbacks(ITestActions)" />
+        public void SetCallbacks(ITestActions instance)
         {
-            foreach (var item in m_Wrapper.m_RespawnActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_TestActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_RespawnActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_TestActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
     /// <summary>
-    /// Provides a new <see cref="RespawnActions" /> instance referencing this action map.
+    /// Provides a new <see cref="TestActions" /> instance referencing this action map.
     /// </summary>
-    public RespawnActions @Respawn => new RespawnActions(this);
+    public TestActions @Test => new TestActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Movement" which allows adding and removing callbacks.
     /// </summary>
@@ -951,18 +983,25 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
     }
     /// <summary>
-    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Respawn" which allows adding and removing callbacks.
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Test" which allows adding and removing callbacks.
     /// </summary>
-    /// <seealso cref="RespawnActions.AddCallbacks(IRespawnActions)" />
-    /// <seealso cref="RespawnActions.RemoveCallbacks(IRespawnActions)" />
-    public interface IRespawnActions
+    /// <seealso cref="TestActions.AddCallbacks(ITestActions)" />
+    /// <seealso cref="TestActions.RemoveCallbacks(ITestActions)" />
+    public interface ITestActions
     {
         /// <summary>
-        /// Method invoked when associated input action "Respawn" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "T" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnRespawn(InputAction.CallbackContext context);
+        void OnT(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Y" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnY(InputAction.CallbackContext context);
     }
 }
