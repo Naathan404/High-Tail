@@ -18,7 +18,7 @@ public class PlayerDashState : PlayerState
 
         // time freeze
         if(!_player.IsOnGround())
-        GameManager.Instance.DoTimeFreeze(0.05f, 0.05f);
+        GameManager.Instance.DoTimeFreeze(0.05f, 0.01f);
 
         _dashTimer = _player.Data.dashDuration;
         Vector2 direction = _player.IsFacingRight() ? Vector2.right : Vector2.left;

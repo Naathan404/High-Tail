@@ -26,7 +26,7 @@ public class NPC : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (dialogueData == null || PauseGameManager.IsGamePaused)
+        if (dialogueData == null || PauseGameManager.IsGamePaused || !CanInteract())
         {
             return;
         }

@@ -10,24 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
-  m_Name: DialogueData
+  m_Name: Villager_DialogueData
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   nameText:
-    nameVI: "Ng\u01B0\u1EDDi \u0111\u1ECF"
-    nameEN: Red people
+    nameVI: "D\xE2n l\xE0ng"
+    nameEN: Villager
   dialogueLines:
-  - image: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-    textVI: "T\xF4i \u0111ang n\xF3i chuy\u1EC7n"
-    textEN: I am talking
+  - image: {fileID: 0}
+    textVI: "T\u1EADn th\u1EBF s\u1EAFp \u0111\u1EBFn r\u1ED3i\n"
+    textEN: The last of us
     autoSkip: 0
   - image: {fileID: 0}
-    textVI: "N\xF3i n\u1EEFa \u0111i, n\xF3i m\u1ED9t c\xE2u th\u1EADt d\xE0i \u0111\u1EC3
-      xem n\xF3i \u0111\u01B0\u1EE3c t\u1EDBi \u0111\xE2u"
-    textEN: Continue talking
-    autoSkip: 0
-  - image: {fileID: 0}
-    textVI: "D\u1EEBng \u0111i"
-    textEN: "Stop \u0111ii"
+    textVI: "C\u1EA7n ng\u01B0\u1EDDi anh h\xF9ng \u0111\u1EC3 c\u1EE9u t\u1EA5t
+      c\u1EA3 ch\xFAng ta\n"
+    textEN: We need The Hero
     autoSkip: 0
   endDialogue: 
   autoProgressDelay: 1.5

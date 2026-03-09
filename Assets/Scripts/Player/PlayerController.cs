@@ -172,7 +172,7 @@ public partial class PlayerController : MonoBehaviour
     {
         if(IsOnGround() && _activePlatform != null)
         {
-            Rb.position += _activePlatform.DeltaPos;
+            Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
         }
         _stateMachine.CurrentState.PhysicsUpdate();
     }
@@ -256,8 +256,16 @@ public partial class PlayerController : MonoBehaviour
     {
         if(collision.gameObject.TryGetComponent<IBouncy>(out IBouncy bouncer))
         {
+            _stateMachine.ChangeState(IdleState);
             ApplyBounce(bouncer.BouncyForce);
             bouncer.PlayBounceAnimation();   
+        }
+
+        if(collision.gameObject.TryGetComponent<IPushable>(out IPushable pusher))
+        {
+            _stateMachine.ChangeState(IdleState);
+            ApplyPush(pusher.PushForce, pusher.IsRight);
+            pusher.PlayPushAnimation();
         }
     }
 
@@ -266,6 +274,12 @@ public partial class PlayerController : MonoBehaviour
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, force);
         Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f)); 
     }    
+
+    private void ApplyPush(float force, float dir)
+    {
+        Rb.linearVelocity = new Vector2(force * dir, Rb.linearVelocity.y);
+        Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
+    }
 
     public void ApplyKnockback(float knockback)
     {
