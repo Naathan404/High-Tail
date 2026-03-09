@@ -8,16 +8,30 @@ public partial class PlayerController
 
     private bool _wasGrounded;       // Lưu trạng thái chạm đất của frame trước
     private float _lastFallVelocity; // Lưu vận tốc rơi cuối cùng trước khi chạm đất
+    private bool _ignoreNextFallDamage = false;
 
     private void OnLanded()
     {
         Debug.Log($"Tiếp đất! Vận tốc rơi cuối cùng là: {_lastFallVelocity}");
 
-        // Kiểm tra xem rơi có đủ mạnh không (Nhớ là vận tốc rơi xuống mang giá trị âm)
         if (_lastFallVelocity <= _fallDamageThreshold)
         {
-            ApplyHP(-_fallDamageAmount); // Trừ máu
-            OnPlayerHardLanded?.Invoke();
+            // 3. Kiểm tra xem có đang cầm "kim bài miễn tử" ngã không
+            if (_ignoreNextFallDamage)
+            {
+                Debug.Log("Tiếp đất an toàn nhờ bùa Respawn! Không trừ máu.");
+                _ignoreNextFallDamage = false; // Thu lại bùa để các lần rơi sau vẫn tính damage bình thường
+            }
+            else
+            {
+                ApplyHP(-_fallDamageAmount);
+                OnPlayerHardLanded?.Invoke();
+            }
+        }
+        else
+        {
+            // Nếu ngã nhẹ nhàng không mất máu thì cũng nên reset cờ để tránh lỗi logic về sau
+            _ignoreNextFallDamage = false;
         }
 
         _lastFallVelocity = 0f;

@@ -36,6 +36,10 @@ public partial class PlayerController : MonoBehaviour
             transform.position = Vector3.zero; // Example: respawn at origin
         }
 
+        Rb.linearVelocity = Vector2.zero;
+        _lastFallVelocity = 0f;
+        _ignoreNextFallDamage = true;
+
         Debug.Log("Bé đã hồi xuân");
     }
 
