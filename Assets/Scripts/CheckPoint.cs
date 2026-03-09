@@ -22,7 +22,7 @@ public class CheckPoint : MonoBehaviour, IInteractable
 
     public bool CanInteract()
     {
-        if (GeneralSetting.Instance.autoCheckPoint)
+        if (GeneralSetting.Instance.autoCheckPoint && !IsInteracted)
         {
             Interact();
         }
