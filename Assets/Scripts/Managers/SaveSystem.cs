@@ -19,6 +19,7 @@ public class SaveSystem : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            _saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
         }
         else
         {
@@ -28,7 +29,7 @@ public class SaveSystem : MonoBehaviour
 
     void Start()
     {
-        Init();
+        //Init();
         LoadGame();
     }
     private void OnApplicationQuit()
@@ -38,9 +39,8 @@ public class SaveSystem : MonoBehaviour
 
     private void Init()
     {
-        _saveFilePath = Path.Combine(Application.persistentDataPath, "savefile.json");
-        _checkPoints = FindObjectsByType<CheckPoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         _npcs = FindObjectsByType<NPC>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        //_checkPoints = FindObjectsByType<CheckPoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
     }
 
     public void SaveGame()
@@ -90,9 +90,15 @@ public class SaveSystem : MonoBehaviour
     }
 
     #region SaveLoad CheckPoints
+
+    CheckPoint[] GetAllCheckPoints()
+    {
+        return FindObjectsByType<CheckPoint>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+    }
     private List<CheckpointData> GetCheckPointsState()
     {
         List<CheckpointData> checkPointsState = new List<CheckpointData>();
+        CheckPoint[] _checkPoints = GetAllCheckPoints();
 
         foreach (CheckPoint checkpoint in _checkPoints)
         {
@@ -109,6 +115,7 @@ public class SaveSystem : MonoBehaviour
 
     private void LoadCheckPointsState(List<CheckpointData> data)
     {
+        CheckPoint[] _checkPoints = GetAllCheckPoints();
         foreach (CheckpointData checkpointData in data)
         {
             CheckPoint checkpoint = _checkPoints.FirstOrDefault(cp => cp.CheckpointID == checkpointData.CheckpointID);
@@ -132,7 +139,7 @@ public class SaveSystem : MonoBehaviour
 
             if (player.TryGetComponent(out PlayerController playerController))
             {
-                playerData.lastCheckpointID = playerController.lastCheckPoint.CheckpointID;
+                playerData.lastCheckpointID = playerController.lastCheckPoint?.CheckpointID ?? "";
                 playerData.hp = playerController.CurrentHP;
                 playerData.energy = playerController.CurrentEnergy;
                 playerData.WallJumpUnlocked = playerController.WallJumpUnlocked;
@@ -181,9 +188,15 @@ public class SaveSystem : MonoBehaviour
     #endregion
 
     #region Saveload NPCs
+
+    NPC[] GetAllNPCs()
+    {
+        return FindObjectsByType<NPC>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+    }
     private List<NPCData> GetNPCsState()
     {
         List<NPCData> npcsState = new List<NPCData>();
+        _npcs = GetAllNPCs();
 
         foreach (NPC npc in _npcs)
         {
@@ -200,6 +213,7 @@ public class SaveSystem : MonoBehaviour
 
     private void LoadNPCsState(List<NPCData> data)
     {
+        _npcs = GetAllNPCs();
         foreach (NPCData npcData in data)
         {
             NPC npc = _npcs.FirstOrDefault(n => n.NPCID == npcData.NPCID);
