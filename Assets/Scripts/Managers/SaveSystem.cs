@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
@@ -61,7 +61,20 @@ public class SaveSystem : MonoBehaviour
         if (File.Exists(_saveFilePath))
         {
             //From JSON to CS (SaveData)
-            SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(_saveFilePath));
+            string jsonContent = File.ReadAllText(_saveFilePath);
+            if (string.IsNullOrEmpty(jsonContent))
+            {
+                Debug.LogWarning("File save rỗng. Tạo file mới!");
+                SaveGame();
+                return;
+            }
+
+            SaveData saveData = JsonUtility.FromJson<SaveData>(jsonContent);
+            if (saveData == null)
+            {
+                Debug.LogError("Dữ liệu save bị hỏng. Bắt đầu game mới!");
+                return;
+            }
 
             //Load general settings
             GeneralSetting.Instance.currentLanguage = saveData.currentLanguage;

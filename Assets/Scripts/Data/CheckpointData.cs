@@ -4,5 +4,5 @@ using UnityEngine;
 public class CheckpointData
 {
     public string CheckpointID;
-    public bool IsInteracted;
+    public bool IsInteracted = false;
 }
