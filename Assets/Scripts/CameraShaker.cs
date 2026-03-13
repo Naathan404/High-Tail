@@ -38,6 +38,11 @@ public class CameraShaker : MonoBehaviour
         _controls.Enable();
     }
 
+    private void OnDisable()
+    {
+        _controls.Disable();
+    }
+
     private void Update()
     {
         if (_controls.Test.T.WasPressedThisFrame())
