@@ -12,21 +12,95 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
   m_Name: VillageChief_DialogueData
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
-  nameText:
-    nameVI: "Tr\u01B0\u1EDFng l\xE0ng"
+  nameText1:
+    nameVI: "Gi\xE0 l\xE0ng"
     nameEN: Village Chief
+  nameText2:
+    nameVI: Fu
+    nameEN: Fu
   dialogueLines:
-  - image: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-    textVI: "\xC0 Fu \u0111\xE2y r\u1ED3i"
-    textEN: Fu, there you are
+  - image: {fileID: 6267887428032955541, guid: e29a4cb30ed02504ca81afbc3db9a8a2, type: 3}
+    IsChar1: 1
+    textVI: "C\xE1i th\u1EB1ng tr\u1EDDi \u0111\xE1nh! Tao t\u01B0\u1EDFng m\xE0y
+      ch\u1EBFt r\u1EE5c \u1EDF x\xF3 x\u1EC9nh n\xE0o r\u1ED3i ch\u1EE9? Sao kh\xF4ng
+      bi\u1EBFn khu\u1EA5t m\u1EAFt kh\u1ECFi c\xE1i l\xE0ng n\xE0y lu\xF4n \u0111i
+      cho r\u1EA3nh n\u1EE3?"
+    textEN: "You damn brat! I thought you\u2019d kicked the bucket in some ditch
+      by now. Why don't you just disappear from this village for good?"
     autoSkip: 0
-  - image: {fileID: 0}
-    textVI: "T\xECnh c\u1EA3nh b\xE2y gi\u1EDD r\u1EA5t l\xE0 nguy hi\u1EC3m"
-    textEN: We're all on the edge
+  - image: {fileID: 5921392838902934559, guid: 57d488ea8999ace48ba1a026ea0c1892, type: 3}
+    IsChar1: 0
+    textVI: ...
+    textEN: ...
     autoSkip: 0
-  - image: {fileID: 0}
-    textVI: "H\xE3y ti\xEAu di\u1EC7t h\u1EAFn \u0111\u1EC3 c\u1EE9u ch\xFAng ta"
-    textEN: Defeat him to save us
+  - image: {fileID: 6267887428032955541, guid: e29a4cb30ed02504ca81afbc3db9a8a2, type: 3}
+    IsChar1: 1
+    textVI: "Cha m\u1EB9 m\xE0y \u0111\xFAng l\xE0 m\u1EAFt m\xF9 m\u1EDBi nh\u1EADn
+      nu\xF4i c\xE1i th\u1EE9 nh\u01B0 m\xE0y. Sao c\xE1i ng\u1ECDn l\u1EEDa h\xF4m
+      qua kh\xF4ng thi\xEAu ch\u1EBFt qu\xE1ch hai ng\u01B0\u1EDDi h\u1ECD \u0111i
+      cho r\u1ED3i, \u0111\u1EE1 ph\u1EA3i kh\u1ED5 v\xEC m\xE0y!"
+    textEN: "I\u2019ll never understand what your parents were thinking when they
+      took you in. Why didn\u2019t that fire just take them both out and spare them
+      the trouble of you?"
+    autoSkip: 0
+  - image: {fileID: 5921392838902934559, guid: 57d488ea8999ace48ba1a026ea0c1892, type: 3}
+    IsChar1: 1
+    textVI: ...
+    textEN: ...
+    autoSkip: 0
+  - image: {fileID: 6267887428032955541, guid: e29a4cb30ed02504ca81afbc3db9a8a2, type: 3}
+    IsChar1: 1
+    textVI: "V\u1EC1 r\u1ED3i th\xEC li\u1EC7u m\xE0 y\xEAn ph\u1EADn, \u0111\u1EEBng
+      c\xF3 g\xE2y th\xEAm phi\u1EC1n ph\u1EE9c. Nh\xE0 tao ph\xEDa sau kia v\u1EABn
+      c\xF2n \xEDt \u0111\u1ED3 kh\xF4 d\u1EF1 tr\u1EEF, c\u1EA5m m\xE0y b\xE9n m\u1EA3ng
+      t\u1EDBi \u0111\xF3 m\xE0 \u0103n tr\u1ED9m nghe ch\u01B0a!"
+    textEN: "Now that you're back, stay out of trouble. I've got some food supplies
+      stashed at my house\u2014don\u2019t you dare think about 'stealing' any!"
+    autoSkip: 0
+  - image: {fileID: 5921392838902934559, guid: 57d488ea8999ace48ba1a026ea0c1892, type: 3}
+    IsChar1: 0
+    textVI: "Con bi\u1EBFt r\u1ED3i. Con c\u1EA3m \u01A1n tr\u01B0\u1EDFng l\xE0ng."
+    textEN: 
+    autoSkip: 0
+  - image: {fileID: 6267887428032955541, guid: e29a4cb30ed02504ca81afbc3db9a8a2, type: 3}
+    IsChar1: 1
+    textVI: "Ai th\xE8m c\xE1i \u01A1n c\u1EE7a m\xE0y! C\xE1i t\xEAn kh\u1ED1n \u0111\xE3
+      t\xE0n ph\xE1 l\xE0ng m\xECnh \u0111ang \u1EDF ph\xEDa \u0110\xF4ng \u0111\u1EA5y.
+      Sao m\xE0y kh\xF4ng ch\u1EA1y \u0111\u1EA1i t\u1EDBi \u0111\xF3 r\u1ED3i ch\u1EBFt
+      lu\xF4n \u0111i cho khu\u1EA5t m\u1EAFt tao?"
+    textEN: "Hmph! Who needs your thanks? The bastard who laid waste to this village
+      is off to the East. Why don\u2019t you just run over there and get yourself
+      killed already?"
+    autoSkip: 0
+  - image: {fileID: 5921392838902934559, guid: 57d488ea8999ace48ba1a026ea0c1892, type: 3}
+    IsChar1: 0
+    textVI: "Con c\u1EA3m \u01A1n \xF4ng. Con v\u1EC1 b\xE1o tin cho cha m\u1EB9
+      xong... s\u1EBD \u0111i ngay."
+    textEN: "Thank you, Chief. I\u2019ll go check on my parents, then I\u2019ll be
+      on my way"
+    autoSkip: 0
+  - image: {fileID: 6267887428032955541, guid: e29a4cb30ed02504ca81afbc3db9a8a2, type: 3}
+    IsChar1: 1
+    textVI: "C\xE1i g\xEC? M\xE0y \u0111\u1ECBnh \u0111i th\u1EADt \xE0? M\xE0y m\xE0
+      \u0111i th\xEC c\xE1i \u0111\u1ED1ng \u0111\u1ED5 n\xE1t n\xE0y ai x\xE2y l\u1EA1i
+      cho tao? \u1EDE l\u1EA1i ngay!"
+    textEN: "Hey! You\u2019re actually leaving? If you go, who\u2019s going to rebuild
+      this mess? Stay right where you are!"
+    autoSkip: 0
+  - image: {fileID: 5921392838902934559, guid: 57d488ea8999ace48ba1a026ea0c1892, type: 3}
+    IsChar1: 0
+    textVI: ...
+    textEN: ...
+    autoSkip: 0
+  - image: {fileID: 6267887428032955541, guid: e29a4cb30ed02504ca81afbc3db9a8a2, type: 3}
+    IsChar1: 1
+    textVI: "H\u1EEB! M\xE0y mu\u1ED1n l\xE0m g\xEC th\xEC l\xE0m, l\xE3o gi\xE0
+      n\xE0y kh\xF4ng th\xE8m c\u1EA3n n\u1EEFa. C\xE1i l\xE0ng n\xE0y tao lo ch\u01B0a
+      xong, gi\u1EDD l\u1EA1i c\xF2n ph\u1EA3i t\u1ED1n c\u01A1m nu\xF4i cha m\u1EB9
+      m\xE0y n\u1EEFa... \u0110\xFAng l\xE0 n\u1EE3 \u0111\u1EDDi!"
+    textEN: "Hmph. Do whatever you want, I\u2019m done stopping you. I\u2019ve got
+      enough on my plate with this village, and now I\u2019ve gotta waste more food
+      on your parents... What a pain."
     autoSkip: 0
   endDialogue: 
   autoProgressDelay: 1.5
