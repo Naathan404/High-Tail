@@ -13,6 +13,12 @@ public class GameManager : MonoBehaviour
             Instance = this;
     }
 
+
+    /// <summary>
+    /// Za warudo
+    /// </summary>
+    /// <param name="strength"></param>
+    /// <param name="duration"></param>
     public void DoTimeFreeze(float strength, float duration)
     {
         Debug.Log("<color=red> ==> Begin time freeze ==> </Color>");

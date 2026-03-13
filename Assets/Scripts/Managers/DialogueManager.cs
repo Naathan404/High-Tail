@@ -82,7 +82,7 @@ public class DialogueManager : MonoBehaviour
         _curDialogueIndex = 0;
         IsDialogueActive = true;
 
-        nameText.text = curDialogueData.nameText.getName();
+        nameText.text = curDialogueData.dialogueLines[_curDialogueIndex].IsChar1 ? curDialogueData.nameText1.getName() : curDialogueData.nameText2.getName();
         ShowDialogue(true);
         PauseGameManager.SetPause(true);
 
@@ -95,6 +95,7 @@ public class DialogueManager : MonoBehaviour
 
         image.sprite = curDialogueData.dialogueLines[_curDialogueIndex].image;
         _curDialogueText = curDialogueData.dialogueLines[_curDialogueIndex].GetText();
+        nameText.text = curDialogueData.dialogueLines[_curDialogueIndex].IsChar1 ? curDialogueData.nameText1.getName() : curDialogueData.nameText2.getName();
 
         StartCoroutine(TypeLine());
     }

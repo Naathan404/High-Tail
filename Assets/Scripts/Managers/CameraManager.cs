@@ -1,21 +1,29 @@
-﻿using DG.Tweening;
+﻿using System.Collections;
+using DG.Tweening;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class CameraManager : MonoBehaviour
 {
+    public static CameraManager Instance;
     [SerializeField] private float _lookOffset = 3f;
     [SerializeField] private float _lookDuration = 0.5f;
     [SerializeField] private Rigidbody2D _playerRb;
     [SerializeField] private CinemachineCamera _cineCam;
     private CinemachineFollow _followComponent;
+    private CinemachineConfiner2D _confinerComponent;
     private float _targetYOffset;
     private Tween _lookTween;
 
     private void Awake()
     {
+        if(Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+            Instance = this;
         _followComponent = _cineCam.GetComponent<CinemachineFollow>();
+        _confinerComponent = _cineCam.GetComponent<CinemachineConfiner2D>();
 
     }
 
@@ -41,6 +49,26 @@ public class CameraManager : MonoBehaviour
         {
             StartLookTween(0);
         }
+    }
+
+    // --- HÀM CHUYỂN PHÒNG: Vẫn Follow nhưng đổi biên giới ---
+    [System.Obsolete]
+    public void SwitchRoom(BoxCollider2D newRoomCollider)
+    {
+        if (_confinerComponent.BoundingShape2D == newRoomCollider) return;
+
+        // cập nhật vùng camera mới
+        _confinerComponent.BoundingShape2D = newRoomCollider;
+        _confinerComponent.InvalidateCache();
+
+        // 3. Hiệu ứng khựng nhẹ của Celeste để tạo cảm giác sang vùng mới
+        StartCoroutine(RoomTransitionFreeze());
+    }
+
+    private IEnumerator RoomTransitionFreeze()
+    {
+        GameManager.Instance.DoTimeFreeze(0.01f, 0.15f);
+        yield return new WaitForSecondsRealtime(0.1f);
     }
 
     private void OnLookPerformed(InputAction.CallbackContext context)
