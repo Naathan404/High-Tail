@@ -17,7 +17,8 @@ public class SceneTransistor : MonoBehaviour
     [SerializeField] private float _transitionDuration;
     [Tooltip("The time to load scene before the end of transition duration")]
     [SerializeField] private float _modifyValue = 0.1f;
-
+    [Tooltip("Whether to play the transition effect when this scene is loaded")]
+    [SerializeField] private bool _haveInitiatedTransition;
     private float _animationSpeed;
     private Animator _animator;
     public enum TransitionType
@@ -47,6 +48,8 @@ public class SceneTransistor : MonoBehaviour
 
     private void Start()
     {
+        if (!_haveInitiatedTransition)
+            return;
         OnSceneLoaded();
     }
 
