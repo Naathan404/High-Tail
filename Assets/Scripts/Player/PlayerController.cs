@@ -54,6 +54,7 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private bool _isGround;
     [SerializeField] private MovingPlatform _activePlatform;
     public bool CanDash = true;
+    public bool IsBlocked = false;
     public Vector2 DashDirection;
 
     [Header("Ground Check")]
@@ -124,6 +125,7 @@ public partial class PlayerController : MonoBehaviour
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
         _isGround = GroundCheck();
+        Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
 
         // Lấy input từ bàn phím
         MoveX = Inputs.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
@@ -133,6 +135,13 @@ public partial class PlayerController : MonoBehaviour
         DashPressed = Inputs.Movement.Dash.WasPressedThisFrame();    // dash
         SlideGlideHeld = Inputs.Movement.SlideGlide.IsPressed();     // giữ nút để trượt tường hoặc thả dù
 
+        if(IsBlocked)
+        {
+            MoveX = 0;
+            MoveY = 0;
+            Rb.linearVelocity = Vector2.zero;
+            Rb.gravityScale = 0;
+        }
         // tính toán hướng dash
         // if(new Vector2(MoveX, MoveY).magnitude > 0f)
         // {
