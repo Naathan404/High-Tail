@@ -3,7 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DialogueData", menuName = "Scriptable Objects/DialogueData")]
 public class DialogueData : ScriptableObject
 {
-    public Name nameText;
+    public Name nameText1;
+    public Name nameText2;
     public DialogueLine[] dialogueLines;
     public bool[] endDialogue;
     public float autoProgressDelay = 1.5f;
@@ -29,6 +30,7 @@ public class DialogueData : ScriptableObject
     public struct DialogueLine
     {
         public Sprite image;
+        public bool IsChar1;
 
         [Header("Content")]
         [TextArea(3, 5)] public string textVI; // Tiếng Việt
