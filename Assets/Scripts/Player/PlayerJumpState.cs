@@ -21,6 +21,11 @@ public class PlayerJumpState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        if (_player.MoveY < -0.5f && _player.IsOnGround()) 
+        {
+            _stateMachine.ChangeState(_player.PogoState);
+            return; 
+        }
         _player.CheckFlip(_player.MoveX);
         if(_player.Rb.linearVelocity.y < 0f)
         {

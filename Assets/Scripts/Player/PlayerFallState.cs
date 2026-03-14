@@ -49,6 +49,12 @@ public class PlayerFallState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
+
+        if (_player.MoveY < -0.5f&& !_player.IsOnGround()) 
+        {
+            _stateMachine.ChangeState(_player.PogoState);
+            return; 
+        }
         if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);

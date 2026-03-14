@@ -12,6 +12,7 @@ public class PlayerData : ScriptableObject
     public float wallSlideGravityScale;
     public float airGlideGravityScale;
     public float maxGlideSpeed;
+    public float pogoForce;
     public int maxHP;
     public int maxEnergy;
 

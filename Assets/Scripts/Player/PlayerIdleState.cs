@@ -11,6 +11,7 @@ public class PlayerIdleState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào idle state");
+        _player.CanDash = true;
     }
 
     public override void HandleInput()

@@ -65,7 +65,6 @@ public class PlayerDashState : PlayerState
     {
         base.Exit();
         
-        _player.CanDash = true;
         _player.Rb.gravityScale = _originalGravity;
         _player.Rb.linearVelocity = Vector2.zero;
     }

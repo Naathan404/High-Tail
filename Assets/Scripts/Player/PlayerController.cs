@@ -26,6 +26,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
     public PlayerBlockState BlockState { get; private set; }
+    public PlayerPogoState PogoState { get; private set; }
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -69,6 +70,11 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 _wallCheckSize;
     [SerializeField] private Transform _wallCheck;
 
+    [Header("Pogo Check")]
+    [SerializeField] private LayerMask _pogoLayerMask;
+    [SerializeField] private Transform _pogoCheckpoint; 
+    [SerializeField] private float _pogoRayLength;
+
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
 
@@ -92,6 +98,7 @@ public partial class PlayerController : MonoBehaviour
         WallJumpState = new PlayerWallJumpState(this, _stateMachine);
         AirGlideState = new PlayerAirGlideState(this, _stateMachine);
         BlockState = new PlayerBlockState(this, _stateMachine);
+        PogoState = new PlayerPogoState(this, _stateMachine);
     }
 
     private void Start()
@@ -243,6 +250,17 @@ public partial class PlayerController : MonoBehaviour
     {
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
+
+    public bool IsPogoHit()
+    {
+        Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
+        if(hit)
+        {
+            return true;
+        }
+        return false;
+    }
+
     #endregion
 
     private void ApplyBounce(float force)
@@ -255,6 +273,13 @@ public partial class PlayerController : MonoBehaviour
     {
         Rb.linearVelocity = new Vector2(force * dir, Rb.linearVelocity.y);
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
+    }
+
+    public void ExecutePogoBounce()
+    {
+        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, Data.pogoForce);
+        CanDash = true;
+        Visual.ApplySquashStretch(new Vector3(0.7f, 1.3f, 1f));
     }
 
     public void ApplyKnockback(float knockback)
@@ -289,5 +314,8 @@ public partial class PlayerController : MonoBehaviour
 
         Gizmos.color = IsTouchingWall() ? Color.green : Color.red;
         Gizmos.DrawWireCube(_wallCheck.transform.position, _wallCheckSize);
+
+        Gizmos.color = IsPogoHit() ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(_pogoCheckpoint.position, _pogoRayLength);
     }
 }

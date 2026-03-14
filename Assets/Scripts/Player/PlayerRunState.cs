@@ -10,6 +10,7 @@ public class PlayerRunState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào run state");
+        _player.CanDash = true;
     }
     public override void LogicUpdate()
     {
