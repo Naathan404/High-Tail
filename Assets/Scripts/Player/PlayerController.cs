@@ -25,6 +25,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
+    public PlayerBlockState BlockState { get; private set; }
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -90,6 +91,7 @@ public partial class PlayerController : MonoBehaviour
         WallSlideState = new PlayerWallSlideState(this, _stateMachine);
         WallJumpState = new PlayerWallJumpState(this, _stateMachine);
         AirGlideState = new PlayerAirGlideState(this, _stateMachine);
+        BlockState = new PlayerBlockState(this, _stateMachine);
     }
 
     private void Start()
@@ -136,10 +138,7 @@ public partial class PlayerController : MonoBehaviour
 
         if(IsBlocked)
         {
-            MoveX = 0;
-            MoveY = 0;
-            Rb.linearVelocity = Vector2.zero;
-            Rb.gravityScale = 0;
+            _stateMachine.ChangeState(BlockState);
         }
         // tính toán hướng dash
         // if(new Vector2(MoveX, MoveY).magnitude > 0f)
