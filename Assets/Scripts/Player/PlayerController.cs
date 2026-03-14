@@ -125,7 +125,6 @@ public partial class PlayerController : MonoBehaviour
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
         _isGround = GroundCheck();
-        Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
 
         // Lấy input từ bàn phím
         MoveX = Inputs.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
