@@ -28,20 +28,27 @@ public class CrumblingPlatform : MonoBehaviour
         }
     }
 
+    private void SetChildrenActive(bool isActive)
+    {
+        foreach(Transform child in transform)
+        {
+            child.gameObject.SetActive(isActive);
+        }
+    }
     private IEnumerator Crumble()
     {
         _animator.SetTrigger("Crumble"); // Just for fun
         yield return new WaitForSeconds(_crumbleDelay);
+        SetChildrenActive(false);
         _renderer.enabled = false;
         _collider.enabled = false;
-
         // Recovery after a delay
         StartCoroutine(Recovery());
     }
-
     private IEnumerator Recovery()
     {
         yield return new WaitForSeconds(_recoveryTime);
+        SetChildrenActive(true);
         _renderer.enabled = true;
         _collider.enabled = true;
     }
