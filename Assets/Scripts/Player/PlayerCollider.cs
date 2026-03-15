@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 
 public partial class PlayerController : MonoBehaviour
@@ -26,6 +27,11 @@ public partial class PlayerController : MonoBehaviour
             _stateMachine.ChangeState(IdleState);
             ApplyPush(pusher.PushForce, pusher.IsRight);
             pusher.PlayPushAnimation();
+        }
+
+        if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
+        {
+            trigger.ExecuteTrigger();
         }
     }
     #endregion
