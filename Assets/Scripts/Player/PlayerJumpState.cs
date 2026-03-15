@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerJumpState : PlayerState
 {
+    private float jumpForce;
     public PlayerJumpState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -12,16 +13,21 @@ public class PlayerJumpState : PlayerState
         _player.UseJumpBuffer();
         _player.Visual.ApplySquashStretch(new Vector3(0.8f, 1.3f, 1f));
 
+        if (_player.IsStickyGround) 
+            jumpForce = _player.Data.jumpForce * 0.5f;
+        else 
+            jumpForce = _player.Data.jumpForce;
+
         float boost = Mathf.Abs(_player.MoveX) > 0.9f ? _player.Data.boostVelocity : 1f;
         // _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, _player.Data.jumpForce);
         _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
-        _player.Rb.AddForce(Vector2.up * _player.Data.jumpForce, ForceMode2D.Impulse);
+        _player.Rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (_player.MoveY < -0.5f && _player.IsOnGround()) 
+        if (_player.MoveY < -0.5f && !_player.IsOnGround()) 
         {
             _stateMachine.ChangeState(_player.PogoState);
             return; 
@@ -39,15 +45,18 @@ public class PlayerJumpState : PlayerState
         if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
+            return;
         }
 
-        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
+            return;
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
+            return;
         }               
     }    
 

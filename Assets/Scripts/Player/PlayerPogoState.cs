@@ -15,16 +15,22 @@ public class PlayerPogoState : PlayerState
             _stateMachine.ChangeState(_player.FallState);
             return;
         }
-        _player.HandleAirMovement(); 
+         
 
         if (_player.IsPogoHit())
         {
             _player.ExecutePogoBounce();
-            // _stateMachine.ChangeState(_player.JumpState);
+            _stateMachine.ChangeState(_player.JumpState);
         }
         else if (_player.IsOnGround())
         {
             _stateMachine.ChangeState(_player.IdleState);
         }
+    }
+
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+        _player.HandleAirMovement();
     }
 }

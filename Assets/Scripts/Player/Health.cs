@@ -5,6 +5,7 @@ public partial class PlayerController
     [Header("Fall Damage")]
     [SerializeField] private float _fallDamageThreshold = -15f; // Ngưỡng vận tốc rơi để bị mất máu (Số âm vì rơi xuống)
     [SerializeField] private int _fallDamageAmount = 1;        // Lượng máu mất đi
+    [SerializeField] private float _timeShakingDuration = 0.5f;
 
     private bool _wasGrounded;       // Lưu trạng thái chạm đất của frame trước
     private float _lastFallVelocity; // Lưu vận tốc rơi cuối cùng trước khi chạm đất
@@ -26,6 +27,7 @@ public partial class PlayerController
             {
                 ApplyHP(-_fallDamageAmount);
                 OnPlayerHardLanded?.Invoke();
+                CameraShaker.Instance.OneTimeShake(Vector2.up, _timeShakingDuration);
             }
         }
         else

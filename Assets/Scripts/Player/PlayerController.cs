@@ -75,6 +75,11 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private Transform _pogoCheckpoint; 
     [SerializeField] private float _pogoRayLength;
 
+    [Header("Resin Check")]
+    [SerializeField] private LayerMask _resinLayerMask;
+    public bool IsStickyGround = false;
+    public bool IsSlipWall = false;
+
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
 
@@ -134,7 +139,7 @@ public partial class PlayerController : MonoBehaviour
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
         _isGround = GroundCheck();
-
+        IsSlipWall = Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _resinLayerMask);
         // Lấy input từ bàn phím
         MoveX = Inputs.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
         MoveY = Inputs.Movement.Move.ReadValue<Vector2>().y;         // lấy input trên dưới để tính hướng dash
@@ -195,7 +200,10 @@ public partial class PlayerController : MonoBehaviour
     #region Movement
     public void HandleHorizontalMovement()
     {
-        float targetSpeed = MoveX * Data.maxMoveSpeed;
+        float maxSpeed;
+        if(!IsStickyGround) maxSpeed = Data.maxMoveSpeed;
+        else maxSpeed = Data.maxMoveSpeed / 2f;
+        float targetSpeed = MoveX * maxSpeed;
         // nếu có nhấn nút thì dùng acceleration, nếu buông nút thì dùng decceleration
         float accelerationRate = (Mathf.Abs(MoveX) > 0.01f) ? Data.acceleration : Data.decceleration;
         // ***NOTE***: Mathf.MoveToward(current, target, maxDelta) để di chuyển giá trị từ current đến target
@@ -236,6 +244,18 @@ public partial class PlayerController : MonoBehaviour
             _castDistance, 
             _groundLayerMask
         );
+
+        RaycastHit2D hitResin = Physics2D.BoxCast
+        (
+            this.transform.position + _footPosition, 
+            _footSize, 
+            0f, 
+            Vector2.down, 
+            _castDistance, 
+            _resinLayerMask
+        );
+
+        IsStickyGround = hitResin.collider != null ? true : false;
 
         if(hit.collider != null)
         {

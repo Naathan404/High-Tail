@@ -12,13 +12,14 @@ public class PlayerIdleState : PlayerState
         base.Enter();
         Debug.Log("Vào idle state");
         _player.CanDash = true;
+        if(_player.IsStickyGround) _player.CanDash = false;
     }
 
     public override void HandleInput()
     {
         base.HandleInput();
 
-        if(!_player.IsOnGround())
+        if(!_player.IsOnGround() && !_player.IsStickyGround)
         {
             _stateMachine.ChangeState(_player.FallState);
             return;
