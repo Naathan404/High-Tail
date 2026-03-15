@@ -53,7 +53,7 @@ public class PlayerDashState : PlayerState
         _dashTimer -= Time.deltaTime;
         if (_dashTimer <= 0)
         {
-            if (_player.IsOnGround())
+            if (_player.IsOnGround() || _player.IsStickyGround)
                 _stateMachine.ChangeState(_player.IdleState);
             else
                 _stateMachine.ChangeState(_player.FallState);
@@ -65,7 +65,6 @@ public class PlayerDashState : PlayerState
     {
         base.Exit();
         
-        _player.CanDash = true;
         _player.Rb.gravityScale = _originalGravity;
         _player.Rb.linearVelocity = Vector2.zero;
     }

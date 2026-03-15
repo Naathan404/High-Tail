@@ -9,6 +9,8 @@ public class CameraManager : MonoBehaviour
     public static CameraManager Instance;
     [SerializeField] private float _lookOffset = 3f;
     [SerializeField] private float _lookDuration = 0.5f;
+    [SerializeField] private float _timeFreezeStrength = 0.01f;
+    [SerializeField] private float _timeFreezeDuration = 0.05f;
     [SerializeField] private Rigidbody2D _playerRb;
     [SerializeField] private CinemachineCamera _cineCam;
     private CinemachineFollow _followComponent;
@@ -67,7 +69,7 @@ public class CameraManager : MonoBehaviour
 
     private IEnumerator RoomTransitionFreeze()
     {
-        GameManager.Instance.DoTimeFreeze(0.01f, 0.15f);
+        GameManager.Instance.DoTimeFreeze(_timeFreezeStrength, _timeFreezeDuration);
         yield return new WaitForSecondsRealtime(0.1f);
     }
 
