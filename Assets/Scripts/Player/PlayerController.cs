@@ -17,6 +17,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
+    public PlayerStateMachine SM => _stateMachine;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
@@ -40,6 +41,7 @@ public partial class PlayerController : MonoBehaviour
     public bool WallSlideUnlocked;
     public bool DashUnlocked;
     public bool AirGlideUnlocked;
+    public bool PogoUnlocked;
 
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
@@ -58,6 +60,7 @@ public partial class PlayerController : MonoBehaviour
     public bool CanDash = true;
     public bool IsBlocked = false;
     public Vector2 DashDirection;
+    public bool CanMove = true;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -136,6 +139,13 @@ public partial class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if(!CanMove)
+        {
+            Rb.linearVelocity = Vector2.zero;
+            MoveX = 0; 
+            MoveY = 0;
+            return;
+        }
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
         _isGround = GroundCheck();
@@ -274,7 +284,7 @@ public partial class PlayerController : MonoBehaviour
     public bool IsPogoHit()
     {
         Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
-        if(hit)
+        if(hit && PogoUnlocked)
         {
             return true;
         }

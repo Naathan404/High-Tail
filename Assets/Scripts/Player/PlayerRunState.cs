@@ -12,6 +12,8 @@ public class PlayerRunState : PlayerState
         base.Enter();
         Debug.Log("Vào run state");
         _player.CanDash = true;
+
+        _player.Visual.Anim.Play("playerRun");
     }
     public override void LogicUpdate()
     {
