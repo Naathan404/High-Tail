@@ -11,6 +11,8 @@ public class PlayerFallState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào fall state");
+
+        _player.Visual.Anim.Play("playerFall");
     }
 
     public override void LogicUpdate() {
@@ -95,5 +97,8 @@ public class PlayerFallState : PlayerState
     {
         base.Exit();
         _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+        GameObject obj = _player.Visual.FallDustPool.GetObject();
+        obj.transform.position = _player.Visual.transform.position;
+        _player.Visual.JumpDustPool.ReturnToPool(obj);
     }
 }

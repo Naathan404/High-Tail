@@ -12,6 +12,8 @@ public override void Enter()
         
         _player.Rb.linearVelocity = Vector2.zero;
         _player.Rb.gravityScale = 0f;
+
+        _player.Visual.Anim.Play("playerBlock");
     }
 
     public override void LogicUpdate()

@@ -22,6 +22,11 @@ public class PlayerJumpState : PlayerState
         // _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, _player.Data.jumpForce);
         _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
         _player.Rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        GameObject obj = _player.Visual.JumpDustPool.GetObject();
+        obj.transform.position = _player.Visual.transform.position;
+        _player.Visual.JumpDustPool.ReturnToPool(obj);
+        _player.Visual.Anim.Play("playerJump");
     }
 
     public override void LogicUpdate()
