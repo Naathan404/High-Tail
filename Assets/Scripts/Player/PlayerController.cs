@@ -17,6 +17,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
+    public PlayerStateMachine SM => _stateMachine;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
@@ -25,6 +26,8 @@ public partial class PlayerController : MonoBehaviour
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerWallSlideState WallSlideState { get; private set; }
     public PlayerAirGlideState AirGlideState { get; private set; }
+    public PlayerBlockState BlockState { get; private set; }
+    public PlayerPogoState PogoState { get; private set; }
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -38,6 +41,7 @@ public partial class PlayerController : MonoBehaviour
     public bool WallSlideUnlocked;
     public bool DashUnlocked;
     public bool AirGlideUnlocked;
+    public bool PogoUnlocked;
 
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
@@ -56,6 +60,7 @@ public partial class PlayerController : MonoBehaviour
     public bool CanDash = true;
     public bool IsBlocked = false;
     public Vector2 DashDirection;
+    public bool CanMove = true;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -67,6 +72,16 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _wallLayerMask;
     [SerializeField] private Vector2 _wallCheckSize;
     [SerializeField] private Transform _wallCheck;
+
+    [Header("Pogo Check")]
+    [SerializeField] private LayerMask _pogoLayerMask;
+    [SerializeField] private Transform _pogoCheckpoint; 
+    [SerializeField] private float _pogoRayLength;
+
+    [Header("Resin Check")]
+    [SerializeField] private LayerMask _resinLayerMask;
+    public bool IsStickyGround = false;
+    public bool IsSlipWall = false;
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
@@ -90,6 +105,8 @@ public partial class PlayerController : MonoBehaviour
         WallSlideState = new PlayerWallSlideState(this, _stateMachine);
         WallJumpState = new PlayerWallJumpState(this, _stateMachine);
         AirGlideState = new PlayerAirGlideState(this, _stateMachine);
+        BlockState = new PlayerBlockState(this, _stateMachine);
+        PogoState = new PlayerPogoState(this, _stateMachine);
     }
 
     private void Start()
@@ -122,10 +139,17 @@ public partial class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if(!CanMove)
+        {
+            Rb.linearVelocity = Vector2.zero;
+            MoveX = 0; 
+            MoveY = 0;
+            return;
+        }
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
         _isGround = GroundCheck();
-
+        IsSlipWall = Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _resinLayerMask);
         // Lấy input từ bàn phím
         MoveX = Inputs.Movement.Move.ReadValue<Vector2>().x;         // di chuyen trai phai
         MoveY = Inputs.Movement.Move.ReadValue<Vector2>().y;         // lấy input trên dưới để tính hướng dash
@@ -136,10 +160,7 @@ public partial class PlayerController : MonoBehaviour
 
         if(IsBlocked)
         {
-            MoveX = 0;
-            MoveY = 0;
-            Rb.linearVelocity = Vector2.zero;
-            Rb.gravityScale = 0;
+            _stateMachine.ChangeState(BlockState);
         }
         // tính toán hướng dash
         // if(new Vector2(MoveX, MoveY).magnitude > 0f)
@@ -189,7 +210,10 @@ public partial class PlayerController : MonoBehaviour
     #region Movement
     public void HandleHorizontalMovement()
     {
-        float targetSpeed = MoveX * Data.maxMoveSpeed;
+        float maxSpeed;
+        if(!IsStickyGround) maxSpeed = Data.maxMoveSpeed;
+        else maxSpeed = Data.maxMoveSpeed / 2f;
+        float targetSpeed = MoveX * maxSpeed;
         // nếu có nhấn nút thì dùng acceleration, nếu buông nút thì dùng decceleration
         float accelerationRate = (Mathf.Abs(MoveX) > 0.01f) ? Data.acceleration : Data.decceleration;
         // ***NOTE***: Mathf.MoveToward(current, target, maxDelta) để di chuyển giá trị từ current đến target
@@ -231,6 +255,18 @@ public partial class PlayerController : MonoBehaviour
             _groundLayerMask
         );
 
+        RaycastHit2D hitResin = Physics2D.BoxCast
+        (
+            this.transform.position + _footPosition, 
+            _footSize, 
+            0f, 
+            Vector2.down, 
+            _castDistance, 
+            _resinLayerMask
+        );
+
+        IsStickyGround = hitResin.collider != null ? true : false;
+
         if(hit.collider != null)
         {
             _activePlatform = hit.collider.GetComponent<MovingPlatform>();
@@ -244,6 +280,17 @@ public partial class PlayerController : MonoBehaviour
     {
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
+
+    public bool IsPogoHit()
+    {
+        Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
+        if(hit && PogoUnlocked)
+        {
+            return true;
+        }
+        return false;
+    }
+
     #endregion
 
     private void ApplyBounce(float force)
@@ -256,6 +303,13 @@ public partial class PlayerController : MonoBehaviour
     {
         Rb.linearVelocity = new Vector2(force * dir, Rb.linearVelocity.y);
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
+    }
+
+    public void ExecutePogoBounce()
+    {
+        Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, Data.pogoForce);
+        CanDash = true;
+        Visual.ApplySquashStretch(new Vector3(0.7f, 1.3f, 1f));
     }
 
     public void ApplyKnockback(float knockback)
@@ -290,5 +344,8 @@ public partial class PlayerController : MonoBehaviour
 
         Gizmos.color = IsTouchingWall() ? Color.green : Color.red;
         Gizmos.DrawWireCube(_wallCheck.transform.position, _wallCheckSize);
+
+        Gizmos.color = IsPogoHit() ? Color.green : Color.red;
+        Gizmos.DrawWireSphere(_pogoCheckpoint.position, _pogoRayLength);
     }
 }

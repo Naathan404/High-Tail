@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class PlayerFallState : PlayerState
@@ -10,6 +11,8 @@ public class PlayerFallState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào fall state");
+
+        _player.Visual.Anim.Play("playerFall");
     }
 
     public override void LogicUpdate() {
@@ -49,15 +52,23 @@ public class PlayerFallState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
+
+        if (_player.MoveY < -0.5f&& !_player.IsOnGround()) 
+        {
+            _stateMachine.ChangeState(_player.PogoState);
+            return; 
+        }
+        
+        if(_player.IsSlipWall) return;
         if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
         }
-        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall && _player.JumpPressed)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
         }
@@ -86,5 +97,8 @@ public class PlayerFallState : PlayerState
     {
         base.Exit();
         _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+        GameObject obj = _player.Visual.FallDustPool.GetObject();
+        obj.transform.position = _player.Visual.transform.position;
+        _player.Visual.JumpDustPool.ReturnToPool(obj);
     }
 }

@@ -5,7 +5,14 @@ using UnityEngine;
 public class PlayerVisual : MonoBehaviour
 {
     private Vector3 _originalScale;
+    public Animator Anim { get; private set; }
     [SerializeField] private float squashStretchDuration;
+    public EffectPooler JumpDustPool;
+    public EffectPooler FallDustPool;
+    private void Awake()
+    {
+        Anim = GetComponent<Animator>();
+    }
 
     private void Start()
     {

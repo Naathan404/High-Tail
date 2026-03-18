@@ -12,6 +12,7 @@ public class PlayerWallSlideState : PlayerState
         base.Enter();
         Debug.Log("Đã vào wall slide state");
 
+        _player.CanDash = true;
         _originalGrivityScale = _player.Rb.gravityScale;
         _player.Rb.gravityScale = _player.Data.wallSlideGravityScale;
         _player.Rb.linearVelocity = Vector2.zero;

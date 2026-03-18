@@ -1,9 +1,14 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerDashState : PlayerState
 {
     private float _dashTimer;
     private float _originalGravity;
+
+    [Header("Ghost Trail")]
+    [SerializeField] private float _ghostTimer = 0f;
+    [SerializeField] private float _ghostDelay = 0.04f;
 
     public PlayerDashState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine) { }
 
@@ -25,6 +30,9 @@ public class PlayerDashState : PlayerState
         _player.Rb.linearVelocity = direction * _player.Data.dashForce; 
 
         _player.CanDash = false;
+
+        _player.Visual.Anim.Play("playerDash");
+        CameraShaker.Instance.OneTimeShake(Vector2.right, 1f);
     }
 
     public override void HandleInput()
@@ -53,10 +61,21 @@ public class PlayerDashState : PlayerState
         _dashTimer -= Time.deltaTime;
         if (_dashTimer <= 0)
         {
-            if (_player.IsOnGround())
+            if (_player.IsOnGround() || _player.IsStickyGround)
                 _stateMachine.ChangeState(_player.IdleState);
             else
                 _stateMachine.ChangeState(_player.FallState);
+        }
+
+        _ghostTimer -= Time.deltaTime;
+        if (_ghostTimer <= 0)
+        {
+            // Lấy Sprite hiện tại của nhân vật từ PlayerVisual
+            Sprite currentSprite = _player.Visual.GetComponent<SpriteRenderer>().sprite;
+            
+            GhostTrailManager.Instance.SpawnGhost(currentSprite, _player.transform.position, _player.transform.localScale);
+            
+            _ghostTimer = _ghostDelay;
         }
 
     }
@@ -65,7 +84,6 @@ public class PlayerDashState : PlayerState
     {
         base.Exit();
         
-        _player.CanDash = true;
         _player.Rb.gravityScale = _originalGravity;
         _player.Rb.linearVelocity = Vector2.zero;
     }

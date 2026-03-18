@@ -9,6 +9,7 @@ public partial class PlayerController : MonoBehaviour
         if(collision.gameObject.TryGetComponent<IHarmful>(out IHarmful damager))
         {
             ApplyHP(-damager.Damage);
+            damager.DealDamage();
             ApplyKnockback(damager.Knockback);
         }
     }

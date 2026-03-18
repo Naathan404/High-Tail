@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerRunState : PlayerState
 {
+    private float _maxSpeed;
     public PlayerRunState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -10,6 +11,9 @@ public class PlayerRunState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào run state");
+        _player.CanDash = true;
+
+        _player.Visual.Anim.Play("playerRun");
     }
     public override void LogicUpdate()
     {
@@ -34,14 +38,17 @@ public class PlayerRunState : PlayerState
         if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
+            return;
         }
         if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
+            return;
         }
         if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
+            return;
         }        
     }    
 
