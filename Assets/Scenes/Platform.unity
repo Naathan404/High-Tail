@@ -1596,7 +1596,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 377660228}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: WallCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1848,6 +1848,18 @@ PrefabInstance:
     - target: {fileID: 6672115630373273974, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
       propertyPath: m_Name
       value: SpiderWeb (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2667,6 +2679,18 @@ PrefabInstance:
     - target: {fileID: 6672115630373273974, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
       propertyPath: m_Name
       value: SpiderWeb (14)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -42806,6 +42830,75 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+--- !u!1001 &982472235
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5919706635596313202, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_Name
+      value: CrumblingPlatform (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -58.121605
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 94.724106
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8725273239954821612, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925456540266093577, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: _castDistance
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925456540266093577, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: _castLayer.m_Bits
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8925456540266093577, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
+      propertyPath: _platformDurability
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 529b7ee92c199c94d92ded729119322c, type: 3}
 --- !u!1 &983063127
 GameObject:
   m_ObjectHideFlags: 0
@@ -43323,7 +43416,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1209750091}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PogoPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43404,6 +43497,18 @@ PrefabInstance:
     - target: {fileID: 6672115630373273974, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
       propertyPath: m_Name
       value: SpiderWeb (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -43979,7 +44084,7 @@ GameObject:
   - component: {fileID: 1350514421}
   - component: {fileID: 1350514422}
   - component: {fileID: 1350514423}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ===PLAYER===
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -44305,6 +44410,18 @@ PrefabInstance:
     - target: {fileID: 6672115630373273974, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
       propertyPath: m_Name
       value: SpiderWeb (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -44806,6 +44923,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiderWeb (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -44932,6 +45061,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiderWeb (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -45031,6 +45172,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiderWeb
       objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -45095,6 +45248,18 @@ PrefabInstance:
     - target: {fileID: 6672115630373273974, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
       propertyPath: m_Name
       value: SpiderWeb (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8036199272985662344, guid: 1088f849d37bdb24ca71778eeb5d13a6, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.61
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -45959,7 +46124,7 @@ GameObject:
   - component: {fileID: 2052328521}
   - component: {fileID: 2052328523}
   - component: {fileID: 2052328524}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83046,3 +83211,4 @@ SceneRoots:
   - {fileID: 1173400680}
   - {fileID: 194654270}
   - {fileID: 1342920760}
+  - {fileID: 982472235}
