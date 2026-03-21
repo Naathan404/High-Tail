@@ -16,6 +16,7 @@ public class PlayerWallSlideState : PlayerState
         _originalGrivityScale = _player.Rb.gravityScale;
         _player.Rb.gravityScale = _player.Data.wallSlideGravityScale;
         _player.Rb.linearVelocity = Vector2.zero;
+        _player.Visual.SlideDustParticle.Play();
     }
 
     public override void LogicUpdate()
@@ -50,5 +51,6 @@ public class PlayerWallSlideState : PlayerState
     {
         base.Exit();
         _player.Rb.gravityScale = _originalGrivityScale;
+        _player.Visual.SlideDustParticle.Stop();
     }
 }

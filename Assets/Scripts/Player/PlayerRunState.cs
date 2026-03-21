@@ -14,6 +14,7 @@ public class PlayerRunState : PlayerState
         _player.CanDash = true;
 
         _player.Visual.Anim.Play("playerRun");
+        _player.Visual.RunDustParticle.Play();
     }
     public override void LogicUpdate()
     {
@@ -30,6 +31,8 @@ public class PlayerRunState : PlayerState
         {
             _stateMachine.ChangeState(_player.JumpState);
         }
+        if(_player.Visual.RunDustParticle.isPlaying) return;
+
     }
 
     public override void HandleInput()
@@ -56,5 +59,11 @@ public class PlayerRunState : PlayerState
     {
         base.PhysicsUpdate();
         _player.HandleHorizontalMovement();
-    }    
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _player.Visual.RunDustParticle.Stop();
+    }
 }
