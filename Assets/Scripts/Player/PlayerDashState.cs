@@ -32,7 +32,9 @@ public class PlayerDashState : PlayerState
         _player.CanDash = false;
 
         _player.Visual.Anim.Play("playerDash");
-        CameraShaker.Instance.OneTimeShake(Vector2.right, 1f);
+        _player.Visual.DashDustParticle.Play();
+        CameraShaker.Instance.OneTimeShake(Vector2.up, 0.5f);
+        GameManager.Instance.DoTimeFreeze(0, 0.1f);
     }
 
     public override void HandleInput()

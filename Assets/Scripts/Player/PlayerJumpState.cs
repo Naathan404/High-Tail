@@ -27,6 +27,7 @@ public class PlayerJumpState : PlayerState
         obj.transform.position = _player.Visual.transform.position;
         _player.Visual.JumpDustPool.ReturnToPool(obj);
         _player.Visual.Anim.Play("playerJump");
+        _player.Visual.JumpDustParticle.Play();
     }
 
     public override void LogicUpdate()
