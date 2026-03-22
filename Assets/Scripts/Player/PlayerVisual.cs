@@ -9,6 +9,10 @@ public class PlayerVisual : MonoBehaviour
     [SerializeField] private float squashStretchDuration;
     public EffectPooler JumpDustPool;
     public EffectPooler FallDustPool;
+    public ParticleSystem RunDustParticle;
+    public ParticleSystem DashDustParticle;
+    public ParticleSystem SlideDustParticle;
+    public ParticleSystem JumpDustParticle;
     private void Awake()
     {
         Anim = GetComponent<Animator>();
