@@ -12,7 +12,6 @@ public partial class PlayerController : MonoBehaviour
     private PlayerStateMachine _stateMachine;
 
     [Header("Components")] //==========================================================
-    public Animator Anim;
     public Rigidbody2D Rb;
     public PlayerVisual Visual;
 
@@ -28,6 +27,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerAirGlideState AirGlideState { get; private set; }
     public PlayerBlockState BlockState { get; private set; }
     public PlayerPogoState PogoState { get; private set; }
+    public PlayerDeathState DeathState { get; private set; }
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -107,6 +107,7 @@ public partial class PlayerController : MonoBehaviour
         AirGlideState = new PlayerAirGlideState(this, _stateMachine);
         BlockState = new PlayerBlockState(this, _stateMachine);
         PogoState = new PlayerPogoState(this, _stateMachine);
+        DeathState = new PlayerDeathState(this, _stateMachine);
     }
 
     private void Start()
