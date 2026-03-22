@@ -1,9 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public partial class PlayerController
 {
     [Header("Fall Damage")]
-    [SerializeField] private float _fallDamageThreshold = -15f; // Ngưỡng vận tốc rơi để bị mất máu (Số âm vì rơi xuống)
+    [SerializeField] private float _fallDamageThreshold = -20f; // Ngưỡng vận tốc rơi để bị mất máu (Số âm vì rơi xuống)
     [SerializeField] private int _fallDamageAmount = 1;        // Lượng máu mất đi
     [SerializeField] private float _timeShakingDuration = 0.5f;
 
@@ -26,6 +27,8 @@ public partial class PlayerController
             else
             {
                 ApplyHP(-_fallDamageAmount);
+                GameManager.Instance.DoTimeFreeze(0, 0.1f);
+                CameraShaker.Instance.OneTimeShake(Vector2.right, 0.5f);
                 OnPlayerHardLanded?.Invoke();
                 CameraShaker.Instance.OneTimeShake(Vector2.up, _timeShakingDuration);
             }
@@ -43,21 +46,20 @@ public partial class PlayerController
     public void ApplyHP(int amount)
     {
         _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
-        if (amount >= 0)
+        if (amount < 0)
         {
-            OnPlayerHealed?.Invoke();
-            Debug.Log($"Hồi {_hp} máu cho player");
-        }
-        else
-        {
-            OnPlayerDamaged?.Invoke();
-            Debug.Log("Người chơi nhận damage");
             if (_hp <= 0)
             {
-                Debug.Log("Bé đã chết");
-                OnPlayerDied?.Invoke();
+                _stateMachine.ChangeState(DeathState);
+                Invoke(nameof(ExecuteRespawn), 0.7f);
             }
         }
+    }
+
+    private void ExecuteRespawn()
+    {
+        Respawn(); 
+        _stateMachine.ChangeState(IdleState);
     }
 
     public void ApplyEnergy(int amount)
