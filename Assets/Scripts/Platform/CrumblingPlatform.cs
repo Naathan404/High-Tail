@@ -6,84 +6,50 @@ public class CrumblingPlatform : MonoBehaviour
 {
     [Header("Crumbling Settings")]
     [SerializeField] private float _recoveryTime = 3f;
-    [SerializeField] private float _platformDurability = 2f; // Do ben cua platform
-    [SerializeField] private float _castDistance = 0.2f;
-    [SerializeField] private LayerMask _castLayer;
-
-    private float _durability; // Counter
-    private Vector2 _boxSize;
-    private bool _isBroken = false;
+    [SerializeField] private float _brokenDelay = 2f; // Thoi gian delay tu khi cham chan vao platform den khi bat dau roi
 
     private Renderer _renderer;
     private Collider2D _collider;
     private Animator _animator;
+    private Trigger _trigger;
 
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
         _collider = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
-        _durability = _platformDurability;
-
-        float width = _collider.bounds.size.x;
-        _boxSize = new Vector2(width, 0.1f);
+        _trigger = GetComponentInChildren<Trigger>();
     }
 
-    private void Update()
+    private void OnEnable()
     {
-        if (_isBroken) return;
-
-        if (IsPlayerLanding())
-        {
-            HandleCrumbling();
-        }
-        else
-        {
-            Recovery();
-        }
+        if (_trigger != null)
+            _trigger.OnStepIn += Break;
     }
 
-    private bool IsPlayerLanding() // Player is landing on the platform
+    private void OnDisable()
     {
-        // The surface of the platform
-        Vector2 origin = (Vector2)(_collider.bounds.center + Vector3.up * _collider.bounds.size.y / 2);
-        RaycastHit2D hit = Physics2D.BoxCast(
-            origin,
-            _boxSize,
-            0f,
-            Vector2.up,
-            _castDistance,
-            _castLayer
-        );
-        return hit.collider != null;
+        if (_trigger != null)
+            _trigger.OnStepIn -= Break;
     }
 
-    private void HandleCrumbling()
+    private void Break()
     {
-        if (_animator != null) 
-            _animator.SetBool("isSteppedOn", true);
-
-        _durability -= Time.deltaTime;
-        Debug.Log($"Platform is crumbling... Remain time: {_durability:F2}s");
-
-        if (_durability <= 0)
-        {
-            Break();
-        }
+        Debug.Log("Start crumbling");
+        StartCoroutine(BreakCoroutine());
     }
 
-    private void Break() // Break the platform -> disappear -> Reset
+    private IEnumerator BreakCoroutine() // BreakCoroutine the platform -> disappear -> Reset
     {
+        // Turn crumbling animation
+        _animator.SetTrigger("Break");
+
+        yield return new WaitForSeconds(_brokenDelay);
+
         _renderer.enabled = false;
         _collider.enabled = false;
-        _isBroken = true;
         SetChildrenActive(false);
         StartCoroutine(ResetPlatform());
-    }
-
-    private void Recovery() // Recovery the durability by an amount per time, idk if its necessary
-    {
-        //Recovery
     }
 
     private IEnumerator ResetPlatform()
@@ -93,8 +59,6 @@ public class CrumblingPlatform : MonoBehaviour
         // Reset
         _renderer.enabled = true;
         _collider.enabled = true;
-        _isBroken = false;
-        _durability = _platformDurability;
         SetChildrenActive(true);
     }
 
@@ -102,26 +66,5 @@ public class CrumblingPlatform : MonoBehaviour
     {
         foreach (Transform child in transform) 
             child.gameObject.SetActive(isActive);
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (_collider == null) _collider = GetComponent<Collider2D>();
-        if (_collider == null) return;
-
-        Vector3 origin = _collider.bounds.center + Vector3.up * (_collider.bounds.size.y / 2);
-        Vector3 endPos = origin + Vector3.up * _castDistance;
-
-        // Start pos
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(origin, new Vector3(_boxSize.x, _boxSize.y, 0.1f));
-
-        // End pos
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(endPos, new Vector3(_boxSize.x, _boxSize.y, 0.1f));
-
-        // Connect line
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(origin, endPos);
     }
 }
