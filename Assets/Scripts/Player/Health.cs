@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
 public partial class PlayerController
@@ -14,52 +14,39 @@ public partial class PlayerController
 
     private void OnLanded()
     {
-        Debug.Log($"Tiếp đất! Vận tốc rơi cuối cùng là: {_lastFallVelocity}");
-
         if (_lastFallVelocity <= _fallDamageThreshold)
         {
-            // 3. Kiểm tra xem có đang cầm "kim bài miễn tử" ngã không
             if (_ignoreNextFallDamage)
             {
-                Debug.Log("Tiếp đất an toàn nhờ bùa Respawn! Không trừ máu.");
-                _ignoreNextFallDamage = false; // Thu lại bùa để các lần rơi sau vẫn tính damage bình thường
+                _ignoreNextFallDamage = false;
             }
             else
             {
-                ApplyHP(-_fallDamageAmount);
-                GameManager.Instance.DoTimeFreeze(0, 0.1f);
-                CameraShaker.Instance.OneTimeShake(Vector2.right, 0.5f);
+                Debug.Log("Rơi quá cao, gãy chân rồi!");
+                KillPlayer();
                 OnPlayerHardLanded?.Invoke();
-                CameraShaker.Instance.OneTimeShake(Vector2.up, _timeShakingDuration);
             }
         }
-        else
-        {
-            // Nếu ngã nhẹ nhàng không mất máu thì cũng nên reset cờ để tránh lỗi logic về sau
-            _ignoreNextFallDamage = false;
-        }
-
         _lastFallVelocity = 0f;
     }
 
     #region HP and Energy
-    public void ApplyHP(int amount)
+    public void KillPlayer()
     {
-        _hp = Mathf.Clamp(_hp + amount, 0, Data.maxHP);
-        if (amount < 0)
-        {
-            if (_hp <= 0)
-            {
-                _stateMachine.ChangeState(DeathState);
-                Invoke(nameof(ExecuteRespawn), 0.7f);
-            }
-        }
+        if (_stateMachine.CurrentState == DeathState) return;
+
+        _stateMachine.ChangeState(DeathState);
+        OnPlayerDamaged?.Invoke(); 
+        OnPlayerDied?.Invoke(); 
+
+        StartCoroutine(DeathSequenceCo());
     }
 
-    private void ExecuteRespawn()
+    private IEnumerator DeathSequenceCo()
     {
+        yield return new WaitForSeconds(1.5f);
         Respawn(); 
-        _stateMachine.ChangeState(IdleState);
+        _stateMachine.ChangeState(IdleState); 
     }
 
     public void ApplyEnergy(int amount)
