@@ -106,8 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 555481ccfc40f414084351e18fd53a16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CrumblingPlatform
-  _crumbleDelay: 3
   _recoveryTime: 5
+  _platformDurability: 3
+  _castDistance: 0.1
+  _castLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!61 &984480443181984905
 BoxCollider2D:
   m_ObjectHideFlags: 0
