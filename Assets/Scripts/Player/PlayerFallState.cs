@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class PlayerFallState : PlayerState
@@ -10,12 +11,13 @@ public class PlayerFallState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào fall state");
+
+        _player.Visual.Anim.Play("playerFall");
     }
 
     public override void LogicUpdate() {
         base.LogicUpdate();
-        _player.CheckIfShoundFlip(_player.MoveX);
-
+        _player.CheckFlip(_player.MoveX);
         // Kiểm tra tiếp đất
         if (_player.IsOnGround()) {
             if (Mathf.Abs(_player.MoveX) > 0.01f)
@@ -25,6 +27,7 @@ public class PlayerFallState : PlayerState
             else
             {
                 _stateMachine.ChangeState(_player.IdleState);
+                _player.Rb.linearVelocity = new Vector2(0f, _player.Rb.linearVelocity.y);
             }
         }
 
@@ -46,16 +49,56 @@ public class PlayerFallState : PlayerState
         }
     }
 
+    public override void HandleInput()
+    {
+        base.HandleInput();
+
+        if (_player.MoveY < -0.5f&& !_player.IsOnGround()) 
+        {
+            _stateMachine.ChangeState(_player.PogoState);
+            return; 
+        }
+        
+        if(_player.IsSlipWall) return;
+        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        {
+            _stateMachine.ChangeState(_player.DashState);
+        }
+        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall && _player.JumpPressed)
+        {
+            _stateMachine.ChangeState(_player.WallJumpState);
+        }
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld && !_player.IsSlipWall)
+        {
+            _stateMachine.ChangeState(_player.WallSlideState);
+        }
+        if(_player.AirGlideUnlocked && !_player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        {
+            _stateMachine.ChangeState(_player.AirGlideState);
+        }
+                                
+    }
 
     public override void PhysicsUpdate() {
         base.PhysicsUpdate();
+
+        _player.HandleAirMovement();
         
-        // Tăng trọng lực khi rơi để cảm giác chắc chắn hơn 
+        // Tăng trọng lực khi rơi
         if (_player.Rb.linearVelocity.y < 0) {
             _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
         }
         
         // // Air control
         // _player.HandleAirMovement();
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+        GameObject obj = _player.Visual.FallDustPool.GetObject();
+        obj.transform.position = _player.Visual.transform.position;
+        _player.Visual.JumpDustPool.ReturnToPool(obj);
     }
 }

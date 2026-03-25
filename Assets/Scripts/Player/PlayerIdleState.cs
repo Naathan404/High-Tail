@@ -11,28 +11,56 @@ public class PlayerIdleState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào idle state");
-        _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
+        _player.CanDash = true;
+        if(_player.IsStickyGround) _player.CanDash = false;
+        
+        _player.Visual.Anim.Play("playerIdle");
     }
 
     public override void HandleInput()
     {
         base.HandleInput();
 
+        if(!_player.IsOnGround() && !_player.IsStickyGround)
+        {
+            _stateMachine.ChangeState(_player.FallState);
+            return;
+        }
+
         if(_player.CanJump())
         {
             _stateMachine.ChangeState(_player.JumpState);
+            return;
+        }
+
+        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        {
+            _stateMachine.ChangeState(_player.DashState);
+            return;
         }
 
         if (Mathf.Abs(_player.MoveX) > 0.01f)
         {
             _stateMachine.ChangeState(_player.RunState);
+            return;
         }
+
+        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        {
+            _stateMachine.ChangeState(_player.WallJumpState);
+            return;
+        }
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        {
+            _stateMachine.ChangeState(_player.WallSlideState);
+            return;
+        }        
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        _player.CheckIfShoundFlip(_player.MoveX);
+        _player.CheckFlip(_player.MoveX);
     }
 
     public override void PhysicsUpdate()
