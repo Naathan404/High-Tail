@@ -221,6 +221,16 @@ public partial class PlayerController : MonoBehaviour
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
 
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
+        
+        if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+        {
+            Rb.linearVelocity = Vector2.zero;
+            Rb.gravityScale = 0; 
+        }
+        else
+        {
+            Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
+        }        
     }
 
     public void HandleAirMovement()
