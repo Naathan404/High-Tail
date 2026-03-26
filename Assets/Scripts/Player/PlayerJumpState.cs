@@ -12,7 +12,8 @@ public class PlayerJumpState : PlayerState
         Debug.Log("Vào jump state");
         _player.UseJumpBuffer();
         _player.Visual.ApplySquashStretch(new Vector3(0.8f, 1.3f, 1f));
-
+        _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
+        
         if (_player.IsStickyGround) 
             jumpForce = _player.Data.jumpForce * 0.5f;
         else 

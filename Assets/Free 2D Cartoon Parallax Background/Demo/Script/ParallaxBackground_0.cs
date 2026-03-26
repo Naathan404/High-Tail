@@ -7,39 +7,51 @@ public class ParallaxBackground_0 : MonoBehaviour
     public bool Camera_Move;
     public float Camera_MoveSpeed = 1.5f;
     [Header("Layer Setting")]
-    public float[] Layer_Speed = new float[7];
-    public GameObject[] Layer_Objects = new GameObject[7];
+    public List<float> Layer_Speed = new List<float>();
+    public List<GameObject> Layer_Objects = new List<GameObject>();
 
-    private Transform _camera;
-    private float[] startPos = new float[7];
+    public Transform _camera;
+    private List<float> startPos = new List<float>();
     private float boundSizeX;
     private float sizeX;
     private GameObject Layer_0;
-    void Start()
-    {
-        _camera = Camera.main.transform;
-        sizeX = Layer_Objects[0].transform.localScale.x;
-        boundSizeX = Layer_Objects[0].GetComponent<SpriteRenderer>().sprite.bounds.size.x;
-        for (int i=0;i<5;i++){
-            startPos[i] = _camera.position.x;
-        }
-    }
+void Start()
+{
+    // Kiểm tra nếu danh sách trống để tránh lỗi dòng tiếp theo
+    if (Layer_Objects.Count == 0) return;
 
-    void Update(){
-        //Moving camera
-        if (Camera_Move){
+    sizeX = Layer_Objects[0].transform.localScale.x;
+    boundSizeX = Layer_Objects[0].GetComponent<SpriteRenderer>().sprite.bounds.size.x;
+    for (int i = 0; i < Layer_Objects.Count; i++)
+    {
+        startPos.Add(_camera.position.x);
+    }
+}
+
+void Update()
+{
+    if (Camera_Move)
+    {
         _camera.position += Vector3.right * Time.deltaTime * Camera_MoveSpeed;
+    }
+    for (int i = 0; i < Layer_Objects.Count; i++)
+    {
+        if (i >= Layer_Speed.Count) break;
+
+        float temp = (_camera.position.x * (1 - Layer_Speed[i]));
+        float distance = _camera.position.x * Layer_Speed[i];
+        
+        Layer_Objects[i].transform.position = new Vector2(startPos[i] + distance, _camera.position.y);
+
+        float offset = boundSizeX * sizeX;
+        if (temp > startPos[i] + offset)
+        {
+            startPos[i] += offset;
         }
-        for (int i=0;i<5;i++){
-            float temp = (_camera.position.x * (1-Layer_Speed[i]) );
-            float distance = _camera.position.x  * Layer_Speed[i];
-            Layer_Objects[i].transform.position = new Vector2 (startPos[i] + distance, _camera.position.y);
-            if (temp > startPos[i] + boundSizeX*sizeX){
-                startPos[i] += boundSizeX*sizeX;
-            }else if(temp < startPos[i] - boundSizeX*sizeX){
-                startPos[i] -= boundSizeX*sizeX;
-            }
-            
+        else if (temp < startPos[i] - offset)
+        {
+            startPos[i] -= offset;
         }
     }
+}
 }
