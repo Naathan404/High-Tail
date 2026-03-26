@@ -14,6 +14,7 @@ public class FallingPlatform : MonoBehaviour
     private Vector3 _stopPosition; // The position where the platform will stop after falling
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
+    private bool _isSteppedOn;
 
     private void Awake()
     {
@@ -37,11 +38,13 @@ public class FallingPlatform : MonoBehaviour
 
     private void FallAction()
     {
+        if (_isSteppedOn) return;
         StartCoroutine(FallCoroutine());
     }
 
     private IEnumerator FallCoroutine()
     {
+        _isSteppedOn = true;
         yield return new WaitForSeconds(_fallDelay);
         Fall();
         yield return new WaitUntil(() => (transform.position.y <= _stopPosition.y));
@@ -71,5 +74,6 @@ public class FallingPlatform : MonoBehaviour
 
         yield return new WaitUntil(() => (transform.position == _startPosition));
         _collider.enabled = true; // Bật lại collider sau khi đã di chuyển về vị trí ban đầu
+        _isSteppedOn = false;
     }
 }
