@@ -28,6 +28,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerBlockState BlockState { get; private set; }
     public PlayerPogoState PogoState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
+    public PlayerUpperJumpState UpperJumpState { get; private set; } 
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -108,6 +109,7 @@ public partial class PlayerController : MonoBehaviour
         BlockState = new PlayerBlockState(this, _stateMachine);
         PogoState = new PlayerPogoState(this, _stateMachine);
         DeathState = new PlayerDeathState(this, _stateMachine);
+        UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
     }
 
     private void Start()
@@ -233,14 +235,26 @@ public partial class PlayerController : MonoBehaviour
         }        
     }
 
+    // public void HandleAirMovement()
+    // {
+    //     if(Mathf.Abs(MoveX) < 0.1f) return;
+    //     // di chuyển ngang khi giữ nút di chuyển
+    //     float targetSpeed = MoveX * Data.maxMoveSpeed;
+    //     float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
+    //     float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+        
+    //     Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
+    // }
+
     public void HandleAirMovement()
     {
         if(Mathf.Abs(MoveX) < 0.1f) return;
-        // di chuyển ngang khi giữ nút di chuyển
-        float targetSpeed = MoveX * Data.maxMoveSpeed;
-        float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
-        float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+
+        float airMaxSpeed = Data.maxMoveSpeed * 1.4f; 
+        float targetSpeed = MoveX * airMaxSpeed;
+        float accelerationRate = Data.acceleration * 1.5f; 
         
+        float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     }
 
