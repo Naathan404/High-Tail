@@ -33,6 +33,14 @@ public class PlayerWallSlideState : PlayerState
         }
         else
         {
+            if(_player.IsTouchingWall() && _player.MoveY > 0.9f && Mathf.Abs(_player.MoveX) < 0.1f)
+            {
+                if(_player.JumpPressed && _player.WallJumpUnlocked)
+                {
+                    _stateMachine.ChangeState(_player.UpperJumpState);
+                    return;
+                }                
+            }
             if(_player.IsTouchingWall())
             {
                 if(_player.JumpPressed && _player.WallJumpUnlocked)

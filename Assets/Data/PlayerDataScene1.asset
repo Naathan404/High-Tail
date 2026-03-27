@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c888ce374e546d49a1fa397dec45be9, type: 3}
+  m_Name: PlayerDataScene1
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerData
+  maxMoveSpeed: 8
+  jumpForce: 25
+  upperJumpForce: 30
+  jumpWallForce: 12
+  dashForce: 50
+  wallSlideGravityScale: 0.5
+  airGlideGravityScale: 0.3
+  maxGlideSpeed: 4
+  pogoForce: 20
+  maxHP: 5
+  maxEnergy: 100
+  jumpBufferTime: 0.15
+  coyoteTime: 0.15
+  gravityScale: 1
+  fallMultiplier: 8
+  acceleration: 50
+  decceleration: 90
+  boostVelocity: 1
+  velocityPower: 0.9
+  dashDuration: 0.15
+  bounceHorizontalForce: 10
+  bounceVerticalForce: 5
+  glideAccelaration: 5
+  energyCostJump: 4
+  energyCostDash: 20
+  energyRegenPerSecond: 1
