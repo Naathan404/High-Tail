@@ -12,7 +12,8 @@ public class CutsceneTrigger : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             _player.CanMove = false;
-            _player.SM.ChangeState(_player.IdleState);
+            _player.Rb.gravityScale = 0f;
+            _player.StateMachine.ChangeState(_player.IdleState);
             _director.Play();
             _director.stopped += OnCutsceneEnded;
             GetComponent<Collider2D>().enabled = false;

@@ -16,7 +16,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
-    public PlayerStateMachine SM => _stateMachine;
+    public PlayerStateMachine StateMachine => _stateMachine;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
@@ -323,9 +323,10 @@ public partial class PlayerController : MonoBehaviour
         Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f)); 
     }    
 
-    private void ApplyPush(float force, float dir)
+    private void ApplyPush(Vector2 force, float dir)
     {
-        Rb.linearVelocity = new Vector2(force * dir, Rb.linearVelocity.y);
+        CanDash = false;
+        Rb.linearVelocity = force;
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
     }
 
