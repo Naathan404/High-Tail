@@ -23,7 +23,6 @@ public partial class PlayerController
             else
             {
                 Debug.Log("Rơi quá cao, gãy chân rồi!");
-                KillPlayer();
                 OnPlayerHardLanded?.Invoke();
             }
         }

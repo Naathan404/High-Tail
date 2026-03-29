@@ -5,6 +5,7 @@ public class PlayerPogoState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        _player.Visual.Anim.Play("playerRoll");
     }
 
     public override void LogicUpdate()

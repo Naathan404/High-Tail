@@ -46,8 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ccc0e5125315740b34319866bcbaaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BounceMushroom
+  _normalBounceForce: 25
+  _pogoBounceForce: 35
   _visual: {fileID: 1192550817917551149}
-  _bouncyForce: 35
+  _squishDuration: 0.2
+  _squishScale: {x: 1.4, y: 0.6, z: 1}
 --- !u!61 &2041091888312830745
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -82,7 +85,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0029223561, y: 0}
+  m_Offset: {x: 0.006128311, y: 0.18775296}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -92,7 +95,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7200519, y: 1}
+  m_Size: {x: 0.9330807, y: 0.109413624}
   m_EdgeRadius: 0
 --- !u!1 &7278427444066558847
 GameObject:
@@ -120,8 +123,8 @@ Transform:
   m_GameObject: {fileID: 7278427444066558847}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.027, z: 0}
-  m_LocalScale: {x: 1, y: 0.5714, z: 1}
+  m_LocalPosition: {x: 0, y: -1.67, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 126972633731377265}
@@ -171,8 +174,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1037348173
-  m_SortingLayer: 2
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1754410622, guid: e6f1e75127e1e1f45976209013676a82, type: 3}

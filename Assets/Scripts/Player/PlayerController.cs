@@ -16,7 +16,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
-    public PlayerStateMachine SM => _stateMachine;
+    public PlayerStateMachine StateMachine => _stateMachine;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
