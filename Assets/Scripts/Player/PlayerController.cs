@@ -62,6 +62,7 @@ public partial class PlayerController : MonoBehaviour
     public bool IsBlocked = false;
     public Vector2 DashDirection;
     public bool CanMove = true;
+    [HideInInspector] public Vector2 CurrentWindForce;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -329,6 +330,11 @@ public partial class PlayerController : MonoBehaviour
         Rb.linearVelocity = force;
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
     }
+
+    public void ApplyWindForce(Vector2 windForce)
+    {
+        CurrentWindForce = windForce;
+    }    
 
     public void ExecutePogoBounce()
     {
