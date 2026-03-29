@@ -14,6 +14,10 @@ public partial class PlayerController : MonoBehaviour
             damager.DealDamage();
             ApplyKnockback(damager.Knockback);
         }
+        if (collision.gameObject.CompareTag("RotatingPlatform"))
+        {
+            transform.SetParent(collision.transform);
+        }        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,6 +39,14 @@ public partial class PlayerController : MonoBehaviour
         if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
         {
             trigger.ExecuteTrigger();
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("RotatingPlatform"))
+        {
+            transform.SetParent(null);
         }
     }
     #endregion
