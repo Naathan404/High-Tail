@@ -40,10 +40,18 @@ public class PlayerAirGlideState : PlayerState
         
         _player.Rb.linearVelocity = new Vector2(newVelocityX, _player.Rb.linearVelocity.y);        
 
-        if (_player.CurrentWindForce != Vector2.zero)
-        {
-            _player.Rb.linearVelocity += _player.CurrentWindForce * Time.fixedDeltaTime;
-        }
+    if (_player.CurrentWindForce != Vector2.zero)
+    {
+        _player.Rb.linearVelocity += _player.CurrentWindForce * Time.fixedDeltaTime;
+
+        float maxWindSpeedX = 15f; 
+        float maxWindSpeedY = 12f; 
+
+        float clampedX = Mathf.Clamp(_player.Rb.linearVelocity.x, -maxWindSpeedX, maxWindSpeedX);
+        float clampedY = Mathf.Clamp(_player.Rb.linearVelocity.y, -maxWindSpeedY, maxWindSpeedY);
+
+        _player.Rb.linearVelocity = new Vector2(clampedX, clampedY);
+    }
     }
 
     public override void Exit()

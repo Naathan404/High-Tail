@@ -1,11 +1,18 @@
+using TMPro;
 using UnityEngine;
 
-public class WindStream : MonoBehaviour
+public class PeriodWindStream : MonoBehaviour
 {
     [Header("Wind Settings")]
     [SerializeField] private ParticleSystem _visual;
     public Vector2 WindDirection = Vector2.right; 
     public float WindForce = 15f;
+    public float WindDuration = 4f;
+    public float CoolDown = 4f;
+    private float _timer = 0f;
+    private bool _isActive;
+
+    [Header("Color Setting")]
     public bool CustomColor;
     public Color WindColor;
 
@@ -13,11 +20,29 @@ public class WindStream : MonoBehaviour
     {
         InitParticleSettings();
     }
+    private void Update()
+    {
+        _timer += Time.deltaTime;
+        if(_isActive == false && _timer > CoolDown)
+        {
+            _timer = 0f;
+            _isActive = true;
+            _visual.Play();
+        }
+        else if(_isActive == true && _timer > WindDuration)
+        {
+            _timer = 0f;
+            _isActive = false;
+            _visual.Stop();
+        }
+    }
+
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
+            if(!_isActive) return;
             PlayerController player = collision.GetComponent<PlayerController>();
             
             if (player != null)
