@@ -13,6 +13,7 @@ public class PlayerFallState : PlayerState
         Debug.Log("Vào fall state");
 
         _player.Visual.Anim.Play("playerFall");
+        _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
     }
 
     public override void LogicUpdate() {
