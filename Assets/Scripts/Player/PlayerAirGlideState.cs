@@ -39,6 +39,11 @@ public class PlayerAirGlideState : PlayerState
         float newVelocityX = Mathf.MoveTowards(_player.Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
         
         _player.Rb.linearVelocity = new Vector2(newVelocityX, _player.Rb.linearVelocity.y);        
+
+        if (_player.CurrentWindForce != Vector2.zero)
+        {
+            _player.Rb.linearVelocity += _player.CurrentWindForce * Time.fixedDeltaTime;
+        }
     }
 
     public override void Exit()
