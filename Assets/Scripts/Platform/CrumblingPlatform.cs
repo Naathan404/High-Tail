@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class CrumblingPlatform : MonoBehaviour
 {
@@ -12,6 +11,7 @@ public class CrumblingPlatform : MonoBehaviour
     private Collider2D _collider;
     private Animator _animator;
     private Trigger _trigger;
+    private bool _isSteppedOn;
 
     private void Awake()
     {
@@ -19,6 +19,7 @@ public class CrumblingPlatform : MonoBehaviour
         _collider = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         _trigger = GetComponentInChildren<Trigger>();
+        _animator.speed = 1f / _brokenDelay;
     }
 
     private void OnEnable()
@@ -35,7 +36,7 @@ public class CrumblingPlatform : MonoBehaviour
 
     private void Break()
     {
-        Debug.Log("Start crumbling");
+        if (_isSteppedOn) return;
         StartCoroutine(BreakCoroutine());
     }
 
@@ -46,6 +47,7 @@ public class CrumblingPlatform : MonoBehaviour
 
         yield return new WaitForSeconds(_brokenDelay);
 
+        _isSteppedOn = true;
         _renderer.enabled = false;
         _collider.enabled = false;
         SetChildrenActive(false);
@@ -57,6 +59,7 @@ public class CrumblingPlatform : MonoBehaviour
         yield return new WaitForSeconds(_recoveryTime);
 
         // Reset
+        _isSteppedOn = false;
         _renderer.enabled = true;
         _collider.enabled = true;
         SetChildrenActive(true);
@@ -64,7 +67,7 @@ public class CrumblingPlatform : MonoBehaviour
 
     private void SetChildrenActive(bool isActive)
     {
-        foreach (Transform child in transform) 
+        foreach (Transform child in transform)
             child.gameObject.SetActive(isActive);
     }
 }

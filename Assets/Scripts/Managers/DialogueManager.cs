@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Rendering.MaterialUpgrader;
-using UnityEngine.InputSystem;
 
 public class DialogueManager : MonoBehaviour
 {

@@ -20,7 +20,8 @@ public class ParallaxBackground : MonoBehaviour
         _cameraStartPos = _cameraTransform.position;
         _layerStartPos = transform.position;
 
-        Sprite sprite = GetComponent<SpriteRenderer>().sprite;
+        Sprite sprite = GetComponent<SpriteRenderer>()?.sprite;
+        if (sprite == null) return;
         Texture2D texture = sprite.texture;
         if (texture != null)
         {
@@ -29,7 +30,7 @@ public class ParallaxBackground : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void LateUpdate()
     {
         Vector3 totalCameraMovement = _cameraTransform.position - _cameraStartPos;
 

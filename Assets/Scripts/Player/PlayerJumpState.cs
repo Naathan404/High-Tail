@@ -12,16 +12,19 @@ public class PlayerJumpState : PlayerState
         Debug.Log("Vào jump state");
         _player.UseJumpBuffer();
         _player.Visual.ApplySquashStretch(new Vector3(0.8f, 1.3f, 1f));
-
+        _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
+        
         if (_player.IsStickyGround) 
             jumpForce = _player.Data.jumpForce * 0.5f;
         else 
             jumpForce = _player.Data.jumpForce;
 
-        float boost = Mathf.Abs(_player.MoveX) > 0.9f ? _player.Data.boostVelocity : 1f;
+        float boost = Mathf.Abs(_player.MoveX) > 0.6f ? _player.Data.boostVelocity : 1f;
         // _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, _player.Data.jumpForce);
-        _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
-        _player.Rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        //_player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
+        //_player.Rb.AddForce(new Vector2(_player.MoveX, 1f) * jumpForce, ForceMode2D.Impulse);
+        float horizontalSpeed = _player.Rb.linearVelocity.x * boost;
+        _player.Rb.linearVelocity = new Vector2(horizontalSpeed, jumpForce);
 
         GameObject obj = _player.Visual.JumpDustPool.GetObject();
         obj.transform.position = _player.Visual.transform.position;
@@ -75,6 +78,15 @@ public class PlayerJumpState : PlayerState
         if(!_player.JumpHeld && _player.Rb.linearVelocity.y > 0f)
         {
             _player.Rb.linearVelocity += Vector2.up * Physics2D.gravity.y * _player.Data.fallMultiplier * Time.fixedDeltaTime;
+        }
+        if (Mathf.Abs(_player.Rb.linearVelocity.y) < 1.25f && _player.JumpHeld)
+        {
+            _player.Rb.gravityScale = _player.Data.gravityScale * 1.0f; 
+        }
+        else if (_player.Rb.linearVelocity.y < 0)
+        {
+            // Khi bắt đầu rơi thì tăng trọng lực để cảm giác rơi chắc chắn
+            _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
         }
     }
 

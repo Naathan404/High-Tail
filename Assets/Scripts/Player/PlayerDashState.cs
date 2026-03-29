@@ -86,7 +86,7 @@ public class PlayerDashState : PlayerState
     {
         base.Exit();
         
-        _player.Rb.gravityScale = _originalGravity;
+        _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
         _player.Rb.linearVelocity = Vector2.zero;
     }
 

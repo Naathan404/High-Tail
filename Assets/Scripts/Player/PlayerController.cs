@@ -16,7 +16,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVisual Visual;
 
     [Header("Player States")] //==========================================================
-    public PlayerStateMachine SM => _stateMachine;
+    public PlayerStateMachine StateMachine => _stateMachine;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
@@ -28,6 +28,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerBlockState BlockState { get; private set; }
     public PlayerPogoState PogoState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
+    public PlayerUpperJumpState UpperJumpState { get; private set; } 
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -108,6 +109,7 @@ public partial class PlayerController : MonoBehaviour
         BlockState = new PlayerBlockState(this, _stateMachine);
         PogoState = new PlayerPogoState(this, _stateMachine);
         DeathState = new PlayerDeathState(this, _stateMachine);
+        UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
     }
 
     private void Start()
@@ -221,16 +223,38 @@ public partial class PlayerController : MonoBehaviour
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
 
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
+        
+        if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+        {
+            Rb.linearVelocity = Vector2.zero;
+            Rb.gravityScale = 0; 
+        }
+        else
+        {
+            Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
+        }        
     }
+
+    // public void HandleAirMovement()
+    // {
+    //     if(Mathf.Abs(MoveX) < 0.1f) return;
+    //     // di chuyển ngang khi giữ nút di chuyển
+    //     float targetSpeed = MoveX * Data.maxMoveSpeed;
+    //     float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
+    //     float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+        
+    //     Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
+    // }
 
     public void HandleAirMovement()
     {
         if(Mathf.Abs(MoveX) < 0.1f) return;
-        // di chuyển ngang khi giữ nút di chuyển
-        float targetSpeed = MoveX * Data.maxMoveSpeed;
-        float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
-        float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+
+        float airMaxSpeed = Data.maxMoveSpeed * 1.4f; 
+        float targetSpeed = MoveX * airMaxSpeed;
+        float accelerationRate = Data.acceleration * 1.5f; 
         
+        float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     }
 
@@ -299,9 +323,10 @@ public partial class PlayerController : MonoBehaviour
         Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f)); 
     }    
 
-    private void ApplyPush(float force, float dir)
+    private void ApplyPush(Vector2 force, float dir)
     {
-        Rb.linearVelocity = new Vector2(force * dir, Rb.linearVelocity.y);
+        CanDash = false;
+        Rb.linearVelocity = force;
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
     }
 
