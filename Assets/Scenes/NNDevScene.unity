@@ -1252,7 +1252,7 @@ MonoBehaviour:
   _pointA: {fileID: 258401741}
   _pointB: {fileID: 215496495}
   _type: 1
-  _numberOfSegments: 12
+  _numberOfSegments: 30
   _vineSegPrefab: {fileID: 4435456150703825146, guid: 5bd969bc58cb24e4cbe31c7ca791de83, type: 3}
   _vineSprites:
   - {fileID: 8328381017853543767, guid: c2790ab3ab816fd4e8f4d377ea334c42, type: 3}
@@ -21988,7 +21988,7 @@ PrefabInstance:
       objectReference: {fileID: 4435456150703825146, guid: 5bd969bc58cb24e4cbe31c7ca791de83, type: 3}
     - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: _numberOfSegments
-      value: 14
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: '_vineSprites.Array.data[0]'
@@ -22655,7 +22655,7 @@ MonoBehaviour:
   _pointA: {fileID: 1676198803}
   _pointB: {fileID: 815357373}
   _type: 0
-  _numberOfSegments: 12
+  _numberOfSegments: 30
   _vineSegPrefab: {fileID: 4435456150703825146, guid: 5bd969bc58cb24e4cbe31c7ca791de83, type: 3}
   _vineSprites:
   - {fileID: 8328381017853543767, guid: c2790ab3ab816fd4e8f4d377ea334c42, type: 3}
@@ -23269,7 +23269,7 @@ MonoBehaviour:
   _pointA: {fileID: 1153824719}
   _pointB: {fileID: 1971055502}
   _type: 1
-  _numberOfSegments: 12
+  _numberOfSegments: 30
   _vineSegPrefab: {fileID: 4435456150703825146, guid: 5bd969bc58cb24e4cbe31c7ca791de83, type: 3}
   _vineSprites:
   - {fileID: 8328381017853543767, guid: c2790ab3ab816fd4e8f4d377ea334c42, type: 3}
@@ -23750,7 +23750,7 @@ PrefabInstance:
       objectReference: {fileID: 4435456150703825146, guid: 5bd969bc58cb24e4cbe31c7ca791de83, type: 3}
     - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: _numberOfSegments
-      value: 14
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: '_vineSprites.Array.data[0]'
@@ -23762,7 +23762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: 43.88265
+      value: 44.16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24202,15 +24202,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: _numberOfSegments
-      value: 15
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -2.3158045
+      value: -4.49
       objectReference: {fileID: 0}
     - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: 43.671967
+      value: 44.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -24978,11 +24978,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: _numberOfSegments
-      value: 15
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: -4.49
+      value: -14.86
       objectReference: {fileID: 0}
     - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
       propertyPath: m_ConnectedAnchor.y
@@ -25814,95 +25814,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 348be8eb61c5175478dbd36c4e660f97, type: 3}
---- !u!1001 &2077379812
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1400918044106451706, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
-    - target: {fileID: 1400918044106451706, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_Name
-      value: VineParent_8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2888041221714006020, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -6.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -19.85
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 50.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5845294863831433350, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: _type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: _vineSegPrefab
-      value: 
-      objectReference: {fileID: 4435456150703825146, guid: 5bd969bc58cb24e4cbe31c7ca791de83, type: 3}
-    - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: _numberOfSegments
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7314062992359314042, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: '_vineSprites.Array.data[0]'
-      value: 
-      objectReference: {fileID: 8103309514876568459, guid: c2790ab3ab816fd4e8f4d377ea334c42, type: 3}
-    - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_ConnectedAnchor.x
-      value: 8.55
-      objectReference: {fileID: 0}
-    - target: {fileID: 8849604343535041875, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
-      propertyPath: m_ConnectedAnchor.y
-      value: 44.16
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 38133774df5527b4ba930ff62d9bec6c, type: 3}
 --- !u!4 &2085514124 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6404760450593930967, guid: 348be8eb61c5175478dbd36c4e660f97, type: 3}
@@ -26368,7 +26279,6 @@ SceneRoots:
   - {fileID: 1398192385}
   - {fileID: 1548880413}
   - {fileID: 1017059595}
-  - {fileID: 2077379812}
   - {fileID: 661984646}
   - {fileID: 1730315418}
   - {fileID: 1639780930}
