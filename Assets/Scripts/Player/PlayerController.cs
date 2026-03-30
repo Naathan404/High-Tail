@@ -93,6 +93,9 @@ public partial class PlayerController : MonoBehaviour
     [HideInInspector] public Transform CurrentVineTransform;
     private float _vineGrabCooldownTimer = 0f;
 
+    [Header("Swing Platform")]
+    public SwingPlatform CurrentSwingPlatform { get; private set; }
+
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
 
@@ -220,6 +223,10 @@ public partial class PlayerController : MonoBehaviour
         if(IsOnGround() && _activePlatform != null)
         {
             Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
+        }
+        if (CurrentSwingPlatform != null)
+        {
+            Rb.position += CurrentSwingPlatform.DeltaPos;
         }
         _stateMachine.CurrentState.PhysicsUpdate();
     }
