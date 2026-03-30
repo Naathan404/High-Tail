@@ -80,7 +80,9 @@ public class Vine : MonoBehaviour
             if (joint != null)
             {
                 joint.connectedBody = previousRb;
-                joint.autoConfigureConnectedAnchor = true; 
+                joint.autoConfigureConnectedAnchor = true;
+
+                joint.enableCollision = false; 
                 ApplyPhysicsBasedOnType(vineSeg.GetComponent<Rigidbody2D>(), joint);
             }
             if(i == 0)
@@ -105,9 +107,12 @@ public class Vine : MonoBehaviour
         }
         else if (_type == VineType.LooseSwing)
         {
-            joint.useLimits = false;
+            JointAngleLimits2D limits = new JointAngleLimits2D { min = -50f, max = 50f };
+            joint.limits = limits;
+            joint.useLimits = true;
+
             rb.angularDamping = 0.5f;
-            rb.mass = 0.5f;
+            rb.mass = 0.8f;
         }
     }
 

@@ -13,28 +13,32 @@ MonoBehaviour:
   m_Name: Player Stats
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   maxMoveSpeed: 11
-  jumpForce: 25
-  upperJumpForce: 30
-  jumpWallForce: 12
-  dashForce: 50
-  wallSlideGravityScale: 0.5
-  airGlideGravityScale: 0.4
-  maxGlideSpeed: 4
-  pogoForce: 20
-  maxHP: 5
-  maxEnergy: 100
-  jumpBufferTime: 0.15
-  coyoteTime: 0.15
-  gravityScale: 1
-  fallMultiplier: 8
   acceleration: 50
   decceleration: 90
   boostVelocity: 1
   velocityPower: 0.9
+  jumpForce: 25
+  upperJumpForce: 30
+  jumpWallForce: 12
+  gravityScale: 1
+  fallMultiplier: 8
+  dashForce: 50
   dashDuration: 0.15
   bounceHorizontalForce: 10
   bounceVerticalForce: 5
   glideAccelaration: 5
+  airGlideGravityScale: 0.4
+  maxGlideSpeed: 4
+  wallSlideGravityScale: 0.5
+  pogoForce: 20
+  climbForce: 5
+  swingForce: 40
+  impulseForce: 20
+  kickbackForce: 20
+  jumpBufferTime: 0.15
+  coyoteTime: 0.15
+  maxHP: 5
+  maxEnergy: 100
   energyCostJump: 4
   energyCostDash: 20
   energyRegenPerSecond: 1

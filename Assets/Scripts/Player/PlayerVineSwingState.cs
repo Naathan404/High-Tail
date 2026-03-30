@@ -12,7 +12,7 @@ public class PlayerVineSwingState : PlayerState
     {
         base.Enter();
         _player.CanDash = true;
-        
+        _player.Visual.Anim.Play("playerIdle");
         _player.Rb.gravityScale = _player.BaseGravity;
 
         _grabJoint = _player.gameObject.AddComponent<HingeJoint2D>();
@@ -25,7 +25,7 @@ public class PlayerVineSwingState : PlayerState
         _grabJoint.connectedAnchor = Vector2.zero; 
         
         // Tâm bám của sóc nằm ở trên đỉnh đầu của nó
-        _grabJoint.anchor = new Vector2(0f, 0.8f); 
+        _grabJoint.anchor = new Vector2(0f, 0.5f); 
     }
 
     public override void PhysicsUpdate()
