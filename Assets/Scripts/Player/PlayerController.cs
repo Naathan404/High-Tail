@@ -29,6 +29,8 @@ public partial class PlayerController : MonoBehaviour
     public PlayerPogoState PogoState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
     public PlayerUpperJumpState UpperJumpState { get; private set; } 
+    public PlayerVineClimbState VineClimbState { get; private set; }
+    public PlayerVineSwingState VineSwingState { get; private set; }
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -62,6 +64,7 @@ public partial class PlayerController : MonoBehaviour
     public bool IsBlocked = false;
     public Vector2 DashDirection;
     public bool CanMove = true;
+    public float BaseGravity => Data.gravityScale * Data.fallMultiplier;
     [HideInInspector] public Vector2 CurrentWindForce;
 
     [Header("Ground Check")]
@@ -84,6 +87,11 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _resinLayerMask;
     public bool IsStickyGround = false;
     public bool IsSlipWall = false;
+
+    [Header("Vine Settings")]
+    [HideInInspector] public Rigidbody2D CurrentVineRb; 
+    [HideInInspector] public Transform CurrentVineTransform;
+    private float _vineGrabCooldownTimer = 0f;
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
@@ -111,6 +119,8 @@ public partial class PlayerController : MonoBehaviour
         PogoState = new PlayerPogoState(this, _stateMachine);
         DeathState = new PlayerDeathState(this, _stateMachine);
         UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
+        VineClimbState = new PlayerVineClimbState(this, _stateMachine);
+        VineSwingState = new PlayerVineSwingState(this, _stateMachine);
     }
 
     private void Start()
@@ -148,6 +158,11 @@ public partial class PlayerController : MonoBehaviour
             MoveX = 0; 
             MoveY = 0;
             return;
+        }
+
+        if (_vineGrabCooldownTimer > 0)
+        {
+            _vineGrabCooldownTimer -= Time.deltaTime;
         }
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
@@ -346,6 +361,11 @@ public partial class PlayerController : MonoBehaviour
     public void ApplyKnockback(float knockback)
     {
         Rb.linearVelocity = new Vector2(MoveX * -knockback, knockback);
+    }
+
+    public void StartVineCooldown()
+    {
+        _vineGrabCooldownTimer = 0.25f;
     }
 
     #region Flip

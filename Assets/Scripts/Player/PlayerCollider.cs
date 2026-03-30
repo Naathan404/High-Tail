@@ -36,6 +36,24 @@ public partial class PlayerController : MonoBehaviour
             pusher.PlayPushAnimation();
         }
 
+        if(collision.gameObject.TryGetComponent<VineSegment>(out VineSegment segment))
+            {
+                if (_vineGrabCooldownTimer <= 0f)
+                {
+                    CurrentVineRb = segment.Rb;
+                    CurrentVineTransform = segment.transform;
+
+                    if(segment.Type == VineType.LooseSwing)
+                    {
+                        _stateMachine.ChangeState(VineSwingState);
+                    }
+                    else
+                    {
+                        _stateMachine.ChangeState(VineClimbState);
+                    }
+                }
+            }
+
         if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
         {
             trigger.ExecuteTrigger();
