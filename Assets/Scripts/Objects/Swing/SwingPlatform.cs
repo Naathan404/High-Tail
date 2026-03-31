@@ -6,38 +6,37 @@ public class SwingPlatform : MonoBehaviour
     private Rigidbody2D _rb;
     private Rigidbody2D _playerRb;
 
-    [Header("Physics Settings")]
-    [Tooltip("Hệ số nhân lực đạp của Player lên xích đu. Tăng số này nếu muốn ván lắc mạnh hơn khi chạy.")]
-    public float kickForceMultiplier = 50f;
+    [Header("Force")]
+    public float pushForce = 5f; // Lực đẩy cùng chiều với Player
 
-    // Biến DeltaPos để script Player của em đọc (giống hệt bên MovingPlatform)
-    public Vector2 DeltaPos { get; private set; }
+    // Biến này để Script Player của em đọc (Giống hệt MovingPlatform)
+    [HideInInspector] public Vector2 DeltaPos;
     private Vector2 _lastPosition;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+
+    private void Start()
+    {
         _lastPosition = _rb.position;
     }
 
     private void FixedUpdate()
     {
-        // 1. TÍNH ĐỘ DỜI (DELTAPOS) ĐỂ PLAYER BÁM THEO
         DeltaPos = _rb.position - _lastPosition;
         _lastPosition = _rb.position;
 
-        // 2. TẠO LỰC ĐẠP VẬT LÝ KHI PLAYER DI CHUYỂN
         if (_playerRb != null)
         {
-            float playerMoveX = _playerRb.linearVelocity.x;
+            float moveInput = _playerRb.linearVelocity.x;
 
-            // Kiểm tra xem Player có đang thực sự di chuyển ngang không
-            if (Mathf.Abs(playerMoveX) > 0.1f)
+            if (Mathf.Abs(moveInput) > 0.1f)
             {
-                // Áp dụng Định luật 3 Newton: Player chạy tới -> đẩy ván về sau
-                // Lực được AddForceAtPosition vào đúng chỗ Player đứng để tạo độ nghiêng tự nhiên
-                Vector2 kickForce = new Vector2(-playerMoveX * kickForceMultiplier * Time.fixedDeltaTime, 0);
-                _rb.AddForceAtPosition(kickForce, _playerRb.position, ForceMode2D.Impulse);
+                Vector2 force = new Vector2(moveInput * pushForce, 0);
+                _rb.AddForce(force);
             }
         }
     }
@@ -55,6 +54,7 @@ public class SwingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             _playerRb = null;
+            DeltaPos = Vector2.zero;
         }
     }
 }

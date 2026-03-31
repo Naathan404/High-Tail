@@ -224,10 +224,6 @@ public partial class PlayerController : MonoBehaviour
         {
             Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
         }
-        if (CurrentSwingPlatform != null)
-        {
-            Rb.position += CurrentSwingPlatform.DeltaPos;
-        }
         _stateMachine.CurrentState.PhysicsUpdate();
     }
     #endregion
@@ -235,27 +231,42 @@ public partial class PlayerController : MonoBehaviour
     #region Movement
     public void HandleHorizontalMovement()
     {
-        float maxSpeed;
-        if(!IsStickyGround) maxSpeed = Data.maxMoveSpeed;
-        else maxSpeed = Data.maxMoveSpeed / 2f;
+        float maxSpeed = !IsStickyGround ? Data.maxMoveSpeed : Data.maxMoveSpeed / 2f;
         float targetSpeed = MoveX * maxSpeed;
-        // nếu có nhấn nút thì dùng acceleration, nếu buông nút thì dùng decceleration
+
         float accelerationRate = (Mathf.Abs(MoveX) > 0.01f) ? Data.acceleration : Data.decceleration;
-        // ***NOTE***: Mathf.MoveToward(current, target, maxDelta) để di chuyển giá trị từ current đến target
-        // theo một khoảng giá trị tối đa maxDelta có thể thay đổi trong một khung hình --> Tốc độ * deltaTime
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
 
-        Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
-        
-        if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+        if (CurrentSwingPlatform != null)
         {
-            Rb.linearVelocity = Vector2.zero;
-            Rb.gravityScale = 0; 
+            // Lấy chính xác vận tốc của xích đu (cả X lẫn Y)
+            Vector2 platformVelocity = CurrentSwingPlatform.GetComponent<Rigidbody2D>().GetPointVelocity(transform.position);
+
+            // BÍ QUYẾT 2: Lực bám dính
+            // Ép Player rơi nhanh hơn xích đu một chút xíu để luôn bị "đè" xuống mặt ván
+            // Chỉ áp dụng lực đè mạnh khi xích đu đang đi xuống (y < 0)
+            float stickForce = (platformVelocity.y < 0) ? -3f : -0.5f;
+
+            // CỘNG VẬN TỐC
+            Rb.linearVelocity = new Vector2(targetSpeed + platformVelocity.x, platformVelocity.y + stickForce);
+
+            Rb.gravityScale = Data.gravityScale;
         }
         else
         {
-            Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
-        }        
+            Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
+
+            if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+            {
+                // Thay vì Vector2.zero, chỉ nên ép trục X về 0 để an toàn hơn cho các trường hợp khác
+                Rb.linearVelocity = new Vector2(0, Rb.linearVelocity.y);
+                Rb.gravityScale = 0;
+            }
+            else
+            {
+                Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
+            }
+        }
     }
 
     // public void HandleAirMovement()
@@ -265,7 +276,7 @@ public partial class PlayerController : MonoBehaviour
     //     float targetSpeed = MoveX * Data.maxMoveSpeed;
     //     float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
     //     float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
-        
+
     //     Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     // }
 
@@ -292,35 +303,44 @@ public partial class PlayerController : MonoBehaviour
 
     public bool GroundCheck()
     {
+        float actualCastDist = (CurrentSwingPlatform != null) ? _castDistance * 3f : _castDistance;
+
         RaycastHit2D hit = Physics2D.BoxCast
         (
-            this.transform.position + _footPosition, 
-            _footSize, 
-            0f, 
-            Vector2.down, 
-            _castDistance, 
+            this.transform.position + _footPosition,
+            _footSize,
+            0f,
+            Vector2.down,
+            actualCastDist,
             _groundLayerMask
         );
 
         RaycastHit2D hitResin = Physics2D.BoxCast
         (
-            this.transform.position + _footPosition, 
-            _footSize, 
-            0f, 
-            Vector2.down, 
-            _castDistance, 
+            this.transform.position + _footPosition,
+            _footSize,
+            0f,
+            Vector2.down,
+            actualCastDist,
             _resinLayerMask
         );
 
         IsStickyGround = hitResin.collider != null ? true : false;
 
-        if(hit.collider != null)
+        // Reset các platform mỗi frame trước khi check lại
+        _activePlatform = null;
+        CurrentSwingPlatform = null;
+
+        if (hit.collider != null)
         {
+            // Kiểm tra xem mặt đất đang đạp lên là MovingPlatform hay SwingPlatform
             _activePlatform = hit.collider.GetComponent<MovingPlatform>();
+            CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>(); // BỔ SUNG DÒNG NÀY
+
             return true;
         }
 
-        return hit.collider != null;
+        return false;
     }
 
     public bool IsTouchingWall()
