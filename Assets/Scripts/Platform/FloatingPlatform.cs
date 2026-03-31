@@ -1,57 +1,54 @@
 ﻿using DG.Tweening;
-using System.Collections;
 using UnityEngine;
+
+// The code is kinda dirty but still working properly, im gonna refactor it later
 
 public class FloatingPlatform : MonoBehaviour
 {
     [SerializeField] private float _interval; // The time when platform start to move until it return to original position
-    [SerializeField] private float _depth;
+    [Tooltip("Factor * player's velocity -> force when hit platform")]
+    [SerializeField] private float _factor;
+    [SerializeField] private float _maxForce = 3f;
+    [SerializeField] private Rigidbody2D _playerRb;
 
-    private Trigger _trigger;
-    private Vector3 _originalPosition;
-    private Vector3 _targetPosition;
-    private bool _isSteppedOn;
-    private float _force;
+    private bool _isMoving;
+    private float _maxHeight;
+    private Vector3 _forceVector;
 
-    private void Awake()
+    private void Start()
     {
-        _trigger = GetComponentInChildren<Trigger>();
-        _originalPosition = transform.position;
-        _targetPosition = transform.position + Vector3.down * _depth;
+        _maxHeight = transform.position.y;
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        _trigger.OnStepIn += Bound;
-    }
-
-    private void OnDisable()
-    {
-        _trigger.OnStepIn -= Bound;
+        float height = _playerRb.transform.position.y;
+        if (_maxHeight < height)
+        {
+            _maxHeight = height;
+        }
     }
 
     private void Bound()
     {
-        if (_isSteppedOn) return;
-        _isSteppedOn = true;
+        if (_isMoving) return;
 
-        // Tạo một Sequence (chuỗi hành động)
-        Sequence bounceSequence = DOTween.Sequence();
-
-        // 1. Đi xuống (Lún) - Dùng OutQuad để nó lún xuống nhanh và êm
-        bounceSequence.Append(transform.DOMove(_targetPosition, _interval / 2).SetEase(Ease.OutQuad));
-
-        // 2. Nảy lên lại vị trí cũ - Dùng OutElastic hoặc OutBack để có độ "nhún"
-        bounceSequence.Append(transform.DOMove(_originalPosition, _interval / 2).SetEase(Ease.OutElastic));
-
-        // 3. Khi xong hết thì cho phép đạp tiếp
-        bounceSequence.OnComplete(() => _isSteppedOn = false);
+        _isMoving = true;
+        // Move the platform to the target position
+        this.transform.DOPunchPosition(_forceVector, _interval, 1, 0f, false)
+                    .SetEase(Ease.OutExpo)
+                    .OnComplete(() => _isMoving = false);
     }
 
-    private IEnumerator Rebound()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        transform.DOMove(_originalPosition, _interval / 2).SetEase(Ease.OutBounce);
-        yield return new WaitForSeconds(_interval / 2);
-        _isSteppedOn = false;
+        if (collision.CompareTag("Player"))
+        {
+            float force = Mathf.Abs(_playerRb.transform.position.y - _maxHeight);
+            force = Mathf.Clamp(force * _factor, 0, _maxForce);
+            _forceVector = Vector3.down * force;
+            Bound();
+            _maxHeight = transform.position.y;
+        }
     }
 }
