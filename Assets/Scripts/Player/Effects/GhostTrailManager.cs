@@ -3,13 +3,25 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GhostTrailManager : Singleton<GhostTrailManager>
+public class GhostTrailManager : MonoBehaviour
 {
+    public static GhostTrailManager Instance;
     private List<GhostSprite> _ghostPool = new List<GhostSprite>();
     [SerializeField] private int _poolSize = 10;
     [SerializeField] private GhostSprite _ghostPrefab;
     [SerializeField] private float _ghostDuration = 0.5f;
     [SerializeField] private Color _ghostColor = new Color(0f, 0f, 0f, 1f);
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(this.gameObject);
+    }
 
     private void Start()
     {
