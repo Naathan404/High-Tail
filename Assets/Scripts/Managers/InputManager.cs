@@ -8,11 +8,11 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         if(Instance != null && Instance != this)
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this.gameObject);
         }
         
         Inputs = new PlayerControls();
