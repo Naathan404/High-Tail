@@ -17,7 +17,7 @@ public partial class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("RotatingPlatform"))
         {
             transform.SetParent(collision.transform);
-        }        
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
