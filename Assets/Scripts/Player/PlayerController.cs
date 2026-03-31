@@ -239,17 +239,10 @@ public partial class PlayerController : MonoBehaviour
 
         if (CurrentSwingPlatform != null)
         {
-            // Lấy chính xác vận tốc của xích đu (cả X lẫn Y)
             Vector2 platformVelocity = CurrentSwingPlatform.GetComponent<Rigidbody2D>().GetPointVelocity(transform.position);
-
-            // BÍ QUYẾT 2: Lực bám dính
-            // Ép Player rơi nhanh hơn xích đu một chút xíu để luôn bị "đè" xuống mặt ván
-            // Chỉ áp dụng lực đè mạnh khi xích đu đang đi xuống (y < 0)
             float stickForce = (platformVelocity.y < 0) ? -3f : -0.5f;
 
-            // CỘNG VẬN TỐC
             Rb.linearVelocity = new Vector2(targetSpeed + platformVelocity.x, platformVelocity.y + stickForce);
-
             Rb.gravityScale = Data.gravityScale;
         }
         else
