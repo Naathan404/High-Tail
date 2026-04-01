@@ -8,13 +8,16 @@ public class OnMovingPlatform : MonoBehaviour
 {
     [SerializeField] private float _movingTime = 0.5f;
     [SerializeField] private float _returnTime = 0.5f;
+    [SerializeField] private bool _isReset;
 
+    private PlayerController _playerController;
     private Vector3 _originalPosition;
     private Vector3 _targetPosition;
     private Trigger _trigger;
 
     private void Awake()
     {
+        _playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         _originalPosition = transform.position;
         Transform targetTransform = transform.Find("TargetPosition");
         if (targetTransform != null)
@@ -25,22 +28,25 @@ public class OnMovingPlatform : MonoBehaviour
     private void OnEnable()
     {
         _trigger.OnStepIn += MoveToTarget;
+        _playerController.OnPlayerDied += ReturnToOriginalPosition;
     }
 
     private void OnDisable()
     {
         _trigger.OnStepIn -= MoveToTarget;
+        _playerController.OnPlayerDied -= ReturnToOriginalPosition;
     }
 
     private void MoveToTarget()
     {
         this.transform.DOMove(_targetPosition, _movingTime)
-            .SetEase(Ease.InOutSine)
-            .OnComplete(() => ReturnToOriginalPosition());
+            .SetEase(Ease.InOutSine);
     }
 
     private void ReturnToOriginalPosition()
     {
+        Debug.Log("Player da chet, reset platform");
+        if (_isReset == false) return; // Neu ko chon reset thi se ko bao gio quay lai vi tri ban dau
         this.transform.DOMove(_originalPosition, _returnTime)
                 .SetEase(Ease.OutQuart);
     }
@@ -60,8 +66,6 @@ public class OnMovingPlatform : MonoBehaviour
         if (collision.collider.CompareTag("Player"))
         {
             collision.collider.transform.SetParent(null);
-            // Return the platform to its original position immediately when the player steps off
-            ReturnToOriginalPosition();
         }
     }
     #endregion
