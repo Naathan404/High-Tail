@@ -107,12 +107,12 @@ public class Vine : MonoBehaviour
         }
         else if (_type == VineType.LooseSwing)
         {
-            JointAngleLimits2D limits = new JointAngleLimits2D { min = -50f, max = 50f };
+            JointAngleLimits2D limits = new JointAngleLimits2D { min = -75f, max = 75f };
             joint.limits = limits;
             joint.useLimits = true;
 
             rb.angularDamping = 0.5f;
-            rb.mass = 0.8f;
+            rb.mass = 0.7f;
         }
     }
 
