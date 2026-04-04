@@ -16,9 +16,12 @@ public class PeriodWindStream : MonoBehaviour
     public bool CustomColor;
     public Color WindColor;
 
+    private BoxCollider2D _collider;
+
     private void Start()
     {
         InitParticleSettings();
+        _collider = GetComponent<BoxCollider2D>();
     }
     private void Update()
     {
@@ -27,12 +30,14 @@ public class PeriodWindStream : MonoBehaviour
         {
             _timer = 0f;
             _isActive = true;
+            _collider.enabled = true;
             _visual.Play();
         }
         else if(_isActive == true && _timer > WindDuration)
         {
             _timer = 0f;
             _isActive = false;
+            _collider.enabled = false;
             _visual.Stop();
         }
     }
