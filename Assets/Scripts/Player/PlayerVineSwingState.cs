@@ -31,6 +31,7 @@ public class PlayerVineSwingState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        _player.CheckFlip(_player.MoveX);
 
         // truyền lực cho player
         if (Mathf.Abs(_player.MoveX) > 0.1f)

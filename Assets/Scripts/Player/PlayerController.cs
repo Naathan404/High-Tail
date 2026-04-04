@@ -52,7 +52,8 @@ public partial class PlayerController : MonoBehaviour
     public bool JumpPressed { get; private set; }
     public bool JumpHeld { get; private set; }
     public bool DashPressed { get; private set; }
-    public bool SlideGlideHeld { get; private set; }
+    public bool GlideHeld { get; private set; }
+    public bool GrabHeld { get; private set; }
 
     [Header("Player Variables")]
     [SerializeField] private float _jumpBufferCounter;
@@ -179,7 +180,8 @@ public partial class PlayerController : MonoBehaviour
         JumpPressed = Inputs.Movement.Jump.WasPressedThisFrame();    // nhay
         JumpHeld = Inputs.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
         DashPressed = Inputs.Movement.Dash.WasPressedThisFrame();    // dash
-        SlideGlideHeld = Inputs.Movement.SlideGlide.IsPressed();     // giữ nút để trượt tường hoặc thả dù
+        GlideHeld = Inputs.Movement.Glide.IsPressed();     // giữ nút để air glide
+        GrabHeld = Inputs.Movement.Grab.IsPressed();        // bám vào tường hoặc dây leo
 
         if(IsBlocked)
         {

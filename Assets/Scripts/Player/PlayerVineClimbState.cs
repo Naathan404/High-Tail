@@ -26,6 +26,7 @@ public class PlayerVineClimbState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        _player.CheckFlip(_player.MoveX);
         if(_player.JumpPressed)
         {
             if (_player.CurrentVineRb != null)

@@ -22,7 +22,7 @@ public class PlayerWallSlideState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if(!_player.SlideGlideHeld)
+        if(!_player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.FallState);
         }
