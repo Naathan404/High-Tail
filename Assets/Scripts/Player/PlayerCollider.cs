@@ -43,6 +43,7 @@ public partial class PlayerController : MonoBehaviour
 
         if(collision.gameObject.TryGetComponent<VineSegment>(out VineSegment segment))
         {
+            if(!GrabHeld) return;
             bool isAlreadyGrabbing = _stateMachine.CurrentState == VineSwingState || _stateMachine.CurrentState == VineClimbState;
             if(isAlreadyGrabbing) return;
             

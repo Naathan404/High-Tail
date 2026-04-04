@@ -27,6 +27,11 @@ public class PlayerVineClimbState : PlayerState
     {
         base.LogicUpdate();
         _player.CheckFlip(_player.MoveX);
+        if(!_player.GrabHeld)
+        {
+            _stateMachine.ChangeState(_player.FallState);
+            return;
+        }
         if(_player.JumpPressed)
         {
             if (_player.CurrentVineRb != null)
@@ -36,12 +41,14 @@ public class PlayerVineClimbState : PlayerState
             }
             _player.StartVineCooldown();
             _stateMachine.ChangeState(_player.JumpState);
+            return;
         }
 
         if(_player.DashUnlocked && _player.CanDash && _player.DashPressed)
         {
             _player.StartVineCooldown();
             _stateMachine.ChangeState(_player.DashState);
+            return;
         }
 
         _player.transform.position = new Vector3(_player.CurrentVineTransform.position.x, _player.transform.position.y);

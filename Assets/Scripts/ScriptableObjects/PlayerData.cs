@@ -43,7 +43,7 @@ public class PlayerData : ScriptableObject
 
     [Header("Vine")]
     public float climbForce = 5f;
-    public float swingForce = 40f;
+    public float swingForce = 60f;
     public float impulseForce = 10f;
     public float kickbackForce = 10f;
 

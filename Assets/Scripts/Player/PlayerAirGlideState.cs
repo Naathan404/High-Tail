@@ -20,7 +20,7 @@ public class PlayerAirGlideState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if(!_player.SlideGlideHeld)
+        if(!_player.GlideHeld)
         {
             _stateMachine.ChangeState(_player.FallState);
         }

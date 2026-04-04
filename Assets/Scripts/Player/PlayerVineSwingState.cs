@@ -46,7 +46,11 @@ public class PlayerVineSwingState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        if(!_player.GrabHeld)
+        {
+            _stateMachine.ChangeState(_player.FallState);
+            return;
+        }
         if (_player.JumpPressed)
         {
             Vector2 currentMomentum = _player.Rb.linearVelocity;
