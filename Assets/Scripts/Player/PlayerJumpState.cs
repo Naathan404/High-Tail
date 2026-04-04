@@ -62,7 +62,7 @@ public class PlayerJumpState : PlayerState
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld && !_player.IsSlipWall)
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
             return;

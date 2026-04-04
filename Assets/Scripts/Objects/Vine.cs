@@ -83,7 +83,7 @@ public class Vine : MonoBehaviour
                 joint.autoConfigureConnectedAnchor = true;
 
                 joint.enableCollision = false; 
-                ApplyPhysicsBasedOnType(vineSeg.GetComponent<Rigidbody2D>(), joint);
+                ApplyPhysicsBasedOnType(vineSeg.GetComponent<Rigidbody2D>(), joint, i);
             }
             if(i == 0)
                 joint.autoConfigureConnectedAnchor = false;
@@ -94,7 +94,7 @@ public class Vine : MonoBehaviour
         }
     }
 
-    private void ApplyPhysicsBasedOnType(Rigidbody2D rb, HingeJoint2D joint)
+    private void ApplyPhysicsBasedOnType(Rigidbody2D rb, HingeJoint2D joint, int index)
     {
         if(_type == VineType.StiffClimb)
         {
@@ -105,15 +105,38 @@ public class Vine : MonoBehaviour
             rb.mass = 2f;
             rb.angularDamping = 5f;
         }
+        // else if (_type == VineType.LooseSwing)
+        // {
+        //     JointAngleLimits2D limits = new JointAngleLimits2D { min = -75f, max = 75f };
+        //     joint.limits = limits;
+        //     joint.useLimits = true;
+
+        //     rb.angularDamping = 0.5f;
+        //     rb.mass = 0.7f;
+        // }
         else if (_type == VineType.LooseSwing)
         {
-            JointAngleLimits2D limits = new JointAngleLimits2D { min = -75f, max = 75f };
-            joint.limits = limits;
+            // 1. TĂNG KHỐI LƯỢNG LÊN ĐỂ DÂY ĐẦM, KHÔNG BỊ XOẮN
+            rb.mass = 1.5f; 
+            rb.angularDamping = 1f;
+
+            // 2. BẬT GIỚI HẠN GÓC CHO TẤT CẢ CÁC ĐỐT
             joint.useLimits = true;
 
-            rb.angularDamping = 0.5f;
-            rb.mass = 0.7f;
-        }
+            if (index == 0)
+            {
+                // ĐỐT SỐ 0 (Nối với trần): Đóng vai trò là TÂM CON LẮC
+                // Cho phép nó văng rộng thoải mái từ -80 đến 80 độ
+                joint.limits = new JointAngleLimits2D { min = -80f, max = 80f };
+            }
+            else
+            {
+                // CÁC ĐỐT CÒN LẠI (Từ 1 trở đi): KHÓA CỨNG!
+                // Chỉ cho phép xê dịch cực nhỏ (-2 đến 2 độ) để nó luôn giữ thẳng hàng với đốt trên
+                joint.limits = new JointAngleLimits2D { min = -2f, max = 2f };
+            }
+        }        
+
     }
 
     private void OnDrawGizmos()

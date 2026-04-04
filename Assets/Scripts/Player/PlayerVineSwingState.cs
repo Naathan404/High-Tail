@@ -31,6 +31,7 @@ public class PlayerVineSwingState : PlayerState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        _player.CheckFlip(_player.MoveX);
 
         // truyền lực cho player
         if (Mathf.Abs(_player.MoveX) > 0.1f)
@@ -45,7 +46,11 @@ public class PlayerVineSwingState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        if(!_player.GrabHeld)
+        {
+            _stateMachine.ChangeState(_player.FallState);
+            return;
+        }
         if (_player.JumpPressed)
         {
             Vector2 currentMomentum = _player.Rb.linearVelocity;
