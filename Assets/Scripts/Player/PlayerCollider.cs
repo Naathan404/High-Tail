@@ -66,6 +66,11 @@ public partial class PlayerController : MonoBehaviour
         {
             transform.SetParent(null);
         }
+
+        if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
+        {
+            trigger.ExitTrigger();
+        }
     }
     #endregion
 }

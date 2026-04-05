@@ -9,11 +9,16 @@ public class FloatingPlatform : MonoBehaviour
     [Tooltip("Factor * player's velocity -> force when hit platform")]
     [SerializeField] private float _factor;
     [SerializeField] private float _maxForce = 3f;
-    [SerializeField] private Rigidbody2D _playerRb;
 
+    private Rigidbody2D _playerRb;
     private bool _isMoving;
     private float _maxHeight;
     private Vector3 _forceVector;
+
+    private void Awake()
+    {
+        _playerRb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+    }
 
     private void Start()
     {
@@ -22,6 +27,7 @@ public class FloatingPlatform : MonoBehaviour
 
     private void Update()
     {
+        if (_playerRb == null) return;
         float height = _playerRb.transform.position.y;
         if (_maxHeight < height)
         {
@@ -42,6 +48,7 @@ public class FloatingPlatform : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision == null || _playerRb == null) return;
         if (collision.CompareTag("Player"))
         {
             float force = Mathf.Abs(_playerRb.transform.position.y - _maxHeight);
