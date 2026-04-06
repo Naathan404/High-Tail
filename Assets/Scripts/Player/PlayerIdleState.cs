@@ -50,7 +50,7 @@ public class PlayerIdleState : PlayerState
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
             return;

@@ -22,35 +22,38 @@ public class PlayerWallSlideState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if(!_player.SlideGlideHeld)
+        if(!_player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.FallState);
+            return;
         }
 
         if(_player.IsOnGround())
         {
             _stateMachine.ChangeState(_player.IdleState);
+            return;
         }
-        else
+
+        if (!_player.IsTouchingWall())
         {
-            if(_player.IsTouchingWall() && _player.MoveY > 0.9f && Mathf.Abs(_player.MoveX) < 0.1f)
+            _stateMachine.ChangeState(_player.FallState);
+            return;
+        }
+
+        if (_player.JumpPressed && _player.WallJumpUnlocked)
+        {
+            bool isFacingRight = _player.IsFacingRight();
+            bool isHoldingUp = _player.MoveY > 0.5f; 
+            bool isHoldingTowardsWall = (isFacingRight && _player.MoveX > 0.1f) || (!isFacingRight && _player.MoveX < -0.1f);
+            bool isNoHorizontalInput = Mathf.Abs(_player.MoveX) <= 0.1f;
+
+            if (isHoldingUp && (isHoldingTowardsWall || isNoHorizontalInput))
             {
-                if(_player.JumpPressed && _player.WallJumpUnlocked)
-                {
-                    _stateMachine.ChangeState(_player.UpperJumpState);
-                    return;
-                }                
-            }
-            if(_player.IsTouchingWall())
-            {
-                if(_player.JumpPressed && _player.WallJumpUnlocked)
-                {
-                    _stateMachine.ChangeState(_player.WallJumpState);
-                }
+                _stateMachine.ChangeState(_player.UpperJumpState);
             }
             else
             {
-                _stateMachine.ChangeState(_player.FallState);
+                _stateMachine.ChangeState(_player.WallJumpState);
             }
         }
     }

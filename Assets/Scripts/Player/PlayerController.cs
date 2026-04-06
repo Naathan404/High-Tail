@@ -29,6 +29,8 @@ public partial class PlayerController : MonoBehaviour
     public PlayerPogoState PogoState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
     public PlayerUpperJumpState UpperJumpState { get; private set; } 
+    public PlayerVineClimbState VineClimbState { get; private set; }
+    public PlayerVineSwingState VineSwingState { get; private set; }
 
     [Header("HP and Energy")] // ===================================================
     [SerializeField] private int _hp;
@@ -50,7 +52,8 @@ public partial class PlayerController : MonoBehaviour
     public bool JumpPressed { get; private set; }
     public bool JumpHeld { get; private set; }
     public bool DashPressed { get; private set; }
-    public bool SlideGlideHeld { get; private set; }
+    public bool GlideHeld { get; private set; }
+    public bool GrabHeld { get; private set; }
 
     [Header("Player Variables")]
     [SerializeField] private float _jumpBufferCounter;
@@ -62,6 +65,8 @@ public partial class PlayerController : MonoBehaviour
     public bool IsBlocked = false;
     public Vector2 DashDirection;
     public bool CanMove = true;
+    public float BaseGravity => Data.gravityScale * Data.fallMultiplier;
+    [HideInInspector] public Vector2 CurrentWindForce;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -83,6 +88,14 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask _resinLayerMask;
     public bool IsStickyGround = false;
     public bool IsSlipWall = false;
+
+    [Header("Vine Settings")]
+    [HideInInspector] public Rigidbody2D CurrentVineRb; 
+    [HideInInspector] public Transform CurrentVineTransform;
+    private float _vineGrabCooldownTimer = 0f;
+
+    [Header("Swing Platform")]
+    public SwingPlatform CurrentSwingPlatform { get; private set; }
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
@@ -110,6 +123,8 @@ public partial class PlayerController : MonoBehaviour
         PogoState = new PlayerPogoState(this, _stateMachine);
         DeathState = new PlayerDeathState(this, _stateMachine);
         UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
+        VineClimbState = new PlayerVineClimbState(this, _stateMachine);
+        VineSwingState = new PlayerVineSwingState(this, _stateMachine);
     }
 
     private void Start()
@@ -122,6 +137,7 @@ public partial class PlayerController : MonoBehaviour
         _energy = Data.maxEnergy;
 
         InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
+        InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
     }
 
     private void OnEnable()
@@ -137,6 +153,7 @@ public partial class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         InputManager.Instance.Inputs.Respawn.Respawn.started -= Respawn;
+        InputManager.Instance.Inputs.Movement.Light.started -= Visual.ToggleSpotLight;
     }
 
     private void Update()
@@ -148,6 +165,11 @@ public partial class PlayerController : MonoBehaviour
             MoveY = 0;
             return;
         }
+
+        if (_vineGrabCooldownTimer > 0)
+        {
+            _vineGrabCooldownTimer -= Time.deltaTime;
+        }
         // ground check liên tục mỗi frame
         _wasGrounded = _isGround;
         _isGround = GroundCheck();
@@ -158,7 +180,8 @@ public partial class PlayerController : MonoBehaviour
         JumpPressed = Inputs.Movement.Jump.WasPressedThisFrame();    // nhay
         JumpHeld = Inputs.Movement.Jump.IsPressed();                 // nhay cao hon khi giu lau
         DashPressed = Inputs.Movement.Dash.WasPressedThisFrame();    // dash
-        SlideGlideHeld = Inputs.Movement.SlideGlide.IsPressed();     // giữ nút để trượt tường hoặc thả dù
+        GlideHeld = Inputs.Movement.Glide.IsPressed();     // giữ nút để air glide
+        GrabHeld = Inputs.Movement.Grab.IsPressed();        // bám vào tường hoặc dây leo
 
         if(IsBlocked)
         {
@@ -212,27 +235,35 @@ public partial class PlayerController : MonoBehaviour
     #region Movement
     public void HandleHorizontalMovement()
     {
-        float maxSpeed;
-        if(!IsStickyGround) maxSpeed = Data.maxMoveSpeed;
-        else maxSpeed = Data.maxMoveSpeed / 2f;
+        float maxSpeed = !IsStickyGround ? Data.maxMoveSpeed : Data.maxMoveSpeed / 2f;
         float targetSpeed = MoveX * maxSpeed;
-        // nếu có nhấn nút thì dùng acceleration, nếu buông nút thì dùng decceleration
+
         float accelerationRate = (Mathf.Abs(MoveX) > 0.01f) ? Data.acceleration : Data.decceleration;
-        // ***NOTE***: Mathf.MoveToward(current, target, maxDelta) để di chuyển giá trị từ current đến target
-        // theo một khoảng giá trị tối đa maxDelta có thể thay đổi trong một khung hình --> Tốc độ * deltaTime
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
 
-        Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
-        
-        if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+        if (CurrentSwingPlatform != null)
         {
-            Rb.linearVelocity = Vector2.zero;
-            Rb.gravityScale = 0; 
+            Vector2 platformVelocity = CurrentSwingPlatform.GetComponent<Rigidbody2D>().GetPointVelocity(transform.position);
+            float stickForce = (platformVelocity.y < 0) ? -3f : -0.5f;
+
+            Rb.linearVelocity = new Vector2(targetSpeed + platformVelocity.x, platformVelocity.y + stickForce);
+            Rb.gravityScale = Data.gravityScale;
         }
         else
         {
-            Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
-        }        
+            Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
+
+            if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+            {
+                // Thay vì Vector2.zero, chỉ nên ép trục X về 0 để an toàn hơn cho các trường hợp khác
+                Rb.linearVelocity = new Vector2(0, Rb.linearVelocity.y);
+                Rb.gravityScale = 0;
+            }
+            else
+            {
+                Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
+            }
+        }
     }
 
     // public void HandleAirMovement()
@@ -242,7 +273,7 @@ public partial class PlayerController : MonoBehaviour
     //     float targetSpeed = MoveX * Data.maxMoveSpeed;
     //     float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
     //     float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
-        
+
     //     Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     // }
 
@@ -269,35 +300,44 @@ public partial class PlayerController : MonoBehaviour
 
     public bool GroundCheck()
     {
+        float actualCastDist = (CurrentSwingPlatform != null) ? _castDistance * 3f : _castDistance;
+
         RaycastHit2D hit = Physics2D.BoxCast
         (
-            this.transform.position + _footPosition, 
-            _footSize, 
-            0f, 
-            Vector2.down, 
-            _castDistance, 
+            this.transform.position + _footPosition,
+            _footSize,
+            0f,
+            Vector2.down,
+            actualCastDist,
             _groundLayerMask
         );
 
         RaycastHit2D hitResin = Physics2D.BoxCast
         (
-            this.transform.position + _footPosition, 
-            _footSize, 
-            0f, 
-            Vector2.down, 
-            _castDistance, 
+            this.transform.position + _footPosition,
+            _footSize,
+            0f,
+            Vector2.down,
+            actualCastDist,
             _resinLayerMask
         );
 
         IsStickyGround = hitResin.collider != null ? true : false;
 
-        if(hit.collider != null)
+        // Reset các platform mỗi frame trước khi check lại
+        _activePlatform = null;
+        CurrentSwingPlatform = null;
+
+        if (hit.collider != null)
         {
+            // Kiểm tra xem mặt đất đang đạp lên là MovingPlatform hay SwingPlatform
             _activePlatform = hit.collider.GetComponent<MovingPlatform>();
+            CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>(); // BỔ SUNG DÒNG NÀY
+
             return true;
         }
 
-        return hit.collider != null;
+        return false;
     }
 
     public bool IsTouchingWall()
@@ -330,6 +370,11 @@ public partial class PlayerController : MonoBehaviour
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
     }
 
+    public void ApplyWindForce(Vector2 windForce)
+    {
+        CurrentWindForce = windForce;
+    }    
+
     public void ExecutePogoBounce()
     {
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, Data.pogoForce);
@@ -340,6 +385,11 @@ public partial class PlayerController : MonoBehaviour
     public void ApplyKnockback(float knockback)
     {
         Rb.linearVelocity = new Vector2(MoveX * -knockback, knockback);
+    }
+
+    public void StartVineCooldown()
+    {
+        _vineGrabCooldownTimer = 0.25f;
     }
 
     #region Flip

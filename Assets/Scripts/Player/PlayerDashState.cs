@@ -44,7 +44,7 @@ public class PlayerDashState : PlayerState
         {
             _stateMachine.ChangeState(_player.WallJumpState);
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld)
+        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
         }                       

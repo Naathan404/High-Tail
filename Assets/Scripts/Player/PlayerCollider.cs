@@ -14,6 +14,10 @@ public partial class PlayerController : MonoBehaviour
             damager.DealDamage();
             ApplyKnockback(damager.Knockback);
         }
+        if (collision.gameObject.CompareTag("RotatingPlatform"))
+        {
+            transform.SetParent(collision.transform);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,6 +39,42 @@ public partial class PlayerController : MonoBehaviour
         if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
         {
             trigger.ExecuteTrigger();
+        }
+
+        if(collision.gameObject.TryGetComponent<VineSegment>(out VineSegment segment))
+        {
+            if(!GrabHeld) return;
+            bool isAlreadyGrabbing = _stateMachine.CurrentState == VineSwingState || _stateMachine.CurrentState == VineClimbState;
+            if(isAlreadyGrabbing) return;
+            
+            if (_vineGrabCooldownTimer <= 0f)
+            {
+                CurrentVineRb = segment.Rb;
+                CurrentVineTransform = segment.transform;
+
+                if(segment.Type == VineType.LooseSwing)
+                {
+                    _stateMachine.ChangeState(VineSwingState);
+                }
+                else
+                {
+                    _stateMachine.ChangeState(VineClimbState);
+                }
+            }
+        }
+
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("RotatingPlatform"))
+        {
+            transform.SetParent(null);
+        }
+
+        if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
+        {
+            trigger.ExitTrigger();
         }
     }
     #endregion
