@@ -71,7 +71,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1892539721305419938}
-  - component: {fileID: -2995801110905123765}
   m_Layer: 0
   m_Name: MovingPlatform
   m_TagString: Untagged
@@ -97,22 +96,6 @@ Transform:
   - {fileID: 8588471385312767478}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-2995801110905123765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6409322448953874268}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0059a2badee9eb443bf84c5964768916, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
-  _startPosition: {fileID: 0}
-  _endPosition: {fileID: 0}
-  _moveSpeed: 0
-  DeltaPos: {x: 0, y: 0}
 --- !u!1 &9135856305019828661
 GameObject:
   m_ObjectHideFlags: 0
