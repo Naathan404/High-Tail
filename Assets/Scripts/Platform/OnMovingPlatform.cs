@@ -4,10 +4,6 @@ using UnityEngine.Rendering;
 using UnityEditor.Experimental.GraphView;
 using TreeEditor;
 // dmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
-// Error:
-//1. Khi ấn shift thì chạm ở vị trí nào cũng di chuyển platform -> solved
-//2. Khi nhảy lên chạm platform thì sẽ bị dính vào platform -> 
-//3. Khi đứng trên platform thì ko được sync position -> 
 
 public class OnMovingPlatform : MonoBehaviour
 {
@@ -21,6 +17,7 @@ public class OnMovingPlatform : MonoBehaviour
     private Vector3 _targetPosition;
     private Trigger _trigger;
     private GlideTrigger _glideTrigger;
+    private bool _isMoving;
 
     // Sync velocity
     private PlayerController _controller;
@@ -89,7 +86,11 @@ public class OnMovingPlatform : MonoBehaviour
 
     private void MoveToTarget()
     {
-        Debug.Log("<color=red> Move platform </color>");
+        if (_isMoving) return;
+
+        _isMoving = true;
+        _isPlatformAtTarget = false;
+
         transform.DOKill();
         transform.DOMove(_targetPosition, _movingTime)
                  .SetEase(Ease.InOutSine)
@@ -107,7 +108,6 @@ public class OnMovingPlatform : MonoBehaviour
         // it will sync the player position with the platform position
         if (_isPlatformAtTarget) return;
 
-        Debug.Log("<color=blue> Syncing position </color>");
         // Sync position
         if (_isPlayerOnPlatform || _glideTrigger.onWallGlideState)
         {
@@ -127,13 +127,19 @@ public class OnMovingPlatform : MonoBehaviour
     {
         if (_isReset == false) return;
 
-        Debug.Log("<color=green> Reset platform </color>");
+        _isMoving = true;
+        _isPlatformAtTarget = false;
+
         transform.DOKill();
         transform.DOMove(_originalPosition, _returnTime)
                  .SetEase(Ease.OutQuart)
+                 .OnUpdate(() =>
+                 {
+                     _lastPosition = transform.position;
+                 })
                  .OnComplete(() =>
                  {
-                     _isPlatformAtTarget = false;
+                     _isMoving = false;
                      _lastPosition = transform.position;
                  });
     }
