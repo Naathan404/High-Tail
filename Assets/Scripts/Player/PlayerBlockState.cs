@@ -29,7 +29,7 @@ public override void Enter()
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        _player.Rb.linearVelocity = Vector2.MoveTowards(_player.Rb.linearVelocity, new Vector2(0f, _player.Rb.linearVelocity.y), _player.Data.decceleration * Time.fixedDeltaTime);
+        _player.Rb.linearVelocity = Vector2.MoveTowards(_player.Rb.linearVelocity, new Vector2(0f, _player.Rb.linearVelocity.y), _player.Data.deceleration * Time.fixedDeltaTime);
     }
 
     public override void Exit()
