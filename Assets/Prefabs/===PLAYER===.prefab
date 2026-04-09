@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5291285990448172348}
   m_Layer: 3
   m_Name: PogoPoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,7 +47,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5381070176679159606
 Transform:
   m_ObjectHideFlags: 0
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 1347245374221350031}
   m_Layer: 3
   m_Name: WallCheck
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 8846296699202411803}
   m_Layer: 3
   m_Name: Visual
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -254,7 +254,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1037348173
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -4099418257374492983, guid: b66de066d46fbe84ab0d4a826c2b24d1, type: 3}
@@ -287,7 +287,7 @@ MonoBehaviour:
   SlideDustParticle: {fileID: 8839830881911442624}
   JumpDustParticle: {fileID: 1018285686572407860}
   _spotLight: {fileID: 6066346822924577067}
-  LightUnlocked: 0
+  LightUnlocked: 1
 --- !u!95 &8846296699202411803
 Animator:
   serializedVersion: 7
