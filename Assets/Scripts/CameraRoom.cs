@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class CameraRoom : MonoBehaviour
 {
-private BoxCollider2D _confinerCollider;
+    public BoxCollider2D _confinerCollider;
 
     private void Awake()
     {
-        _confinerCollider = GetComponent<BoxCollider2D>();
+        if(_confinerCollider == null)
+            _confinerCollider = GetComponent<BoxCollider2D>();
     }
 
     [System.Obsolete]
@@ -18,5 +19,13 @@ private BoxCollider2D _confinerCollider;
             // Gọi CameraManager để đổi phòng
             CameraManager.Instance.SwitchRoom(_confinerCollider);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector2 center = (Vector2)transform.position + _confinerCollider.offset;
+        Vector2 size = _confinerCollider.size;
+        Gizmos.DrawWireCube(center, size);
     }
 }

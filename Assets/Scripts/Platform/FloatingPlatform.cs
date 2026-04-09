@@ -1,61 +1,62 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-// The code is kinda dirty but still working properly, im gonna refactor it later
-
 public class FloatingPlatform : MonoBehaviour
 {
-    [SerializeField] private float _interval; // The time when platform start to move until it return to original position
-    [Tooltip("Factor * player's velocity -> force when hit platform")]
-    [SerializeField] private float _factor;
-    [SerializeField] private float _maxForce = 3f;
+    [Header("Juice Settings")]
+    [Tooltip("Duration)")]
+    [SerializeField] private float _dipDuration = 0.3f;
+    [Tooltip("Max Dip Distance")]
+    [SerializeField] private float _maxDipDistance = 0.8f;
+    [SerializeField] private float _forceMultiplier = 0.05f;
 
-    private Rigidbody2D _playerRb;
-    private bool _isMoving;
-    private float _maxHeight;
-    private Vector3 _forceVector;
-
-    private void Awake()
-    {
-        _playerRb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-    }
+    private Vector3 _startPosition;
+    private Tween _bounceTween;
+    private bool _isBouncing = false;
 
     private void Start()
     {
-        _maxHeight = transform.position.y;
+        _startPosition = transform.position;
     }
 
-    private void Update()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (_playerRb == null) return;
-        float height = _playerRb.transform.position.y;
-        if (_maxHeight < height)
+        if (collision.gameObject.CompareTag("Player"))
         {
-            _maxHeight = height;
+            ContactPoint2D contact = collision.GetContact(0);
+            if (contact.normal.y < -0.5f)
+            {
+                float fallSpeed = Mathf.Abs(collision.relativeVelocity.y);
+                float dipAmount = Mathf.Clamp(fallSpeed * _forceMultiplier, 0.1f, _maxDipDistance);
+                
+                if(_isBouncing) return;
+                collision.transform.SetParent(this.transform);
+                Dip(dipAmount, collision.gameObject);
+            }
         }
     }
 
-    private void Bound()
+    private void Dip(float dipAmount, GameObject player)
     {
-        if (_isMoving) return;
+        _bounceTween?.Kill(true);
+        _isBouncing = true;
 
-        _isMoving = true;
-        // Move the platform to the target position
-        this.transform.DOPunchPosition(_forceVector, _interval, 1, 0f, false)
-                    .SetEase(Ease.OutExpo)
-                    .OnComplete(() => _isMoving = false);
+        // bounce effect
+        _bounceTween = transform.DOPunchPosition(Vector3.down * dipAmount, _dipDuration, 1, 0f)
+            .SetEase(Ease.InOutQuad)
+            .OnComplete(() => 
+            {
+                // return to the origin pos for sure
+                transform.position = _startPosition;
+                _isBouncing = false;
+                player.transform.SetParent(null);
+            });
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnDisable()
     {
-        if (collision == null || _playerRb == null) return;
-        if (collision.CompareTag("Player"))
-        {
-            float force = Mathf.Abs(_playerRb.transform.position.y - _maxHeight);
-            force = Mathf.Clamp(force * _factor, 0, _maxForce);
-            _forceVector = Vector3.down * force;
-            Bound();
-            _maxHeight = transform.position.y;
-        }
+        _bounceTween?.Kill();
+        transform.position = _startPosition;
+        _isBouncing = false;
     }
 }

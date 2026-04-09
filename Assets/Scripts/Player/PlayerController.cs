@@ -143,7 +143,6 @@ public partial class PlayerController : MonoBehaviour
         _hp = Data.maxHP;
         _energy = Data.maxEnergy;
 
-        InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
         InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
     }
 
@@ -159,7 +158,6 @@ public partial class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputManager.Instance.Inputs.Respawn.Respawn.started -= Respawn;
         InputManager.Instance.Inputs.Movement.Light.started -= Visual.ToggleSpotLight;
     }
 
