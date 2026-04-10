@@ -71,7 +71,10 @@ public partial class PlayerController : MonoBehaviour
         {
             transform.SetParent(null);
         }
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
         if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
         {
             trigger.ExitTrigger();
