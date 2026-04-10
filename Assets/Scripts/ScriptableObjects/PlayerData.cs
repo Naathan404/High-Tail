@@ -52,6 +52,7 @@ public class PlayerData : ScriptableObject
     [Header("Others")]
     public float jumpBufferTime = 0.15f;
     public float coyoteTime = 0.1f;
+    public float respawnDuration = 0.5f;
 
     // năng lượng
     [Header("Enery Consumption & Regeneration")]

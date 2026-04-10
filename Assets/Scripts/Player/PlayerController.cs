@@ -1,8 +1,6 @@
 using System;
-using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SearchService;
+using UnityEngine.SceneManagement;
 
 public partial class PlayerController : MonoBehaviour
 {
@@ -14,6 +12,7 @@ public partial class PlayerController : MonoBehaviour
     [Header("Components")] //==========================================================
     public Rigidbody2D Rb;
     public PlayerVisual Visual;
+    private Scene _coreScene;
 
     [Header("Player States")] //==========================================================
     public PlayerStateMachine StateMachine => _stateMachine;
@@ -125,6 +124,8 @@ public partial class PlayerController : MonoBehaviour
         UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
         VineClimbState = new PlayerVineClimbState(this, _stateMachine);
         VineSwingState = new PlayerVineSwingState(this, _stateMachine);
+
+        _coreScene = gameObject.scene;
     }
 
     private void Start()
@@ -407,7 +408,18 @@ public partial class PlayerController : MonoBehaviour
     }
     #endregion
 
-    
+    #region Reset Things
+    public void ReturnToCoreScene()
+    {
+        this.transform.SetParent(null);
+
+        if(_coreScene.isLoaded)
+        {
+            SceneManager.MoveGameObjectToScene(this.gameObject, _coreScene);
+        }
+    }
+
+    #endregion
 
     // Vẽ gizmos ra scene
     private void OnDrawGizmos()
