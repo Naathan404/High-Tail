@@ -58,6 +58,7 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpBufferCounter;
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
+    public void SetFacingDirection(bool isFacingRight) => _isFacingRight = isFacingRight;
     [SerializeField] private bool _isGround;
     [SerializeField] private MovingPlatform _activePlatform;
     public bool CanDash = true;
