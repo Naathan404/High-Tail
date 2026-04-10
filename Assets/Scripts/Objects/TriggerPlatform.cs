@@ -19,17 +19,21 @@ public class TriggerPlatform : MonoBehaviour
     private bool _hasReachedTarget = false;
     private Rigidbody2D _rb;
     private PlayerController _player;
+    public Vector3 DeltaPos;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _rb.bodyType = RigidbodyType2D.Kinematic;
         _startPosition = transform.position;
-        _player = FindAnyObjectByType<PlayerController>();
+
+        DeltaPos = Vector2.zero;
     }
 
-    private void OnEnable()
+    private void Start()
     {
+        _player = FindAnyObjectByType<PlayerController>();
+        if(_player == null) Debug.Log("Khong tim thay nguoi choi");
         if (_player != null) _player.OnPlayerDied += ResetPlatform;
     }
 
@@ -50,6 +54,11 @@ public class TriggerPlatform : MonoBehaviour
                 // Bục tới đích thì dừng lại bằng MovePosition nên không cần ép velocity về 0 nữa
             }
         }
+        else if(!_isMoving)
+        {
+            _rb.linearVelocity = Vector2.zero;
+            DeltaPos = Vector2.zero;
+        }
     }
 
     private void MoveTowards(Vector2 target, float speed)
@@ -57,6 +66,7 @@ public class TriggerPlatform : MonoBehaviour
         // THAY ĐỔI LỚN: Dùng MovePosition thay cho linearVelocity
         // Điều này giúp bục "cõng" Sóc Kite (làm con) cực kỳ mượt mà không bị rung giật
         Vector2 newPos = Vector2.MoveTowards(_rb.position, target, speed * Time.fixedDeltaTime);
+        DeltaPos = newPos - _rb.position;
         _rb.MovePosition(newPos);
     }
 
@@ -78,53 +88,60 @@ public class TriggerPlatform : MonoBehaviour
         }
 
         _rb.MovePosition(_startPosition);
+        DeltaPos = Vector2.zero;
+    }
+
+    private void HandleCollision(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player") || _player == null) return;
+
+        ContactPoint2D contact = collision.GetContact(0);
+        bool hitTop = contact.normal.y < -0.5f;
+        bool hitSide = Mathf.Abs(contact.normal.x) > 0.5f;
+
+        // Kích hoạt bục chạy
+        if ((_triggerType == TriggerType.Top && hitTop) || 
+            (_triggerType == TriggerType.Side && hitSide && _player.StateMachine.CurrentState == _player.WallSlideState) || 
+            (_triggerType == TriggerType.Both))
+        {
+            _isMoving = true;
+        }
+
+        // Xử lý SetParent
+        bool shouldStick = hitTop || (_triggerType == TriggerType.Side && _sideMode == SideAttachMode.Stick && hitSide);
+        
+        if (shouldStick)
+        {
+            if (collision.transform.parent != transform)
+            {
+                collision.transform.SetParent(transform, true);
+            }
+        }
+        else
+        {
+            if (collision.transform.parent == transform)
+            {
+                _player.ReturnToCoreScene(); 
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        HandleCollision(collision);
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            ContactPoint2D contact = collision.GetContact(0);
-            
-            // Kiểm tra hướng va chạm
-            bool hitTop = contact.normal.y < -0.5f;
-            bool hitSide = Mathf.Abs(contact.normal.x) > 0.5f;
-
-            // 1. Logic kích hoạt bục chạy (Giữ nguyên của ông)
-            if ((_triggerType == TriggerType.Top && hitTop) || 
-                (_triggerType == TriggerType.Side && hitSide && _player.StateMachine.CurrentState == _player.WallSlideState) || 
-                (_triggerType == TriggerType.Both))
-            {
-                _isMoving = true;
-            }
-
-            // 2. Logic bám dính (SetParent THÔNG MINH)
-            bool shouldStick = hitTop || (_triggerType == TriggerType.Side && _sideMode == SideAttachMode.Stick && hitSide);
-            
-            if (shouldStick)
-            {
-                // Chỉ gán cha nếu hiện tại CHƯA gán (Chống spam frame)
-                if (collision.transform.parent != transform)
-                {
-                    collision.transform.SetParent(transform, true);
-                }
-            }
-            else
-            {
-                // Trượt xuống cạnh thì nhả cha ra để rơi bình thường
-                if (collision.transform.parent == transform)
-                {
-                    collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
-                }
-            }
-        }
+        HandleCollision(collision);
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // Nhảy ra khỏi bục thì nhả cha-con
+            // _isMoving = false;
+            // DeltaPos = Vector2.zero;
             if (collision.transform.parent == transform)
             {
                 collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
