@@ -114,7 +114,7 @@ public class TriggerPlatform : MonoBehaviour
                 // Trượt xuống cạnh thì nhả cha ra để rơi bình thường
                 if (collision.transform.parent == transform)
                 {
-                    collision.transform.SetParent(null);
+                    collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
                 }
             }
         }
@@ -127,7 +127,7 @@ public class TriggerPlatform : MonoBehaviour
             // Nhảy ra khỏi bục thì nhả cha-con
             if (collision.transform.parent == transform)
             {
-                collision.transform.SetParent(null);
+                collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
             }
         }
     }

@@ -324,7 +324,6 @@ GameObject:
   - component: {fileID: 2735330784613472962}
   - component: {fileID: 3283447825504488879}
   - component: {fileID: 1621698026104434779}
-  - component: {fileID: 2228863411803746609}
   m_Layer: 3
   m_Name: ===PLAYER===
   m_TagString: Player
@@ -375,11 +374,11 @@ MonoBehaviour:
   Visual: {fileID: 6368215634073862181}
   _hp: 0
   _energy: 0
-  WallJumpUnlocked: 1
-  WallSlideUnlocked: 1
+  WallJumpUnlocked: 0
+  WallSlideUnlocked: 0
   DashUnlocked: 1
-  AirGlideUnlocked: 1
-  PogoUnlocked: 1
+  AirGlideUnlocked: 0
+  PogoUnlocked: 0
   _jumpBufferCounter: 0
   _coyoteCounter: 0
   _isFacingRight: 0
@@ -413,7 +412,6 @@ MonoBehaviour:
   IsSlipWall: 0
   CurrentVineRb: {fileID: 0}
   CurrentVineTransform: {fileID: 0}
-  lastCheckPoint: {fileID: 0}
 --- !u!95 &320667634887335565
 Animator:
   serializedVersion: 7
@@ -521,43 +519,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db96266598d5cb45bb0ef6263bbe7d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
---- !u!70 &2228863411803746609
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7084073050358436855}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0.00875029, y: -0.12172657}
-  m_Size: {x: 0.70417243, y: 1.3016099}
-  m_Direction: 0
 --- !u!1001 &1264795652714848270
 PrefabInstance:
   m_ObjectHideFlags: 0
