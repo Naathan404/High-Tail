@@ -35,7 +35,7 @@ public class PlayerAirGlideState : PlayerState
     {
         base.PhysicsUpdate();
         float targetSpeed = _player.MoveX * _player.Data.maxGlideSpeed;
-        float accelerationRate = (Mathf.Abs(_player.MoveX) > 0.1f) ? _player.Data.glideAccelaration : 0f;
+        float accelerationRate = (Mathf.Abs(_player.MoveX) > 0.1f) ? _player.Data.glideAcceleration : 0f;
         float newVelocityX = Mathf.MoveTowards(_player.Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
         
         _player.Rb.linearVelocity = new Vector2(newVelocityX, _player.Rb.linearVelocity.y);        
