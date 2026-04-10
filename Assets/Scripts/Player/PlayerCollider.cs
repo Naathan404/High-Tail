@@ -9,8 +9,8 @@ public partial class PlayerController : MonoBehaviour
         if(collision.gameObject.TryGetComponent<IHarmful>(out IHarmful damager))
         {
             KillPlayer();
-            CameraShaker.Instance.OneTimeShake(Vector2.right, 0.5f);
-            GameManager.Instance.DoTimeFreeze(0, 0.1f);
+            CameraShakeManager.Instance.ShakeForDamage();
+            GameManager.Instance.DoTimeFreeze(0.05f, 0.25f);
             damager.DealDamage();
             ApplyKnockback(damager.Knockback);
         }

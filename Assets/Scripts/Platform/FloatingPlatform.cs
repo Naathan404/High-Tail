@@ -24,6 +24,7 @@ public class FloatingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             ContactPoint2D contact = collision.GetContact(0);
+            //_startPosition = transform.position;
             if (contact.normal.y < -0.5f)
             {
                 float fallSpeed = Mathf.Abs(collision.relativeVelocity.y);
@@ -31,12 +32,12 @@ public class FloatingPlatform : MonoBehaviour
                 
                 if(_isBouncing) return;
                 collision.transform.SetParent(this.transform);
-                Dip(dipAmount, collision.gameObject);
+                Dip(dipAmount, collision.gameObject.GetComponent<PlayerController>());
             }
         }
     }
 
-    private void Dip(float dipAmount, GameObject player)
+    private void Dip(float dipAmount, PlayerController player)
     {
         _bounceTween?.Kill(true);
         _isBouncing = true;
@@ -49,7 +50,7 @@ public class FloatingPlatform : MonoBehaviour
                 // return to the origin pos for sure
                 transform.position = _startPosition;
                 _isBouncing = false;
-                player.transform.SetParent(null);
+                player.ReturnToCoreScene();
             });
     }
 
