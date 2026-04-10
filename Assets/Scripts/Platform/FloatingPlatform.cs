@@ -24,6 +24,7 @@ public class FloatingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             ContactPoint2D contact = collision.GetContact(0);
+            //_startPosition = transform.position;
             if (contact.normal.y < -0.5f)
             {
                 float fallSpeed = Mathf.Abs(collision.relativeVelocity.y);
