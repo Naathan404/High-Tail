@@ -23,7 +23,7 @@ public class PlayerDashState : PlayerState
 
         // time freeze
         if(!_player.IsOnGround())
-        GameManager.Instance.DoTimeFreeze(0.05f, 0.01f);
+        GameManager.Instance.DoTimeFreeze(0.05f, 0.05f);
         
 
         _dashTimer = _player.Data.dashDuration;

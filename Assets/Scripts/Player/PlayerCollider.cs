@@ -10,7 +10,7 @@ public partial class PlayerController : MonoBehaviour
         {
             KillPlayer();
             CameraShakeManager.Instance.ShakeForDamage();
-            GameManager.Instance.DoTimeFreeze(0, 0.1f);
+            GameManager.Instance.DoTimeFreeze(0.05f, 0.25f);
             damager.DealDamage();
             ApplyKnockback(damager.Knockback);
         }
