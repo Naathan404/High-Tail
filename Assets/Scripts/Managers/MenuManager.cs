@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
+    public static MenuManager Instance;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button backButton;
     [Header("Side Panel")]
@@ -33,6 +34,13 @@ public class MenuManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+            Destroy(gameObject);
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         if (sidePanel != null)
         {
             if (!sidePanel.TryGetComponent<CanvasGroup>(out sidePanelCanvasGroup))
