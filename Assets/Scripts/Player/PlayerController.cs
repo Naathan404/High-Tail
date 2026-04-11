@@ -1,8 +1,6 @@
 using System;
-using DG.Tweening;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SearchService;
+using UnityEngine.SceneManagement;
 
 public partial class PlayerController : MonoBehaviour
 {
@@ -14,6 +12,7 @@ public partial class PlayerController : MonoBehaviour
     [Header("Components")] //==========================================================
     public Rigidbody2D Rb;
     public PlayerVisual Visual;
+    private Scene _coreScene;
 
     [Header("Player States")] //==========================================================
     public PlayerStateMachine StateMachine => _stateMachine;
@@ -28,7 +27,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerBlockState BlockState { get; private set; }
     public PlayerPogoState PogoState { get; private set; }
     public PlayerDeathState DeathState { get; private set; }
-    public PlayerUpperJumpState UpperJumpState { get; private set; } 
+    public PlayerUpperJumpState UpperJumpState { get; private set; }
     public PlayerVineClimbState VineClimbState { get; private set; }
     public PlayerVineSwingState VineSwingState { get; private set; }
 
@@ -59,6 +58,7 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private float _jumpBufferCounter;
     [SerializeField] private float _coyoteCounter;
     [SerializeField] private bool _isFacingRight;
+    public void SetFacingDirection(bool isFacingRight) => _isFacingRight = isFacingRight;
     [SerializeField] private bool _isGround;
     [SerializeField] private MovingPlatform _activePlatform;
     public bool CanDash = true;
@@ -81,7 +81,7 @@ public partial class PlayerController : MonoBehaviour
 
     [Header("Pogo Check")]
     [SerializeField] private LayerMask _pogoLayerMask;
-    [SerializeField] private Transform _pogoCheckpoint; 
+    [SerializeField] private Transform _pogoCheckpoint;
     [SerializeField] private float _pogoRayLength;
 
     [Header("Resin Check")]
@@ -89,8 +89,14 @@ public partial class PlayerController : MonoBehaviour
     public bool IsStickyGround = false;
     public bool IsSlipWall = false;
 
+    [Header("Ice (platform) check")]
+    [SerializeField] private LayerMask _iceLayerMask;
+    [SerializeField] private float _time = 2;
+    private bool IsSlipGround = false;
+    private bool WasOnSlipGround = false;
+
     [Header("Vine Settings")]
-    [HideInInspector] public Rigidbody2D CurrentVineRb; 
+    [HideInInspector] public Rigidbody2D CurrentVineRb;
     [HideInInspector] public Transform CurrentVineTransform;
     private float _vineGrabCooldownTimer = 0f;
 
@@ -125,6 +131,8 @@ public partial class PlayerController : MonoBehaviour
         UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
         VineClimbState = new PlayerVineClimbState(this, _stateMachine);
         VineSwingState = new PlayerVineSwingState(this, _stateMachine);
+
+        _coreScene = gameObject.scene;
     }
 
     private void Start()
@@ -136,7 +144,6 @@ public partial class PlayerController : MonoBehaviour
         _hp = Data.maxHP;
         _energy = Data.maxEnergy;
 
-        InputManager.Instance.Inputs.Respawn.Respawn.started += Respawn;
         InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
     }
 
@@ -152,16 +159,15 @@ public partial class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputManager.Instance.Inputs.Respawn.Respawn.started -= Respawn;
         InputManager.Instance.Inputs.Movement.Light.started -= Visual.ToggleSpotLight;
     }
 
     private void Update()
     {
-        if(!CanMove)
+        if (!CanMove)
         {
             Rb.linearVelocity = Vector2.zero;
-            MoveX = 0; 
+            MoveX = 0;
             MoveY = 0;
             return;
         }
@@ -183,7 +189,7 @@ public partial class PlayerController : MonoBehaviour
         GlideHeld = Inputs.Movement.Glide.IsPressed();     // giữ nút để air glide
         GrabHeld = Inputs.Movement.Grab.IsPressed();        // bám vào tường hoặc dây leo
 
-        if(IsBlocked)
+        if (IsBlocked)
         {
             _stateMachine.ChangeState(BlockState);
         }
@@ -198,11 +204,11 @@ public partial class PlayerController : MonoBehaviour
         // }
 
         // Check điều kiện nhảy
-        if(_isGround)
+        if (_isGround)
             _coyoteCounter = Data.coyoteTime;
         else
             _coyoteCounter -= Time.deltaTime;
-        if(JumpPressed)
+        if (JumpPressed)
             _jumpBufferCounter = Data.jumpBufferTime;
         else
             _jumpBufferCounter -= Time.deltaTime;
@@ -221,10 +227,10 @@ public partial class PlayerController : MonoBehaviour
             OnLanded();
         }
     }
-    
+
     private void FixedUpdate()
     {
-        if(IsOnGround() && _activePlatform != null)
+        if (IsOnGround() && _activePlatform != null)
         {
             Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
         }
@@ -235,10 +241,24 @@ public partial class PlayerController : MonoBehaviour
     #region Movement
     public void HandleHorizontalMovement()
     {
-        float maxSpeed = !IsStickyGround ? Data.maxMoveSpeed : Data.maxMoveSpeed / 2f;
-        float targetSpeed = MoveX * maxSpeed;
+        float maxSpeed = Data.maxMoveSpeed;
+        if (IsStickyGround) maxSpeed /= 2f;
+        if (IsSlipGround) maxSpeed *= 1.5f;
 
-        float accelerationRate = (Mathf.Abs(MoveX) > 0.01f) ? Data.acceleration : Data.decceleration;
+        float targetSpeed = MoveX * maxSpeed;
+        float accelerationRate;
+        if (Mathf.Abs(MoveX) > 0.01f)
+        {
+            // Neu o tren mat bang thi tang toc cham hon
+            accelerationRate = IsSlipGround ? Data.acceleration * 0.4f : Data.acceleration;
+        }
+        else
+        {
+            if (IsSlipGround)
+                accelerationRate = Data.deceleration * 0.5f;
+            else
+                accelerationRate = IsOnGround() ? Data.deceleration : Data.deceleration * 0.01f;
+        }
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
 
         if (CurrentSwingPlatform != null)
@@ -253,13 +273,17 @@ public partial class PlayerController : MonoBehaviour
         {
             Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
 
-            if (IsOnGround() && Mathf.Abs(MoveX) < 0.01f)
+            if (IsOnGround())
             {
-                // Thay vì Vector2.zero, chỉ nên ép trục X về 0 để an toàn hơn cho các trường hợp khác
-                Rb.linearVelocity = new Vector2(0, Rb.linearVelocity.y);
-                Rb.gravityScale = 0;
+                // Trả về gravity chuẩn khi ở trên đất
+                Rb.gravityScale = Data.gravityScale;
+
+                // Nếu không nhấn phím và KHÔNG phải mặt băng thì dừng hẳn trục X
+                if (Mathf.Abs(MoveX) < 0.01f && !IsSlipGround)
+                {
+                    Rb.linearVelocity = new Vector2(0, Rb.linearVelocity.y);
+                }
             }
-            else
             {
                 Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
             }
@@ -279,12 +303,13 @@ public partial class PlayerController : MonoBehaviour
 
     public void HandleAirMovement()
     {
-        if(Mathf.Abs(MoveX) < 0.1f) return;
+        if (Mathf.Abs(MoveX) < 0.1f) return;
 
-        float airMaxSpeed = Data.maxMoveSpeed * 1.4f; 
+        float airMaxSpeed = Data.maxMoveSpeed * 1.4f;
+        if (WasOnSlipGround) airMaxSpeed = Data.maxMoveSpeed * 1.6f;
         float targetSpeed = MoveX * airMaxSpeed;
-        float accelerationRate = Data.acceleration * 1.5f; 
-        
+        float accelerationRate = Data.acceleration * 1.5f;
+
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     }
@@ -322,7 +347,20 @@ public partial class PlayerController : MonoBehaviour
             _resinLayerMask
         );
 
+        RaycastHit2D hitIce = Physics2D.BoxCast
+        (
+            this.transform.position + _footPosition,
+            _footSize,
+            0f,
+            Vector2.down,
+            actualCastDist,
+            _iceLayerMask
+        );
+
         IsStickyGround = hitResin.collider != null ? true : false;
+        IsSlipGround = hitIce.collider != null ? true : false;
+        if (IsSlipGround) WasOnSlipGround = true;
+        else if (hit || hitResin) WasOnSlipGround = false;
 
         // Reset các platform mỗi frame trước khi check lại
         _activePlatform = null;
@@ -348,7 +386,7 @@ public partial class PlayerController : MonoBehaviour
     public bool IsPogoHit()
     {
         Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
-        if(hit && PogoUnlocked)
+        if (hit && PogoUnlocked)
         {
             return true;
         }
@@ -360,8 +398,8 @@ public partial class PlayerController : MonoBehaviour
     private void ApplyBounce(float force)
     {
         Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, force);
-        Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f)); 
-    }    
+        Visual.ApplySquashStretch(new Vector3(0.8f, 1.2f, 1f));
+    }
 
     private void ApplyPush(Vector2 force, float dir)
     {
@@ -373,7 +411,7 @@ public partial class PlayerController : MonoBehaviour
     public void ApplyWindForce(Vector2 windForce)
     {
         CurrentWindForce = windForce;
-    }    
+    }
 
     public void ExecutePogoBounce()
     {
@@ -396,20 +434,33 @@ public partial class PlayerController : MonoBehaviour
     public void CheckFlip(float moveX)
     {
         Vector2 scale = this.transform.localScale;
-        if(moveX > 0 && !_isFacingRight)
+        if (moveX > 0 && !_isFacingRight)
         {
             _isFacingRight = !_isFacingRight;
             this.transform.localScale = new Vector2(Mathf.Abs(scale.x), scale.y);
         }
-        else if(moveX < 0 && _isFacingRight)
+        else if (moveX < 0 && _isFacingRight)
         {
             _isFacingRight = !_isFacingRight;
-            this.transform.localScale = new Vector2(Mathf.Abs(scale.x) * -1f, scale.y);            
+            this.transform.localScale = new Vector2(Mathf.Abs(scale.x) * -1f, scale.y);
         }
     }
     #endregion
 
-    
+
+    #region Reset Things
+    public void ReturnToCoreScene()
+    {
+        this.transform.SetParent(null);
+
+        if(_coreScene.isLoaded)
+        {
+            SceneManager.MoveGameObjectToScene(this.gameObject, _coreScene);
+        }
+    }
+
+    #endregion
+
 
     // Vẽ gizmos ra scene
     private void OnDrawGizmos()

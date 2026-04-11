@@ -43,9 +43,9 @@ public partial class PlayerController
 
     private IEnumerator DeathSequenceCo()
     {
-        yield return new WaitForSeconds(1.5f);
-        Respawn(); 
+        yield return new WaitForSeconds(Data.respawnDuration);
         _stateMachine.ChangeState(IdleState); 
+        CheckpointManager.Instance.RespawnPlayer(this);
     }
 
     public void ApplyEnergy(int amount)

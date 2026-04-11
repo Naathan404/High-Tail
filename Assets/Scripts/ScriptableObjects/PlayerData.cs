@@ -9,7 +9,7 @@ public class PlayerData : ScriptableObject
     [Header("Run")]
     public float maxMoveSpeed = 10;
     public float acceleration = 50;
-    public float decceleration = 90;
+    public float deceleration = 90;
     public float boostVelocity = 3;
     public float velocityPower = 0.9f;
 
@@ -31,7 +31,7 @@ public class PlayerData : ScriptableObject
     public float bounceVerticalForce = 5;
 
     [Header("Air Glide")]
-    public float glideAccelaration = 5;
+    public float glideAcceleration = 5;
     public float airGlideGravityScale = 0.3f;
     public float maxGlideSpeed = 4;
 
@@ -52,9 +52,10 @@ public class PlayerData : ScriptableObject
     [Header("Others")]
     public float jumpBufferTime = 0.15f;
     public float coyoteTime = 0.1f;
+    public float respawnDuration = 0.5f;
 
     // năng lượng
-    [Header("Enery Consumption & Regeneration")]
+    [Header("Energy Consumption & Regeneration")]
     public int maxHP = 5;
     public int maxEnergy = 100;
     public int energyCostJump = 4;

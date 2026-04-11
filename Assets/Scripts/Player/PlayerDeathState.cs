@@ -12,7 +12,8 @@ public class PlayerDeathState : PlayerState
         _player.Rb.linearVelocity = Vector2.zero;
         _player.Rb.simulated = false;
 
-        CameraShaker.Instance.OneTimeShake(Vector2.right, 0.2f);
+        //CameraShaker.Instance.OneTimeShake(Vector2.right, 0.2f);
+        
         
         _player.Visual.Anim.Play("playerDie");
     }
