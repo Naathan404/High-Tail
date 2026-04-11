@@ -14,6 +14,8 @@ public class SpinningPlatform : MonoBehaviour
     [SerializeField] private List<GameObject> _platforms;
     [SerializeField] private float _rotationSpeed = 3;
     [SerializeField] private float _radius = 5f;
+    [SerializeField] private bool _isClockwise = true;
+    [SerializeField] private bool _lockPlatformZAxis = true;
 
     private int _platformCount; // Number of all child platforms in spinning platform
 
@@ -35,7 +37,13 @@ public class SpinningPlatform : MonoBehaviour
     private void Rotate()
     {
         float rotationAmount = 360f * _rotationSpeed * Time.deltaTime;
+        if (_isClockwise) rotationAmount *= -1f;
         transform.Rotate(Vector3.forward, rotationAmount);
+
+        if (_lockPlatformZAxis)
+        {
+            LockZAxis(rotationAmount);
+        }
     }
 
     private void SetPosition()
@@ -58,6 +66,18 @@ public class SpinningPlatform : MonoBehaviour
     {
         float angleInRadians = angleInDegrees * Mathf.Deg2Rad;
         return new Vector3(Mathf.Cos(angleInRadians) * _radius, Mathf.Sin(angleInRadians) * _radius, 0f);
+    }
+
+    private void LockZAxis(float rotationAmount)
+    {
+        foreach (var platform in _platforms)
+        {
+            if (platform != null)
+            {
+                // Adjust the platform's rotation so its gonna look like the Z Axis is locked
+                platform.transform.Rotate(Vector3.forward, -rotationAmount);
+            }
+        }
     }
 
     private void OnDrawGizmos()
