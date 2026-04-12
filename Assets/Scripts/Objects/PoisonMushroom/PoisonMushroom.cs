@@ -25,6 +25,10 @@ public class PoisonMushroom : MonoBehaviour
     [SerializeField] private float _detectRadius = 5f;
     [SerializeField] private LayerMask _playerLayer;
 
+    [Header("Damage Settings")]
+    [SerializeField] private int _poisonDamage = 1;
+    public int PoisonDamage => _poisonDamage;
+
     private bool _isSpewing = false;
 
     private enum PoisonDirection
