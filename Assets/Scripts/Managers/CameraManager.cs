@@ -45,6 +45,7 @@ public class CameraManager : MonoBehaviour
 
     private void Update()
     {
+        if (_playerRb == null) return;
         bool isMoving = Mathf.Abs(_playerRb.linearVelocityX) > 0.1f || Mathf.Abs(_playerRb.linearVelocityY) > 0.1f;
         // If the player starts moving and the camera is currently offset, reset it to default
         if (isMoving && !Mathf.Approximately(_targetYOffset, 0)) 
