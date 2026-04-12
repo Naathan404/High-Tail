@@ -11,6 +11,7 @@ public class GeneralSetting : MonoBehaviour
     public Action<Language> OnLanguageChanged;
     public bool autoSave = true;
     public bool autoCheckPoint = true;
+    public string MainCharacterName;
 
     public enum Language { Vietnamese, English };
 

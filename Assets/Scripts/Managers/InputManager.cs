@@ -38,7 +38,6 @@ public class InputManager : MonoBehaviour
     {
         Inputs.Movement.Disable();
         Inputs.Camera.Disable();
-        Inputs.Interaction.Disable();
         Inputs.Respawn.Disable();
     }
 
