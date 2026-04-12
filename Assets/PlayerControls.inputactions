@@ -297,54 +297,6 @@
             ]
         },
         {
-            "name": "Test",
-            "id": "0827a516-15db-4534-8e8f-3981cc8ddbfe",
-            "actions": [
-                {
-                    "name": "T",
-                    "type": "Button",
-                    "id": "009f5322-3069-4074-b01f-3ba203df79df",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Y",
-                    "type": "Button",
-                    "id": "79aeaee9-2421-4bfe-a49b-14eaba449859",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "5c94757c-719b-4caa-a857-84cfc5ac084a",
-                    "path": "<Keyboard>/t",
-                    "interactions": "Press(pressPoint=0.2)",
-                    "processors": "",
-                    "groups": "",
-                    "action": "T",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "4c1ad21f-1014-4d9e-afc0-bf88c8414e07",
-                    "path": "<Keyboard>/y",
-                    "interactions": "Press(pressPoint=0.2)",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Y",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
-        },
-        {
             "name": "Respawn",
             "id": "ed082389-863f-4f24-99a2-598b343f3539",
             "actions": [
@@ -378,6 +330,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Respawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "3ae6e1f4-f910-4a47-97c8-19eda2afa1f9",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "cf270f33-1d6c-4c1b-9272-2cfba4607cd5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f356a031-c468-425a-802a-8a5285161e61",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
