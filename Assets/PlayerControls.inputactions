@@ -297,13 +297,22 @@
             ]
         },
         {
-            "name": "Respawn",
+            "name": "Testing",
             "id": "ed082389-863f-4f24-99a2-598b343f3539",
             "actions": [
                 {
                     "name": "Respawn",
                     "type": "Button",
                     "id": "cb672269-8865-466b-ba14-096769f57283",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ShockWave",
+                    "type": "Button",
+                    "id": "a4f814b2-ac03-4b0d-a0b0-777ce2ba1726",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -330,6 +339,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Respawn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "36a47e4d-1785-4da2-a602-10ef812040e7",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShockWave",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public partial class PlayerController : MonoBehaviour
@@ -8,12 +9,16 @@ public partial class PlayerController : MonoBehaviour
     public bool DashUnlocked = false;
     public bool AirGlideUnlocked = false;
     public bool PogoUnlocked = false;
+    public bool GlowUnlocked = false;
+    public bool DoubleJumpUnlocked = false;
 
     [Header("Skill Names")]
     [SerializeField] private Text _wallJumpSlideName;
     [SerializeField] private Text _dashName;
     [SerializeField] private Text _airGlideName;
     [SerializeField] private Text _pogoName;
+    [SerializeField] private Text _glowName;
+    [SerializeField] private Text _doubleJumpName;
 
     public void UnlockWallJumpWallSlide()
     {
@@ -34,5 +39,17 @@ public partial class PlayerController : MonoBehaviour
     {
         PogoUnlocked = true;
         UIManager.Instance.ShowSkillUnlocked(_pogoName);
+    }
+
+    public void UnlockGlow()
+    {
+        GlowUnlocked = true;
+        UIManager.Instance.ShowSkillUnlocked(_glowName);
+    }
+
+    public void UnlockDoubleJump()
+    {
+        DoubleJumpUnlocked = true;
+        UIManager.Instance.ShowSkillUnlocked(_doubleJumpName);
     }
 }
