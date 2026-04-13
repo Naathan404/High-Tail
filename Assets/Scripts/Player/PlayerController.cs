@@ -38,13 +38,6 @@ public partial class PlayerController : MonoBehaviour
     public int CurrentEnergy => _energy;
 
 
-    [Header("Skills Unlock")]   // =========================================================
-    public bool WallJumpUnlocked;
-    public bool WallSlideUnlocked;
-    public bool DashUnlocked;
-    public bool AirGlideUnlocked;
-    public bool PogoUnlocked;
-
     [Header("Player Inputs")] //==========================================================
     public float MoveX { get; private set; }
     public float MoveY { get; private set; }

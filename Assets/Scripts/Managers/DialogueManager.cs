@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System; // Dùng cho Action
+using System; 
 
 public class DialogueManager : Singleton<DialogueManager>
 {
@@ -20,6 +20,8 @@ public class DialogueManager : Singleton<DialogueManager>
     private string _curDialogueText;
     private bool _isTyping;
     public bool IsDialogueActive { get; private set; }
+
+    private Action _onDialogueFinishedCallback;
 
     void Start()
     {
@@ -39,13 +41,15 @@ public class DialogueManager : Singleton<DialogueManager>
     }
 
     // THAY ĐỔI LỚN: Thêm tham số Transform npcTransform
-    public void StartDialogue(DialogueData data, Transform npcTransform = null)
+    public void StartDialogue(DialogueData data, Transform npcTransform = null, Action onDialogueFinished = null)
     {
         if (data == null)
         {
             Debug.LogError("DialogueData is null!");
             return;
         }
+
+        _onDialogueFinishedCallback = onDialogueFinished;
 
         _curDialogueData = data;
         _curDialogueIndex = 0;
@@ -154,6 +158,8 @@ public class DialogueManager : Singleton<DialogueManager>
             CameraManager.Instance.ResetDialogueCamera(() => 
             {
                 InputManager.Instance.EnableControl();
+                _onDialogueFinishedCallback?.Invoke();
+                _onDialogueFinishedCallback = null;
             });
         }
         else
@@ -162,6 +168,8 @@ public class DialogueManager : Singleton<DialogueManager>
             {
                 InputManager.Instance.EnableControl();
             }
+            _onDialogueFinishedCallback?.Invoke();
+            _onDialogueFinishedCallback = null;
         }
     }
 
