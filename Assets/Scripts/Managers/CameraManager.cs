@@ -15,6 +15,7 @@ public class CameraManager : Singleton<CameraManager>
     [SerializeField] private float _timeFreezeDuration = 0.05f;
 
     [Header("Dialogue Zoom Settings")]
+    [SerializeField] private float _setUpFOV = 70f;
     [SerializeField] private float _dialogueZoomFOV = 40f; 
     [SerializeField] private float _dialogueTransitionTime = 0.8f; 
     [SerializeField] private float _dialogueYOffset = 0.5f; 
@@ -37,6 +38,9 @@ public class CameraManager : Singleton<CameraManager>
     private bool _isInDialogue = false;
 
     public BoxCollider2D CurrentBoundary;
+
+    // Events
+
 
     private void Start()
     {
@@ -82,8 +86,9 @@ public class CameraManager : Singleton<CameraManager>
         _dialogueSequence?.Kill();
         _lookTween?.Kill(); 
 
-        // TẮT CONFINER ĐỂ CAMERA LẶN XUỐNG DƯỚI SÀN
+        // tắt confider
         //if (_confinerComponent != null) _confinerComponent.enabled = false;
+
         
         Vector2 offsetToMidpoint = (npcTransform.position - _playerRb.transform.position) / 2f;
         
@@ -101,7 +106,7 @@ public class CameraManager : Singleton<CameraManager>
             _dialogueTransitionTime).SetEase(Ease.InOutCubic));
 
         _dialogueSequence.Join(DOTween.To(
-            () => _cineCam.Lens.FieldOfView,
+            () => /*_cineCam.Lens.FieldOfView*/ _setUpFOV,
             x => {
                 var lens = _cineCam.Lens;
                 lens.FieldOfView = x;
@@ -146,7 +151,7 @@ public class CameraManager : Singleton<CameraManager>
             _defaultScreenY, 
             _dialogueTransitionTime).SetEase(Ease.InOutCubic));
 
-        // ĐÃ BỔ SUNG: Trả lại FOV về lúc chơi game
+        // trả lại fov
         _dialogueSequence.Join(DOTween.To(
             () => _cineCam.Lens.FieldOfView,
             x => {
@@ -160,7 +165,7 @@ public class CameraManager : Singleton<CameraManager>
         _dialogueSequence.OnComplete(() => {
             _isInDialogue = false;
             
-            // BẬT LẠI CONFINER ĐỂ KHÓA CAMERA VÀO LẠI PHÒNG
+            // bật lại confider
             //if (_confinerComponent != null) _confinerComponent.enabled = true;
             _confinerComponent.BoundingShape2D = CurrentBoundary;
             

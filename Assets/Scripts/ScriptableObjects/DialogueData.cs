@@ -12,22 +12,7 @@ public class DialogueData : ScriptableObject
     public AudioClip VoiceSound;
     public float VoicePitch = 1f;
 
-    [System.Serializable]
-    public struct Text
-    {
-        public string textVI;
-        public string textEN;
-        public string GetText()
-        {
-            switch(GeneralSetting.Instance.currentLanguage)
-            {
-                case GeneralSetting.Language.English:
-                    return textEN;
-                default:
-                    return textVI;
-            }
-        }
-    }
+
     [System.Serializable]
     public struct DialogueLine
     {

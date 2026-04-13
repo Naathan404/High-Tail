@@ -1,13 +1,20 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DialogueTrigger : MonoBehaviour
 {
+    [Header("Trigger Setting")]
     [SerializeField] private BoxCollider2D _collider;
-    [SerializeField] private BoxCollider2D _confiderCollider;
     [SerializeField] private DialogueData _dialogueData;
     [SerializeField] private Transform _npcTransform;
+    [SerializeField] private bool _isActivated = false;
 
-    private bool _isActivated = false;
+    [Header("Camera Collider")]
+    [SerializeField] private BoxCollider2D _confiderCollider;
+
+    [Header("Event Callback")]
+    public UnityEvent OnDialogueCompleted;
+
 
     private void Awake()
     {
@@ -26,7 +33,13 @@ public class DialogueTrigger : MonoBehaviour
                 player.Rb.linearVelocity = Vector2.zero;
             }
             CameraManager.Instance.SwitchRoom(_confiderCollider);
-            DialogueManager.Instance.StartDialogue(_dialogueData, _npcTransform);
+            DialogueManager.Instance.StartDialogue(
+                _dialogueData,
+                _npcTransform,
+                () =>
+                {
+                    OnDialogueCompleted?.Invoke();
+                });
             _isActivated = true;
         }
     }
