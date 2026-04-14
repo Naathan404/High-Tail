@@ -25,6 +25,7 @@ public class CameraManager : Singleton<CameraManager>
     [Header("References")]
     [SerializeField] private Rigidbody2D _playerRb;
     [SerializeField] private CinemachineCamera _cineCam;
+    [SerializeField] private ShockwaveController _shockWave;
     
     private CinemachinePositionComposer _composerComponent;
     private CinemachineConfiner2D _confinerComponent;
@@ -40,7 +41,15 @@ public class CameraManager : Singleton<CameraManager>
     public BoxCollider2D CurrentBoundary;
 
     // Events
+    private void OnEnable()
+    {
+        AstralGift.OnCollected += _shockWave.CallShockWave;
+    }
 
+    private void OnDisable()
+    {
+        AstralGift.OnCollected -= _shockWave.CallShockWave;
+    }
 
     private void Start()
     {
