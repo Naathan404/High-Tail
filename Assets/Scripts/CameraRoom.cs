@@ -16,6 +16,7 @@ public class CameraRoom : MonoBehaviour
         // Khi sóc Tail chạm vào biên giới phòng mới
         if (collision.CompareTag("Player"))
         {
+            CameraManager.Instance.CurrentBoundary = _confinerCollider;
             // Gọi CameraManager để đổi phòng
             CameraManager.Instance.SwitchRoom(_confinerCollider);
         }
