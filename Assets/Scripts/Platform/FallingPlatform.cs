@@ -13,10 +13,12 @@ public class FallingPlatform : MonoBehaviour
 
     private Vector2 _defaultPosition;
 
+
     private void Awake()
     {
         _defaultPosition = transform.position;
     }
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -36,5 +38,10 @@ public class FallingPlatform : MonoBehaviour
             if(player != null) player.ReturnToCoreScene();
             transform.DOMoveY(_defaultPosition.y, _returnDuration, false);
         }
+    }
+
+    private void ReturnPlatform()
+    {
+        transform.DOMoveY(_defaultPosition.y, _returnDuration, false);
     }
 }

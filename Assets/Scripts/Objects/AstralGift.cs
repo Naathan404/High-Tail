@@ -24,6 +24,11 @@ public class AstralGift : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+    private void Update()
+    {
+        //this.transform.Do
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Kiểm tra nếu chạm vào Tale và chưa được nhặt
