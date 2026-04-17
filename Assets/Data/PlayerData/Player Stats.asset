@@ -12,14 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c888ce374e546d49a1fa397dec45be9, type: 3}
   m_Name: Player Stats
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
+  WallJumpUnlocked: 1
+  WallSlideUnlocked: 1
+  DashUnlocked: 1
+  AirGlideUnlocked: 0
+  PogoUnlocked: 0
+  GlowUnlocked: 0
+  DoubleJumpUnlocked: 0
   maxMoveSpeed: 11
   acceleration: 50
   deceleration: 90
   boostVelocity: 1
   velocityPower: 0.9
-  jumpForce: 26
+  jumpForce: 25.5
   upperJumpForce: 30
-  jumpWallForce: 12
+  jumpWallForce: {x: 12, y: 20}
   gravityScale: 1
   fallMultiplier: 8
   dashForce: 50

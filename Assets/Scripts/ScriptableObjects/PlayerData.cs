@@ -25,7 +25,7 @@ public class PlayerData : ScriptableObject
     [Header("Jump")]
     public float jumpForce = 25;
     public float upperJumpForce = 40;
-    public float jumpWallForce = 12;
+    public Vector2 jumpWallForce = new Vector2(12, 20);
 
     [Header("Fall")]
     public float gravityScale = 1;
