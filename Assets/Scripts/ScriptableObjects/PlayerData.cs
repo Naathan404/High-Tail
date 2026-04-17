@@ -6,6 +6,15 @@ public class PlayerData : ScriptableObject
     // chỉ số
     [Header("Player Stats")]
 
+    [Header("Skills Unlock")]   // =========================================================
+    public bool WallJumpUnlocked = false;
+    public bool WallSlideUnlocked = false;
+    public bool DashUnlocked = false;
+    public bool AirGlideUnlocked = false;
+    public bool PogoUnlocked = false;
+    public bool GlowUnlocked = false;
+    public bool DoubleJumpUnlocked = false;
+
     [Header("Run")]
     public float maxMoveSpeed = 10;
     public float acceleration = 50;

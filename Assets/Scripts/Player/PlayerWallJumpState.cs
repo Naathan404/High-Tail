@@ -28,7 +28,7 @@ public class PlayerWallJumpState : PlayerState
         {
             _stateMachine.ChangeState(_player.FallState);
         }
-        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
         }
