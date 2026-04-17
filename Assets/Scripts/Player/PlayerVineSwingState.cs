@@ -64,7 +64,7 @@ public class PlayerVineSwingState : PlayerState
             _stateMachine.ChangeState(_player.JumpState);
         }
 
-        if(_player.DashUnlocked && _player.CanDash && _player.DashPressed)
+        if(_player.Data.DashUnlocked && _player.CanDash && _player.DashPressed)
         {
             _player.StartVineCooldown();
             _stateMachine.ChangeState(_player.DashState);
