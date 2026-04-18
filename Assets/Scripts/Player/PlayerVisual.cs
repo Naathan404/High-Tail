@@ -45,7 +45,7 @@ public class PlayerVisual : MonoBehaviour
 
     public void ToggleSpotLight(InputAction.CallbackContext context)
     {
-        if(!GetComponentInParent<PlayerController>().GlowUnlocked) return;
+        if(!GetComponentInParent<PlayerController>().Data.GlowUnlocked) return;
         _spotLight.gameObject.SetActive(!_spotLight.gameObject.activeInHierarchy);
     }
 }

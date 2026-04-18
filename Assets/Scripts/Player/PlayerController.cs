@@ -31,11 +31,6 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVineClimbState VineClimbState { get; private set; }
     public PlayerVineSwingState VineSwingState { get; private set; }
 
-    [Header("HP and Energy")] // ===================================================
-    [SerializeField] private int _hp;
-    [SerializeField] private int _energy;
-    public int CurrentHP => _hp;
-    public int CurrentEnergy => _energy;
 
 
     [Header("Player Inputs")] //==========================================================
@@ -134,8 +129,6 @@ public partial class PlayerController : MonoBehaviour
 
         _isFacingRight = true;
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
-        _hp = Data.maxHP;
-        _energy = Data.maxEnergy;
 
         InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
     }
@@ -379,7 +372,7 @@ public partial class PlayerController : MonoBehaviour
     public bool IsPogoHit()
     {
         Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
-        if (hit && PogoUnlocked)
+        if (hit && Data.PogoUnlocked)
         {
             return true;
         }

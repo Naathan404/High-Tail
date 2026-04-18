@@ -50,6 +50,7 @@ public class BouncyMushroom : MonoBehaviour
             finalForce = _pogoBounceForce;
         }
 
+        player.Rb.linearVelocity = Vector2.zero;
         player.Rb.linearVelocity = new Vector2(player.Rb.linearVelocity.x, finalForce);
         player.CanDash = true; 
     }
