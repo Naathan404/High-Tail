@@ -457,7 +457,6 @@ MonoBehaviour:
   SlideDustParticle: {fileID: 8839830881911442624}
   JumpDustParticle: {fileID: 1018285686572407860}
   _spotLight: {fileID: 6066346822924577067}
-  LightUnlocked: 1
 --- !u!95 &8846296699202411803
 Animator:
   serializedVersion: 7
@@ -541,16 +540,12 @@ MonoBehaviour:
   _fallDamageThreshold: -100
   _fallDamageAmount: 1
   _timeShakingDuration: 0.5
+  _poisonDamageCooldown: 0.5
   Data: {fileID: 11400000, guid: 9a11834553d6e944f88dfea37c10fffb, type: 2}
   Rb: {fileID: 2735330784613472962}
   Visual: {fileID: 6368215634073862181}
   _hp: 0
   _energy: 0
-  WallJumpUnlocked: 1
-  WallSlideUnlocked: 1
-  DashUnlocked: 1
-  AirGlideUnlocked: 0
-  PogoUnlocked: 0
   _jumpBufferCounter: 0
   _coyoteCounter: 0
   _isFacingRight: 0
@@ -585,9 +580,34 @@ MonoBehaviour:
   _iceLayerMask:
     serializedVersion: 2
     m_Bits: 0
-  _time: 2
+  _time: 5
   CurrentVineRb: {fileID: 0}
   CurrentVineTransform: {fileID: 0}
+  WallJumpUnlocked: 1
+  WallSlideUnlocked: 1
+  DashUnlocked: 1
+  AirGlideUnlocked: 0
+  PogoUnlocked: 0
+  GlowUnlocked: 0
+  DoubleJumpUnlocked: 0
+  _wallJumpSlideName:
+    textVI: 
+    textEN: 
+  _dashName:
+    textVI: 
+    textEN: 
+  _airGlideName:
+    textVI: 
+    textEN: 
+  _pogoName:
+    textVI: 
+    textEN: 
+  _glowName:
+    textVI: 
+    textEN: 
+  _doubleJumpName:
+    textVI: 
+    textEN: 
 --- !u!95 &320667634887335565
 Animator:
   serializedVersion: 7
