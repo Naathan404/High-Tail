@@ -6,6 +6,15 @@ public class PlayerData : ScriptableObject
     // chỉ số
     [Header("Player Stats")]
 
+    [Header("Skills Unlock")]   // =========================================================
+    public bool WallJumpUnlocked = false;
+    public bool WallSlideUnlocked = false;
+    public bool DashUnlocked = false;
+    public bool AirGlideUnlocked = false;
+    public bool PogoUnlocked = false;
+    public bool GlowUnlocked = false;
+    public bool DoubleJumpUnlocked = false;
+
     [Header("Run")]
     public float maxMoveSpeed = 10;
     public float acceleration = 50;
@@ -16,7 +25,7 @@ public class PlayerData : ScriptableObject
     [Header("Jump")]
     public float jumpForce = 25;
     public float upperJumpForce = 40;
-    public float jumpWallForce = 12;
+    public Vector2 jumpWallForce = new Vector2(12, 20);
 
     [Header("Fall")]
     public float gravityScale = 1;

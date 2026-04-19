@@ -18,7 +18,7 @@ public class PlayerDashState : PlayerState
         if(!_player.CanDash) return;
         Debug.Log("<color=yellow> ==> Dashing ==> </Color>");
         _originalGravity = _player.Rb.gravityScale;
-        _player.Rb.gravityScale = 1f;
+        _player.Rb.gravityScale = 0f;
         _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f), 0.05f);
 
         // time freeze
@@ -41,11 +41,11 @@ public class PlayerDashState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        if(_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
+        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
         }                       

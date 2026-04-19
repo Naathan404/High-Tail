@@ -67,7 +67,7 @@ public class PlayerWallSlideState : PlayerState
 
         _player.Rb.linearVelocity = new Vector2(currentVelX, _player.Rb.linearVelocity.y);
 
-        if (_player.JumpPressed && _player.WallJumpUnlocked)
+        if (_player.JumpPressed && _player.Data.WallJumpUnlocked)
         {
             bool isFacingRight = _player.IsFacingRight();
             bool isHoldingUp = _player.MoveY > 0.5f; 

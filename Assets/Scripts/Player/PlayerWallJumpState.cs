@@ -10,7 +10,7 @@ public class PlayerWallJumpState : PlayerState
     {
         base.Enter();
         float jumpDirection = _player.IsFacingRight() ? -1f : 1f;
-        Vector2 jumpForce = new Vector2(jumpDirection * _player.Data.jumpWallForce, _player.Data.jumpForce);
+        Vector2 jumpForce = new Vector2(jumpDirection * _player.Data.jumpWallForce.x, _player.Data.jumpWallForce.y);
 
         _player.Rb.linearVelocity = Vector2.zero;
         _player.Rb.AddForce(jumpForce, ForceMode2D.Impulse);
@@ -28,7 +28,7 @@ public class PlayerWallJumpState : PlayerState
         {
             _stateMachine.ChangeState(_player.FallState);
         }
-        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
         }

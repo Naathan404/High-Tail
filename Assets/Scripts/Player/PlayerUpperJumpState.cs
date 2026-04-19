@@ -48,13 +48,13 @@ public class PlayerUpperJumpState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
             return;
         }
 
-        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed && !_player.IsSlipWall)
+        if(_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
