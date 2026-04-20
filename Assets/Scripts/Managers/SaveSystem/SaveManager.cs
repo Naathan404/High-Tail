@@ -181,6 +181,37 @@ public class SaveManager : Singleton<SaveManager>
         //TODO: show note
         Debug.Log($"Đã Save! Active Node mới là: {newCommit.nodeID}");
     }
+
+    //Delete
+    public void DeleteSaveNode(string nodeID) //TODO sửa lại quy tắc xóa, khi về offscene
+    {
+        if (MainData == null || MainData.allCommits == null) return;
+
+        // 1. Tìm file save cần xóa
+        SaveNode nodeToDelete = MainData.allCommits.Find(n => n.nodeID == nodeID);
+        if (nodeToDelete != null)
+        {
+            //2. Cấm xóa trạm gốc (Root) để tránh hỏng file save
+            if (nodeToDelete.parentNodeID == "")
+            {
+                Debug.LogWarning("Không thể xóa bản lưu Gốc (Root)!");
+                return;
+            }
+
+            // 3. Xóa khỏi danh sách RAM
+            MainData.allCommits.Remove(nodeToDelete);
+
+            // 4. Nếu vô tình xóa trúng file save đang chơi dở -> Lùi về Root
+            if (MainData.activeNodeID == nodeID)
+            {
+                MainData.activeNodeID = MainData.allCommits[0].nodeID;
+            }
+
+            // 5. GHI XUỐNG Ổ CỨNG NGAY LẬP TỨC
+            SaveToDisk();
+            Debug.Log($"Đã xóa thành công Node: {nodeID}");
+        }
+    }
     #endregion
 
     private void SaveToDisk()
