@@ -4,7 +4,7 @@ public class Singleton<T> : MonoBehaviour where T : class
 {
     public static T Instance;
 
-    public void Awake()
+    virtual public void Awake()
     {
         if(Instance != null && Instance != this as T)
         {
