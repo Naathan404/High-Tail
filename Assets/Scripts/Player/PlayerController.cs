@@ -221,6 +221,12 @@ public partial class PlayerController : MonoBehaviour
             Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
         }
         _stateMachine.CurrentState.PhysicsUpdate();
+
+        // Limit the player's speed
+        if (Rb.linearVelocity.magnitude > Data.maxSpeed)
+        {
+            Rb.linearVelocity = Rb.linearVelocity.normalized * Data.maxSpeed;
+        }
     }
     #endregion
 
@@ -439,7 +445,7 @@ public partial class PlayerController : MonoBehaviour
     {
         this.transform.SetParent(null);
 
-        if(_coreScene.isLoaded)
+        if (_coreScene.isLoaded)
         {
             SceneManager.MoveGameObjectToScene(this.gameObject, _coreScene);
         }
