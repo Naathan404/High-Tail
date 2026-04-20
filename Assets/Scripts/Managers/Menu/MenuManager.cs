@@ -138,15 +138,13 @@ public class MenuManager : Singleton<MenuManager>
     {
         OpenSideMenu(false);
         SwitchTopLeftButton(false);
-        //SceneManager.LoadScene("[OFF] SCENE_1");
-        //TODO load new game
+        SaveManager.Instance.StartNewGame();
     }
 
     private void OnContinueClicked()
     {
         OpenSideMenu(false);
         OpenPanel(continuePanel, true);
-        //TODO: Load saved node list
         Debug.Log("Continue game");
     }
 

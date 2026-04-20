@@ -130,7 +130,7 @@ public class SaveManager : Singleton<SaveManager>
     }
 
     //Checkout
-    public bool LoadGameFromNode(string targetNodeID)
+    public bool LoadGameFromNode(string targetNodeID) //TODO: sửa lại quy tắc load, khi về offscene
     {
         SaveNode targetNode = MainData.allCommits.Find(n => n.nodeID == targetNodeID);
         if (targetNode != null)
