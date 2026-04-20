@@ -1,30 +1,21 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Dialogue Data", menuName = "High Tail/DialogueData")]
-public class DialogueData : ScriptableObject
+[CreateAssetMenu(fileName = "New TaleStone Data", menuName = "High Tail/TaleStoneData")]
+public class TaleStoneData : ScriptableObject
 {
-    public Text Name;
-    public Sprite CharSprite;
     public DialogueLine[] DialogueLines;
-    public bool[] EndDialogue;
     public float AutoProgressDelay = 1.5f;
     public float TypingSpeed = 0.05f;
-    public AudioClip VoiceSound;
-    public float VoicePitch = 1f;
 
     public bool IsActivated = false;
-
-
+    
     [System.Serializable]
     public struct DialogueLine
     {
-        public bool IsYou;
-
         [Header("Content")]
         [TextArea(3, 5)] public string textVI; // Tiếng Việt
         [TextArea(3, 5)] public string textEN; // Tiếng Anh
-
-        public bool autoSkip;
+        public bool AutoSkip;
 
         public string GetText()
         {

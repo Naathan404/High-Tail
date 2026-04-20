@@ -5000,10 +5000,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58b590a2684391e4ea3f81b3002847b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AstralGift
-  collectParticles: {fileID: 7415345010807515822}
-  hitStopDuration: 0.1
-  scaleDuration: 0.3
-  maxScale: 1.5
+  _collectParticles: {fileID: 7415345010807515822}
+  _hitStopDuration: 0.1
+  _scaleDuration: 0.3
+  _maxScale: 1.5
+  _floatingDuration: 1
 --- !u!58 &5409088376513400308
 CircleCollider2D:
   m_ObjectHideFlags: 0

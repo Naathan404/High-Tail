@@ -7,7 +7,6 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private DialogueData _dialogueData;
     [SerializeField] private Transform _npcTransform;
-    [SerializeField] private bool _isActivated = false;
 
     [Header("Camera Collider")]
     [SerializeField] private BoxCollider2D _confiderCollider;
@@ -24,7 +23,7 @@ public class DialogueTrigger : MonoBehaviour
     [System.Obsolete]
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(_isActivated) return;
+        if(_dialogueData.IsActivated) return;
         if(collision.gameObject.CompareTag("Player"))
         {
             PlayerController player = collision.GetComponent<PlayerController>();
@@ -40,7 +39,7 @@ public class DialogueTrigger : MonoBehaviour
                 {
                     OnDialogueCompleted?.Invoke();
                 });
-            _isActivated = true;
+            _dialogueData.IsActivated = true;
         }
     }
 
