@@ -37,11 +37,11 @@ public class EndDialogueCallbackHelper : MonoBehaviour
     [System.Serializable]
     public enum Skill
     {
-        WallJumpWallSlide,
-        Dash,
-        AirGlide, 
-        Glow,
-        Pogo,
-        DoubleJump
+        WallJumpWallSlide, // 0
+        Dash,               // 1
+        AirGlide,           // 2
+        Glow,              // 3 
+        Pogo,              // 4
+        DoubleJump          // 5
     }
 }

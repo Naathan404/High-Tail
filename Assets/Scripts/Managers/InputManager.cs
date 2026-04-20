@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
     {
         Inputs.Movement.Disable();
         Inputs.Camera.Disable();
-        Inputs.Testing.Disable();
+        //Inputs.Testing.Disable();
     }
 
     public void EnableControl()

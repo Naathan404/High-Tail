@@ -6,15 +6,19 @@ using System;
 public class AstralGift : MonoBehaviour
 {
     [Header("Hiệu ứng thị giác")]
-    [SerializeField] private ParticleSystem collectParticles; 
-    [SerializeField] private float hitStopDuration = 0.1f; 
-    [SerializeField] private float scaleDuration = 0.3f; 
-    [SerializeField] private float maxScale = 1.5f; 
+    [SerializeField] private ParticleSystem _collectParticles; 
+    [SerializeField] private float _hitStopDuration = 0.1f; 
+    [SerializeField] private float _scaleDuration = 0.3f; 
+    [SerializeField] private float _maxScale = 1.5f; 
+    [SerializeField] private float _floatingDuration = 1f;
+    [SerializeField] private float _floatingOffsetY = 1f;
 
     [Header("Cài đặt khác")]
     private bool _isCollected = false;
     private Collider2D _collider;
     private SpriteRenderer _spriteRenderer;
+
+    private float _startPosY;
 
     public static event Action<Transform> OnCollected;
 
@@ -24,9 +28,11 @@ public class AstralGift : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    private void Start()
     {
-        //this.transform.Do
+        _startPosY = transform.position.y;
+        transform.DOMoveY(_startPosY + _floatingOffsetY, _floatingDuration).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine);
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -43,8 +49,8 @@ public class AstralGift : MonoBehaviour
         _isCollected = true;
         _collider.enabled = false; 
 
-        OnCollected?.Invoke(this.transform);
-        StartCoroutine(HandleCollect(hitStopDuration));
+        OnCollected?.Invoke(transform);
+        StartCoroutine(HandleCollect(_hitStopDuration));
 
 
     }
@@ -59,19 +65,24 @@ public class AstralGift : MonoBehaviour
         Time.timeScale = originalTimeScale; 
 
         // play particle fx
-        if (collectParticles != null)
+        if (_collectParticles != null)
         {
-            collectParticles.Play();
+            _collectParticles.Play();
             CameraShakeManager.Instance.ShakeForDash();
         }
 
         // play anim 
         Sequence collectSequence = DOTween.Sequence();
-        collectSequence.Append(transform.DOScale(maxScale, scaleDuration * 0.4f).SetEase(Ease.OutBack));
-        collectSequence.Append(transform.DOScale(0f, scaleDuration * 0.6f).SetEase(Ease.InBack));
+        collectSequence.Append(transform.DOScale(_maxScale, _scaleDuration * 0.4f).SetEase(Ease.OutBack));
+        collectSequence.Append(transform.DOScale(0f, _scaleDuration * 0.6f).SetEase(Ease.InBack));
         collectSequence.OnComplete(() => {
             // PlayerController.Instance.AddScore(1); 
             Destroy(gameObject, 0.5f);
         });        
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 }
