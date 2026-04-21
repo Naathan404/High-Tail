@@ -13,7 +13,9 @@ public class SaveManager : Singleton<SaveManager>
     [HideInInspector] public SaveGameShrine activeShrine;
     public GameData MainData { get; private set; }
     private string _savePath;
+    [Header("New Game Setting")]
     [SerializeField] private string _startSceneName;
+    [SerializeField] private Vector3 _startPosition;
 
     [Header("Animation Settings")]
     [SerializeField] private float _animationDuration = 0.5f;
@@ -64,7 +66,7 @@ public class SaveManager : Singleton<SaveManager>
 
     #region Version Control
     #region init, load
-    private void LoadMainData()
+    private void LoadMainData() //TODO: start game, dont have active node (menu)
     {
         bool loadedSuccessfully = false;
 
@@ -103,29 +105,11 @@ public class SaveManager : Singleton<SaveManager>
         }
         if (MainData.allCommits.Count == 0)
         {
-            //InitializeTestRoot();
             StartNewGame();
         }
     }
 
-    private void InitializeTestRoot()
-    {
-        SaveNode testRootNode = new SaveNode
-        {
-            nodeID = IDGenerator.GenerateUniqueID("root"),
-            parentNodeID = "",
-            commitName = "Auto New Game (Test)",
-            timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-            sceneName = SceneManager.GetActiveScene().name,
-            deadShrineIDs = new List<string>()
-        };
-
-        MainData.allCommits.Add(testRootNode);
-        MainData.activeNodeID = testRootNode.nodeID;
-        Debug.Log("Đã khởi tạo dữ liệu gốc thành công.");
-    }
-
-    public void StartNewGame()
+    public void StartNewGame() //TODO: dont create new root node
     {
         int rootCount = MainData.allCommits.FindAll(n => n.parentNodeID == "").Count;
         SaveNode rootNode = new SaveNode
@@ -141,9 +125,8 @@ public class SaveManager : Singleton<SaveManager>
 
         MainData.allCommits.Add(rootNode);
         MainData.activeNodeID = rootNode.nodeID;
-
         SaveToDisk();
-        //SceneManager.LoadScene(_startSceneName);
+        StartCoroutine(LoadSceneRoutine(rootNode));
     }
     #endregion
 
@@ -220,6 +203,11 @@ public class SaveManager : Singleton<SaveManager>
 
     private void RestoreGameState(SaveNode node)
     {
+        Vector3 respawnPosition = Vector3.zero;
+        if (string.IsNullOrEmpty(node.reviveShrineID))
+        {
+            respawnPosition = _startPosition;
+        }
         SaveGameShrine[] shrines = Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         
         PlayerController player = Object.FindAnyObjectByType<PlayerController>();
@@ -238,8 +226,13 @@ public class SaveManager : Singleton<SaveManager>
             }
 
             // --- VIỆC 2: KIỂM TRA ĐỂ DỊCH CHUYỂN NHÂN VẬT ---
-            if (!isPlayerTeleported && shrine.ID == node.reviveShrineID)
+            if (!isPlayerTeleported && (shrine.ID == node.reviveShrineID || string.IsNullOrEmpty(node.reviveShrineID)))
             {
+                if (string.IsNullOrEmpty(node.reviveShrineID))
+                {
+                    respawnPosition = _startPosition;
+                }
+                else respawnPosition = shrine.transform.position;
                 if (player != null)
                 {
                     // Tắt vật lý 
@@ -247,7 +240,7 @@ public class SaveManager : Singleton<SaveManager>
                     if (charController != null) charController.enabled = false;
 
                     // Dịch chuyển
-                    player.transform.position = shrine.transform.position;
+                    player.transform.position = respawnPosition;
 
                     // Bật lại
                     if (charController != null) charController.enabled = true;
@@ -266,7 +259,8 @@ public class SaveManager : Singleton<SaveManager>
 
     #region commit
     //Commit
-    public void ExcuteSave()
+    public void ExcuteSave() //TODO: show input save name
+    //TODO: limit save node count
     {
         if (activeShrine == null)
         {
@@ -300,14 +294,13 @@ public class SaveManager : Singleton<SaveManager>
 
         SaveToDisk();
         ShowSaveOption(false, false);
-        //TODO: show note
         Debug.Log($"Đã Save! Active Node mới là: {newCommit.nodeID}");
     }
     #endregion
 
     #region delete
     //Delete
-    public void DeleteSaveNode(string nodeID) //TODO sửa lại quy tắc xóa, khi về offscene
+    public void DeleteSaveNode(string nodeID) //TODO fix delete, dont delete current node
     {
         if (MainData == null || MainData.allCommits == null) return;
 

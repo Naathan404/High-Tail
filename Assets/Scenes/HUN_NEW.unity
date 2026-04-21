@@ -2142,7 +2142,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 15
   m_Viewport: {fileID: 1694960569}
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 1313881697}
@@ -4252,7 +4252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaveManager
   activeShrine: {fileID: 0}
-  _startSceneName: scene1
+  _startSceneName: '[OFF] SCENE_1'
+  _startPosition: {x: 0, y: 0, z: 0}
   _animationDuration: 0.5
   _closeDelayTime: 0
   _saveGamePanel: {fileID: 87339928}
