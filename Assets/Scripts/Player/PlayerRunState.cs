@@ -38,17 +38,17 @@ public class PlayerRunState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
             return;
         }
-        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        if(_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
+        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
             return;

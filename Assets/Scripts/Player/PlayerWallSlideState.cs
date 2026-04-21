@@ -15,7 +15,16 @@ public class PlayerWallSlideState : PlayerState
         _player.CanDash = true;
         _originalGrivityScale = _player.Rb.gravityScale;
         _player.Rb.gravityScale = _player.Data.wallSlideGravityScale;
-        _player.Rb.linearVelocity = Vector2.zero;
+
+        float startVelX = 0f;
+        if(_player.transform.parent != null)
+        {
+            Rigidbody2D parentRb = _player.transform.parent.GetComponent<Rigidbody2D>();
+            if(parentRb != null)
+                startVelX = parentRb.linearVelocity.x;
+        }
+
+        _player.Rb.linearVelocity = new Vector2(startVelX, 0f);
         _player.Visual.SlideDustParticle.Play();
     }
 
@@ -40,7 +49,25 @@ public class PlayerWallSlideState : PlayerState
             return;
         }
 
-        if (_player.JumpPressed && _player.WallJumpUnlocked)
+        float currentVelX = 0f;
+        if(_player.transform.parent != null)
+        {
+            TriggerPlatform platform = _player.transform.parent.GetComponent<TriggerPlatform>();
+            if(platform != null)
+                currentVelX = platform.DeltaPos.x / Time.fixedDeltaTime;
+            else
+            {
+                Rigidbody2D parentRb = _player.transform.parent.GetComponent<Rigidbody2D>();
+                if (parentRb != null)
+                {
+                    currentVelX = parentRb.linearVelocity.x; 
+                }
+            }
+        }
+
+        _player.Rb.linearVelocity = new Vector2(currentVelX, _player.Rb.linearVelocity.y);
+
+        if (_player.JumpPressed && _player.Data.WallJumpUnlocked)
         {
             bool isFacingRight = _player.IsFacingRight();
             bool isHoldingUp = _player.MoveY > 0.5f; 

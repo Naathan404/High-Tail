@@ -1,36 +1,24 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "DialogueData", menuName = "Scriptable Objects/DialogueData")]
+[CreateAssetMenu(fileName = "New Dialogue Data", menuName = "High Tail/DialogueData")]
 public class DialogueData : ScriptableObject
 {
-    public Name nameText1;
-    public Name nameText2;
-    public DialogueLine[] dialogueLines;
-    public bool[] endDialogue;
-    public float autoProgressDelay = 1.5f;
-    public float typingSpeed = 0.05f;
-    public AudioClip voiceSound;
-    public float voicePitch = 1f;
+    public Text Name;
+    public Sprite CharSprite;
+    public DialogueLine[] DialogueLines;
+    public bool[] EndDialogue;
+    public float AutoProgressDelay = 1.5f;
+    public float TypingSpeed = 0.05f;
+    public AudioClip VoiceSound;
+    public float VoicePitch = 1f;
 
-    [System.Serializable]
-    public struct Name
-    {
-        public string nameVI;
-        public string nameEN;
-        public string getName()
-        {
-            if (GeneralSetting.Instance.currentLanguage == GeneralSetting.Language.English)
-            {
-                return nameEN;
-            }
-            return nameVI;
-        }
-    }
+    public bool IsActivated = false;
+
+
     [System.Serializable]
     public struct DialogueLine
     {
-        public Sprite image;
-        public bool IsChar1;
+        public bool IsYou;
 
         [Header("Content")]
         [TextArea(3, 5)] public string textVI; // Tiếng Việt
@@ -40,11 +28,13 @@ public class DialogueData : ScriptableObject
 
         public string GetText()
         {
-            if (GeneralSetting.Instance.currentLanguage == GeneralSetting.Language.English)
+            switch (GeneralSetting.Instance.currentLanguage)
             {
-                return textEN;
-            }
-            return textVI;
+                case GeneralSetting.Language.English:
+                    return textEN;
+                default:
+                    return textVI;
+            }   
         }
     }
 }

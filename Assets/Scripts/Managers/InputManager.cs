@@ -23,7 +23,7 @@ public class InputManager : MonoBehaviour
         Inputs.Movement.Enable();
         Inputs.Camera.Enable();
         Inputs.Interaction.Enable();
-        Inputs.Respawn.Enable();
+        Inputs.Testing.Enable();
     }
 
     private void OnDisable()
@@ -31,6 +31,21 @@ public class InputManager : MonoBehaviour
         Inputs.Movement.Disable();
         Inputs.Camera.Disable();
         Inputs.Interaction.Disable();
-        Inputs.Respawn.Disable();
+        Inputs.Testing.Disable();
+    }
+
+    public void DisableControl()
+    {
+        Inputs.Movement.Disable();
+        Inputs.Camera.Disable();
+        //Inputs.Testing.Disable();
+    }
+
+    public void EnableControl()
+    {
+        Inputs.Movement.Enable();
+        Inputs.Camera.Enable();
+        Inputs.Interaction.Enable();
+        Inputs.Testing.Enable();
     }
 }

@@ -2,57 +2,37 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System; 
 
-public class DialogueManager : MonoBehaviour
+public class DialogueManager : Singleton<DialogueManager>
 {
-    public static DialogueManager Instance { get; private set; }
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    [Header("Dialogue UI")]
+    [SerializeField] private TMP_Text _lineText;
+    [SerializeField] private TMP_Text _yourNameText;
+    [SerializeField] private TMP_Text _otherNameText;
+    [SerializeField] private GameObject _dialoguePanel;
+    [SerializeField] private Image _yourImage;
+    [SerializeField] private Image _otherImage;
 
-    public Image image;
-    public TMP_Text text;
-    public TMP_Text nameText;
-    public GameObject dialoguePanel;
-
+    [Header("Dialogue Settings")]
+    [SerializeField] private DialogueData _curDialogueData;
+    private int _curDialogueIndex;
+    private string _curDialogueText;
     private bool _isTyping;
     public bool IsDialogueActive { get; private set; }
 
-    public DialogueData curDialogueData;
-    private int _curDialogueIndex;
-    private string _curDialogueText;
-
-
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
-    }
+    private Action _onDialogueFinishedCallback;
 
     void Start()
     {
-        EndDialogue();
+        EndDialogue(true); 
     }
 
     void Update()
     {
         if (!IsDialogueActive) return;
 
-        // Kiểm tra an toàn xem thiết bị có tồn tại không và có được bấm trong frame này không
         bool isLeftClick = InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame();
-        //bool isSpacePressed = Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame;
 
         if (isLeftClick)
         {
@@ -60,12 +40,8 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void ShowDialogue(bool on)
-    {
-        dialoguePanel.SetActive(on);
-    }
-
-    public void StartDialogue(DialogueData data)
+    // THAY ĐỔI LỚN: Thêm tham số Transform npcTransform
+    public void StartDialogue(DialogueData data, Transform npcTransform = null, Action onDialogueFinished = null)
     {
         if (data == null)
         {
@@ -73,89 +49,132 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        curDialogueData = data;
+        _onDialogueFinishedCallback = onDialogueFinished;
+
+        _curDialogueData = data;
         _curDialogueIndex = 0;
-        IsDialogueActive = true;
+        
+        InputManager.Instance.DisableControl(); 
 
-        nameText.text = curDialogueData.dialogueLines[_curDialogueIndex].IsChar1 ? curDialogueData.nameText1.getName() : curDialogueData.nameText2.getName();
-        ShowDialogue(true);
-        PauseGameManager.SetPause(true);
-
-        DisplayCurrentLine();
+        if (npcTransform != null && CameraManager.Instance != null)
+        {
+            CameraManager.Instance.ZoomIntoDialogue(npcTransform, () => 
+            {
+                IsDialogueActive = true;
+                _otherImage.sprite = _curDialogueData.CharSprite;
+                DisplayCurrentLine();
+                ShowDialogue(true);
+            });
+        }
+        else
+        {
+            IsDialogueActive = true;
+            _otherImage.sprite = _curDialogueData.CharSprite;
+            DisplayCurrentLine();
+            ShowDialogue(true);
+        }
     }
 
     private void DisplayCurrentLine()
     {
         StopAllCoroutines();
 
-        image.sprite = curDialogueData.dialogueLines[_curDialogueIndex].image;
-        _curDialogueText = curDialogueData.dialogueLines[_curDialogueIndex].GetText();
-        nameText.text = curDialogueData.dialogueLines[_curDialogueIndex].IsChar1 ? curDialogueData.nameText1.getName() : curDialogueData.nameText2.getName();
-
+        if(_curDialogueData.DialogueLines[_curDialogueIndex].IsYou)
+        {
+            _yourImage.gameObject.SetActive(true);
+            _yourNameText.gameObject.SetActive(true);
+            _otherImage.gameObject.SetActive(false);
+            _otherNameText.gameObject.SetActive(false);
+        }
+        else
+        {
+            _yourImage.gameObject.SetActive(false);
+            _yourNameText.gameObject.SetActive(false);
+            _otherImage.gameObject.SetActive(true); 
+            _otherNameText.gameObject.SetActive(true);
+        }
+        _curDialogueText = _curDialogueData.DialogueLines[_curDialogueIndex].GetText();
+        
+        _otherNameText.text = _curDialogueData.DialogueLines[_curDialogueIndex].IsYou ? 
+                        GeneralSetting.Instance.MainCharacterName : _curDialogueData.Name.GetText();
         StartCoroutine(TypeLine());
     }
 
     private IEnumerator TypeLine()
     {
         _isTyping = true;
-        text.text = "";
+        _lineText.text = "";
 
         foreach (char letter in _curDialogueText)
         {
-            text.text += letter;
-
-            // Âm thanh gõ (nếu có sound library)
-            //Controller_Sound.Play("Type");
-
-            yield return new WaitForSecondsRealtime(curDialogueData.typingSpeed);
+            _lineText.text += letter;
+            yield return new WaitForSecondsRealtime(_curDialogueData.TypingSpeed);
         }
 
         _isTyping = false;
 
-        if (curDialogueData.dialogueLines.Length > _curDialogueIndex && curDialogueData.dialogueLines[_curDialogueIndex].autoSkip)
+        if (_curDialogueData.DialogueLines.Length > _curDialogueIndex && _curDialogueData.DialogueLines[_curDialogueIndex].autoSkip)
         {
-            yield return new WaitForSecondsRealtime(curDialogueData.autoProgressDelay);
+            yield return new WaitForSecondsRealtime(_curDialogueData.AutoProgressDelay);
             NextLine();
         }
     }
 
     public void NextLine()
     {
-        if (curDialogueData == null)
-        {
-            return;
-        }
+        if (_curDialogueData == null) return;
+        
         if (_isTyping)
         {
             StopAllCoroutines();
-            text.text = _curDialogueText;
+            _lineText.text = _curDialogueText;
             _isTyping = false;
         }
-        else if (++_curDialogueIndex < curDialogueData.dialogueLines.Length)    
+        else if (++_curDialogueIndex < _curDialogueData.DialogueLines.Length)    
         {
             DisplayCurrentLine();
         }
         else
         {
-            EndDialogue();
+            EndDialogue(false);
         }
     }
 
-    public void EndDialogue()
+
+    public void EndDialogue(bool instant = false)
     {
         StopAllCoroutines();
         IsDialogueActive = false;
-        dialoguePanel.SetActive(false);
-        text.text = "";
-        if (image != null)
-        {
-            image.sprite = null;
-        }
+        _dialoguePanel.SetActive(false); 
+        ShowDialogue(false);
+
+        _lineText.text = "";
         _curDialogueIndex = 0;
         _curDialogueText = "";
-        curDialogueData = null;
+        _curDialogueData = null;
 
-        ShowDialogue(false);
-        PauseGameManager.SetPause(false);
+        if (!instant && CameraManager.Instance != null)
+        {
+            CameraManager.Instance.ResetDialogueCamera(() => 
+            {
+                InputManager.Instance.EnableControl();
+                _onDialogueFinishedCallback?.Invoke();
+                _onDialogueFinishedCallback = null;
+            });
+        }
+        else
+        {
+            if(InputManager.Instance != null)
+            {
+                InputManager.Instance.EnableControl();
+            }
+            _onDialogueFinishedCallback?.Invoke();
+            _onDialogueFinishedCallback = null;
+        }
+    }
+
+    public void ShowDialogue(bool on)
+    {
+        _dialoguePanel.SetActive(on);
     }
 }

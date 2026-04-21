@@ -43,29 +43,28 @@ public partial class PlayerController
 
     private IEnumerator DeathSequenceCo()
     {
-        yield return new WaitForSeconds(1.5f);
-        Respawn(); 
+        yield return new WaitForSeconds(Data.respawnDuration);
         _stateMachine.ChangeState(IdleState); 
+        CheckpointManager.Instance.RespawnPlayer(this);
     }
 
     public void ApplyEnergy(int amount)
     {
-        _energy = Mathf.Clamp(_energy + amount, 0, Data.maxEnergy);
         if (amount >= 0)
             Debug.Log($"Người chơi hồi {amount} năng lượng");
         else
             Debug.Log($"Người chơi tiêu hao {amount} năng lượng");
     }
 
-    public void SetHP(int hp)
-    {
-        _hp = Mathf.Clamp(hp, 0, Data.maxHP);
-    }
+    // public void SetHP(int hp)
+    // {
+    //     _hp = Mathf.Clamp(hp, 0, Data.maxHP);
+    // }
 
-    public void SetEnergy(int energy)
-    {
-        _energy = Mathf.Clamp(energy, 0, Data.maxEnergy);
-    }
+    // public void SetEnergy(int energy)
+    // {
+    //     _energy = Mathf.Clamp(energy, 0, Data.maxEnergy);
+    // }
 
     #endregion
 }

@@ -22,7 +22,6 @@ public class PlayerVisual : MonoBehaviour
 
     [Header("Lighting")]
     [SerializeField] private Light2D _spotLight;
-    public bool LightUnlocked = false;
 
     private void Awake()
     {
@@ -46,7 +45,7 @@ public class PlayerVisual : MonoBehaviour
 
     public void ToggleSpotLight(InputAction.CallbackContext context)
     {
-        if(!LightUnlocked) return;
+        if(!GetComponentInParent<PlayerController>().Data.GlowUnlocked) return;
         _spotLight.gameObject.SetActive(!_spotLight.gameObject.activeInHierarchy);
     }
 }

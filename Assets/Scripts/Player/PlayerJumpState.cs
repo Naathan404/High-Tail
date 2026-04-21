@@ -36,7 +36,7 @@ public class PlayerJumpState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.PogoUnlocked) 
+        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked) 
         {
             _stateMachine.ChangeState(_player.PogoState);
             return; 
@@ -51,18 +51,18 @@ public class PlayerJumpState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(_player.DashPressed && _player.CanDash && _player.DashUnlocked)
+        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
             return;
         }
 
-        if(_player.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed && !_player.IsSlipWall)
+        if(_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
+        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
             return;

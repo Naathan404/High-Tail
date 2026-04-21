@@ -26,12 +26,12 @@ public class NPC : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (dialogueData == null || PauseGameManager.IsGamePaused || !CanInteract())
-        {
-            return;
-        }
-        DialogueManager.Instance.StartDialogue(dialogueData[dialogueIndex++]);
-        interactIcon.SetActive(CanInteract());
+        // if (dialogueData == null || PauseGameManager.IsGamePaused || !CanInteract())
+        // {
+        //     return;
+        // }
+        // DialogueManager.Instance.StartDialogue(dialogueData[dialogueIndex++]);
+        // interactIcon.SetActive(CanInteract());
     }
 
     public void OnInteract(bool on = true)

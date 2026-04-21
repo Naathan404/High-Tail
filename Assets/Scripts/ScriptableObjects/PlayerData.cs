@@ -6,17 +6,26 @@ public class PlayerData : ScriptableObject
     // chỉ số
     [Header("Player Stats")]
 
+    [Header("Skills Unlock")]   // =========================================================
+    public bool WallJumpUnlocked = false;
+    public bool WallSlideUnlocked = false;
+    public bool DashUnlocked = false;
+    public bool AirGlideUnlocked = false;
+    public bool PogoUnlocked = false;
+    public bool GlowUnlocked = false;
+    public bool DoubleJumpUnlocked = false;
+
     [Header("Run")]
     public float maxMoveSpeed = 10;
     public float acceleration = 50;
-    public float decceleration = 90;
+    public float deceleration = 90;
     public float boostVelocity = 3;
     public float velocityPower = 0.9f;
 
     [Header("Jump")]
     public float jumpForce = 25;
     public float upperJumpForce = 40;
-    public float jumpWallForce = 12;
+    public Vector2 jumpWallForce = new Vector2(12, 20);
 
     [Header("Fall")]
     public float gravityScale = 1;
@@ -31,7 +40,7 @@ public class PlayerData : ScriptableObject
     public float bounceVerticalForce = 5;
 
     [Header("Air Glide")]
-    public float glideAccelaration = 5;
+    public float glideAcceleration = 5;
     public float airGlideGravityScale = 0.3f;
     public float maxGlideSpeed = 4;
 
@@ -52,9 +61,10 @@ public class PlayerData : ScriptableObject
     [Header("Others")]
     public float jumpBufferTime = 0.15f;
     public float coyoteTime = 0.1f;
+    public float respawnDuration = 0.5f;
 
     // năng lượng
-    [Header("Enery Consumption & Regeneration")]
+    [Header("Energy Consumption & Regeneration")]
     public int maxHP = 5;
     public int maxEnergy = 100;
     public int energyCostJump = 4;

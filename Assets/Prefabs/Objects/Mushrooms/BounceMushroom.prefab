@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ccc0e5125315740b34319866bcbaaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BounceMushroom
-  _normalBounceForce: 25
-  _pogoBounceForce: 35
+  _normalBounceForce: 30
+  _pogoBounceForce: 40
   _visual: {fileID: 1192550817917551149}
   _squishDuration: 0.2
   _squishScale: {x: 1.4, y: 0.6, z: 1}
@@ -174,9 +174,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: -1037348173
+  m_SortingLayer: 3
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1754410622, guid: e6f1e75127e1e1f45976209013676a82, type: 3}
   m_Color: {r: 1, g: 0.54638106, b: 0, a: 1}

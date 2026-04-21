@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Platform
   - RotatingPlatform
+  - Poison
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - Wall
   - Enemy
   - Resin
-  - 
+  - PlayerForceField
   - 
   - 
   - 
@@ -48,11 +49,17 @@ TagManager:
   - name: Background
     uniqueID: 433359229
     locked: 0
+  - name: Midground
+    uniqueID: 1837700571
+    locked: 0
   - name: Player
     uniqueID: 3257619123
     locked: 0
   - name: Foreground
     uniqueID: 3703639563
+    locked: 0
+  - name: CameraSortingLayer
+    uniqueID: 2292432379
     locked: 0
   m_RenderingLayers:
   - Default
