@@ -8,12 +8,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        SaveNode currentState = SaveManager.Instance.GetActiveState();
-        if (currentState != null)
-        {
-            _canInteract = !currentState.deadShrineIDs.Contains(ID);
-        }
-        if (!_canInteract) DisableShrine();
+        EnableShrine();
     }
 
     private void OnEnable()
@@ -53,5 +48,10 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     {
         _canInteract = false;
         GetComponent<SpriteRenderer>().color =Color.gray;
+    }
+    public void EnableShrine()
+    {
+        _canInteract = true;
+        GetComponent<SpriteRenderer>().color = Color.white;
     }
 }

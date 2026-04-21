@@ -82,7 +82,9 @@ public class SaveManager : Singleton<SaveManager>
                     {
                         if (MainData.allCommits == null)
                             MainData.allCommits = new List<SaveNode>();
-
+                        if (string.IsNullOrEmpty(MainData.activeNodeID))
+                            MainData.activeNodeID = MainData.allCommits[0].nodeID;
+                        RestoreGameState(GetActiveState());
                         loadedSuccessfully = true;
                     }
                 }
@@ -101,7 +103,8 @@ public class SaveManager : Singleton<SaveManager>
         }
         if (MainData.allCommits.Count == 0)
         {
-            InitializeTestRoot();
+            //InitializeTestRoot();
+            StartNewGame();
         }
     }
 
@@ -124,11 +127,12 @@ public class SaveManager : Singleton<SaveManager>
 
     public void StartNewGame()
     {
+        int rootCount = MainData.allCommits.FindAll(n => n.parentNodeID == "").Count;
         SaveNode rootNode = new SaveNode
         {
             nodeID = IDGenerator.GenerateUniqueID("rootnote"),
             parentNodeID = "",
-            commitName = "New Game", //TODO: counting newgame
+            commitName = $"New Game {rootCount + 1}", 
             timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             reviveShrineID = "",
             sceneName = _startSceneName,
@@ -139,7 +143,7 @@ public class SaveManager : Singleton<SaveManager>
         MainData.activeNodeID = rootNode.nodeID;
 
         SaveToDisk();
-        SceneManager.LoadScene(_startSceneName);
+        //SceneManager.LoadScene(_startSceneName);
     }
     #endregion
 
@@ -154,6 +158,8 @@ public class SaveManager : Singleton<SaveManager>
         {
             MainData.activeNodeID = targetNodeID;
             StartCoroutine(LoadSceneRoutine(targetNode));
+            MainData.activeNodeID = targetNodeID;
+            SaveToDisk();
             return true;
         }
         return false;
@@ -163,7 +169,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         _isLoading = true;
 
-        // BƯỚC 1: KÉO RÈM (Fade Out)
+        // Fade out
         if (_transitionCanvasGroup != null)
         {
             _transitionCanvasGroup.blocksRaycasts = true;
@@ -214,19 +220,29 @@ public class SaveManager : Singleton<SaveManager>
 
     private void RestoreGameState(SaveNode node)
     {
-        // 1. Lấy tất cả Đền thờ ra
         SaveGameShrine[] shrines = Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        
+        PlayerController player = Object.FindAnyObjectByType<PlayerController>();
+        bool isPlayerTeleported = false;
 
-        // 2. Lướt qua từng cái Đền
         foreach (var shrine in shrines)
         {
-            if (shrine.ID == node.reviveShrineID)
+            // Kiểm tra xem ID của đền này có nằm trong danh sách Đền đã chết (deadShrineIDs) không
+            if (node.deadShrineIDs != null && node.deadShrineIDs.Contains(shrine.ID))
             {
-                // 3. Khớp ID thì mới đi gọi Player ra
-                PlayerController player = Object.FindAnyObjectByType<PlayerController>();
+                shrine.DisableShrine(); 
+            }
+            else
+            {
+                shrine.EnableShrine();
+            }
+
+            // --- VIỆC 2: KIỂM TRA ĐỂ DỊCH CHUYỂN NHÂN VẬT ---
+            if (!isPlayerTeleported && shrine.ID == node.reviveShrineID)
+            {
                 if (player != null)
                 {
-                    // Tắt vật lý (như đã bàn để tránh lỗi rớt xuyên sàn)
+                    // Tắt vật lý 
                     var charController = player.GetComponent<CharacterController>();
                     if (charController != null) charController.enabled = false;
 
@@ -236,15 +252,15 @@ public class SaveManager : Singleton<SaveManager>
                     // Bật lại
                     if (charController != null) charController.enabled = true;
 
-                    Debug.Log($"[SaveSystem] Đã dịch chuyển người chơi đến Đền có ID: {node.reviveShrineID}");
-
-                    // Xong việc thì Return thoái lui y hệt code của bạn kia!
-                    return;
+                    isPlayerTeleported = true; 
                 }
             }
         }
-
-        Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.reviveShrineID}");
+        
+        if (!isPlayerTeleported)
+        {
+            Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.reviveShrineID} để dịch chuyển!");
+        }
     }
     #endregion
 
