@@ -16,11 +16,13 @@ public class PlayerFallState : PlayerState
         _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
     }
 
-    public override void LogicUpdate() {
+    public override void LogicUpdate()
+    {
         base.LogicUpdate();
         _player.CheckFlip(_player.MoveX);
         // Kiểm tra tiếp đất
-        if (_player.IsOnGround()) {
+        if (_player.IsOnGround())
+        {
             if (Mathf.Abs(_player.MoveX) > 0.01f)
             {
                 _stateMachine.ChangeState(_player.RunState);
@@ -45,7 +47,8 @@ public class PlayerFallState : PlayerState
         // }
 
         // set jump buffer
-        if (_player.JumpPressed) {
+        if (_player.JumpPressed)
+        {
             _player.SetJumpBufferTimer();
         }
     }
@@ -54,46 +57,47 @@ public class PlayerFallState : PlayerState
     {
         base.HandleInput();
 
-        if (_player.MoveY < -0.5f&& !_player.IsOnGround() && _player.Data.PogoUnlocked) 
+        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked)
         {
             _stateMachine.ChangeState(_player.PogoState);
-            return; 
+            return;
         }
-        
-        if(_player.IsSlipWall) return;
-        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
+
+        if (_player.IsSlipWall) return;
+        if (_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
             return;
         }
-        if(_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall && _player.JumpPressed)
+        if (_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall && _player.JumpPressed)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
+        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
             return;
         }
-        if(_player.Data.AirGlideUnlocked && !_player.IsTouchingWall() && !_player.IsOnGround() && _player.GlideHeld)
+        if (_player.Data.AirGlideUnlocked && !_player.IsTouchingWall() && !_player.IsOnGround() && _player.GlideHeld)
         {
             _stateMachine.ChangeState(_player.AirGlideState);
             return;
         }
-                                
+
     }
 
-    public override void PhysicsUpdate() {
+    public override void PhysicsUpdate()
+    {
         base.PhysicsUpdate();
 
         _player.HandleAirMovement();
-        
+
         // Tăng trọng lực khi rơi
-        if (_player.Rb.linearVelocity.y < 0) {
+        if (_player.Rb.linearVelocity.y < 0)
+        {
             _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
         }
-        
         // // Air control
         // _player.HandleAirMovement();
     }
