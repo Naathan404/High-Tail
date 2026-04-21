@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : Singleton<MenuManager>
-{   
+{
     [Header("Button")]
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button backButton;
@@ -58,11 +58,11 @@ public class MenuManager : Singleton<MenuManager>
     private void InitializeUI()
     {
 
-        sidePanelButtons = new List<Button> { 
-            contButton, 
-            newButton, 
-            setButton, 
-            creditButton, 
+        sidePanelButtons = new List<Button> {
+            contButton,
+            newButton,
+            setButton,
+            creditButton,
             exitButton };
 
         ClosePanel();
@@ -102,13 +102,23 @@ public class MenuManager : Singleton<MenuManager>
             {
                 SelectNext();
             }
-            if (currentButtonIndex != -1 && 
+            if (currentButtonIndex != -1 &&
                 Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 sidePanelButtons[currentButtonIndex].onClick.Invoke();
             }
         }
 
+    }
+
+    public void CloseMenu()
+    {
+        if (isSidePanelOpen)
+        {
+            OpenSideMenu(false);
+        }
+        SwitchTopLeftButton(isMenuOpen: false);
+        ClosePanel();
     }
 
     #region Click Handlers
@@ -186,9 +196,9 @@ public class MenuManager : Singleton<MenuManager>
         btnToShow.transform.DOKill();
 
         btnToHide.transform.DOScale(Vector3.zero, _switchDuration)
-            .SetEase(Ease.InBack) 
-            .SetUpdate(true)   
-            .OnComplete(() => 
+            .SetEase(Ease.InBack)
+            .SetUpdate(true)
+            .OnComplete(() =>
             {
                 btnToHide.gameObject.SetActive(false); // Chỉ tắt hẳn khi đã thu nhỏ xong
             });
@@ -196,35 +206,35 @@ public class MenuManager : Singleton<MenuManager>
 
         btnToShow.gameObject.SetActive(true); // Bật lên trước
         btnToShow.transform.localScale = Vector3.zero; // Ép về 0 trước khi phóng
-        
+
         btnToShow.transform.DOScale(Vector3.one, _switchDuration + 0.1f) // Bật lên chậm hơn lúc tắt một chút cho đẹp
             .SetEase(Ease.OutBack) // Nảy lên quá đà một xíu rồi bật về vị trí cũ
             .SetUpdate(true);
     }
 
     #endregion
-    
+
     #region Panel open
-    
+
     public void OpenSideMenu(bool open, bool reset = false)
     {
         isSidePanelOpen = open;
-        
-        sidePanelCanvasGroup.DOKill(); 
+
+        sidePanelCanvasGroup.DOKill();
 
         if (open)
         {
             UpdateSelectionUI();
             if (reset) ResetSelection();
-            
+
             sidePanel.SetActive(true);
             // TODO: PauseGameManager.SetPause(true);
-            
+
             sidePanelCanvasGroup.DOFade(1f, fadeDuration)
                                 .SetUpdate(true);
         }
         else
-        {            
+        {
             sidePanelCanvasGroup.DOFade(0f, fadeDuration)
                                 .SetUpdate(true)
                                 .OnComplete(() =>

@@ -24,5 +24,6 @@ public class SaveSlotUI : MonoBehaviour
     private void OnLoadClicked()
     {
         SaveManager.Instance.LoadGameFromNode(_nodeID);
+        MenuManager.Instance.CloseMenu();
     }
 }

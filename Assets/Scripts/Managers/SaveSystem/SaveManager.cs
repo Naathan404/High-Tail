@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,6 +24,12 @@ public class SaveManager : Singleton<SaveManager>
     private CanvasGroup _savePanelCanvasGroup;
     [SerializeField] private Button _saveButton;
 
+    [Header("Scene Transition")]
+    [SerializeField] private CanvasGroup _transitionCanvasGroup;
+    [SerializeField] private float _transitionDuration = 0.5f;
+    private bool _isLoading = false;
+    private string _currentLoadedScene = "";
+
     public override void Awake()
     {
         base.Awake();
@@ -42,6 +50,11 @@ public class SaveManager : Singleton<SaveManager>
             _saveButton.onClick.RemoveAllListeners();
             _saveButton.onClick.AddListener(ExcuteSave); // Nút UI giờ sẽ gọi lệnh Commit mới
         }
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.alpha = 0f;
+            _transitionCanvasGroup.blocksRaycasts = false;
+        }
     }
 
     public SaveNode GetActiveState()
@@ -50,25 +63,26 @@ public class SaveManager : Singleton<SaveManager>
     }
 
     #region Version Control
+    #region init, load
     private void LoadMainData()
     {
         bool loadedSuccessfully = false;
 
         if (File.Exists(_savePath))
         {
-            try 
+            try
             {
                 string json = File.ReadAllText(_savePath);
-                
+
                 if (!string.IsNullOrEmpty(json))
                 {
                     MainData = JsonUtility.FromJson<GameData>(json);
-                    
+
                     if (MainData != null)
                     {
-                        if (MainData.allCommits == null) 
+                        if (MainData.allCommits == null)
                             MainData.allCommits = new List<SaveNode>();
-                            
+
                         loadedSuccessfully = true;
                     }
                 }
@@ -82,7 +96,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogWarning("Dữ liệu save không hợp lệ hoặc trống. Đang khởi tạo mới...");
             MainData = new GameData();
-            if (MainData.allCommits == null) 
+            if (MainData.allCommits == null)
                 MainData.allCommits = new List<SaveNode>();
         }
         if (MainData.allCommits.Count == 0)
@@ -108,7 +122,6 @@ public class SaveManager : Singleton<SaveManager>
         Debug.Log("Đã khởi tạo dữ liệu gốc thành công.");
     }
 
-    //Init
     public void StartNewGame()
     {
         SaveNode rootNode = new SaveNode
@@ -128,21 +141,114 @@ public class SaveManager : Singleton<SaveManager>
         SaveToDisk();
         SceneManager.LoadScene(_startSceneName);
     }
+    #endregion
 
-    //Checkout
-    public bool LoadGameFromNode(string targetNodeID) //TODO: sửa lại quy tắc load, khi về offscene
+    #region checkout
+
+    public bool LoadGameFromNode(string targetNodeID)
     {
+        if (_isLoading) return false; // Chống spam click
+
         SaveNode targetNode = MainData.allCommits.Find(n => n.nodeID == targetNodeID);
         if (targetNode != null)
         {
             MainData.activeNodeID = targetNodeID;
-            SceneManager.LoadScene(targetNode.sceneName);
-            Debug.Log($"checkout to {targetNode.commitName}");
+            StartCoroutine(LoadSceneRoutine(targetNode));
             return true;
         }
         return false;
     }
 
+    private IEnumerator LoadSceneRoutine(SaveNode node)
+    {
+        _isLoading = true;
+
+        // BƯỚC 1: KÉO RÈM (Fade Out)
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.blocksRaycasts = true;
+            yield return _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true).WaitForCompletion();
+        }
+
+        // BƯỚC 2: HỎI THĂM RAM CỦA UNITY
+        Scene targetScene = SceneManager.GetSceneByName(node.sceneName);
+
+        // NẾU SCENE CHƯA CÓ TRÊN RAM THÌ MỚI TIẾN HÀNH LOAD/UNLOAD
+        if (!targetScene.isLoaded)
+        {
+            // UNLOAD MAP CŨ (Nếu có)
+            if (!string.IsNullOrEmpty(_currentLoadedScene))
+            {
+                Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
+                if (oldScene.isLoaded)
+                {
+                    yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
+                }
+            }
+
+            // LOAD MAP MỚI (Additive)
+            AsyncOperation loadOp = SceneManager.LoadSceneAsync(node.sceneName, LoadSceneMode.Additive);
+            while (!loadOp.isDone) yield return null;
+
+            // Cập nhật lại targetScene sau khi nạp xong
+            targetScene = SceneManager.GetSceneByName(node.sceneName);
+        }
+
+        // BƯỚC 3: SET ACTIVE VÀ GHI NHỚ
+        SceneManager.SetActiveScene(targetScene);
+        _currentLoadedScene = node.sceneName;
+
+        // BƯỚC 4: PHỤC HỒI NHÂN VẬT
+        RestoreGameState(node);
+
+        // BƯỚC 5: MỞ RÈM (Fade In)
+        if (_transitionCanvasGroup != null)
+        {
+            yield return _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true).WaitForCompletion();
+            _transitionCanvasGroup.blocksRaycasts = false;
+        }
+
+        MenuManager.Instance?.OpenSideMenu(false);
+        _isLoading = false;
+    }
+
+    private void RestoreGameState(SaveNode node)
+    {
+        // 1. Lấy tất cả Đền thờ ra
+        SaveGameShrine[] shrines = Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+        // 2. Lướt qua từng cái Đền
+        foreach (var shrine in shrines)
+        {
+            if (shrine.ID == node.reviveShrineID)
+            {
+                // 3. Khớp ID thì mới đi gọi Player ra
+                PlayerController player = Object.FindAnyObjectByType<PlayerController>();
+                if (player != null)
+                {
+                    // Tắt vật lý (như đã bàn để tránh lỗi rớt xuyên sàn)
+                    var charController = player.GetComponent<CharacterController>();
+                    if (charController != null) charController.enabled = false;
+
+                    // Dịch chuyển
+                    player.transform.position = shrine.transform.position;
+
+                    // Bật lại
+                    if (charController != null) charController.enabled = true;
+
+                    Debug.Log($"[SaveSystem] Đã dịch chuyển người chơi đến Đền có ID: {node.reviveShrineID}");
+
+                    // Xong việc thì Return thoái lui y hệt code của bạn kia!
+                    return;
+                }
+            }
+        }
+
+        Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.reviveShrineID}");
+    }
+    #endregion
+
+    #region commit
     //Commit
     public void ExcuteSave()
     {
@@ -181,7 +287,9 @@ public class SaveManager : Singleton<SaveManager>
         //TODO: show note
         Debug.Log($"Đã Save! Active Node mới là: {newCommit.nodeID}");
     }
+    #endregion
 
+    #region delete
     //Delete
     public void DeleteSaveNode(string nodeID) //TODO sửa lại quy tắc xóa, khi về offscene
     {
@@ -212,6 +320,7 @@ public class SaveManager : Singleton<SaveManager>
             Debug.Log($"Đã xóa thành công Node: {nodeID}");
         }
     }
+    #endregion
     #endregion
 
     private void SaveToDisk()
