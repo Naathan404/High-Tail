@@ -111,6 +111,37 @@ public class MenuManager : Singleton<MenuManager>
 
     }
 
+    #region Public API
+    public void OpenMenu()
+    {
+        SwitchTopLeftButton(isMenuOpen: true);
+        OpenSideMenu(open: true, reset: true);
+    }
+
+    public enum PanelType
+    {
+        Settings,
+        Credit,
+        Continue
+    }
+
+    public void OpenSubPanel(PanelType type)
+    {
+        SwitchTopLeftButton(isMenuOpen: true);
+        switch (type)
+        {
+            case PanelType.Settings:
+                OnSettingsClicked();
+                break;
+            case PanelType.Credit:
+                OnCreditClicked();
+                break;
+            case PanelType.Continue:
+                OnContinueClicked();
+                break;
+        }
+    }
+
     public void CloseMenu()
     {
         if (isSidePanelOpen)
@@ -120,6 +151,8 @@ public class MenuManager : Singleton<MenuManager>
         SwitchTopLeftButton(isMenuOpen: false);
         ClosePanel();
     }
+
+    #endregion
 
     #region Click Handlers
     private void OnPauseClicked()

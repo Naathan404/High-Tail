@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -221,9 +223,9 @@ public class SaveManager : Singleton<SaveManager>
         {
             respawnPosition = _startPosition;
         }
-        SaveGameShrine[] shrines = Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        SaveGameShrine[] shrines = UnityEngine.Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
-        PlayerController player = Object.FindAnyObjectByType<PlayerController>();
+        PlayerController player = UnityEngine.Object.FindAnyObjectByType<PlayerController>();
         bool isPlayerTeleported = false;
 
         foreach (var shrine in shrines)
@@ -275,8 +277,18 @@ public class SaveManager : Singleton<SaveManager>
     public void ExcuteSave() //TODO: show input save name
     //TODO: limit save node count
     {
+        if (MainData == null || MainData.allCommits == null) return;
+        if (_currentSavedNodes >= _maxSaveNodes)
+        {
+            ShowNotification($"Can only save {_maxSaveNodes} times. Please delete some old saves to create a new one.", () =>
+            {
+                MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Continue);
+            });
+            return;
+        }
         if (activeShrine == null)
         {
+            ShowNotification("Cannot save game. Please select a shrine to save.");
             return;
         }
         SaveNode currentNode = MainData.allCommits.Find(n => n.nodeID == MainData.activeNodeID);
@@ -304,6 +316,7 @@ public class SaveManager : Singleton<SaveManager>
         MainData.activeNodeID = newCommit.nodeID;
         activeShrine.DisableShrine();
         activeShrine = null;
+        _currentSavedNodes++;
 
         SaveToDisk();
         ShowSaveOption(false, waiting: false);
@@ -357,9 +370,17 @@ public class SaveManager : Singleton<SaveManager>
         UpdatePanelState(show: open, isNotification: false, message: "", waiting: waiting);
     }
 
-    public void ShowNotification(string message)
+    public void ShowNotification(string message, Action onComplete = null)
     {
         UpdatePanelState(show: true, isNotification: true, message: message, waiting: false);
+        if (onComplete != null)
+        {
+            // Tính tổng thời gian hiển thị = thời gian animation + thời gian notification
+            float totalDuration = _animationDuration + _notificationDuration;
+
+            // Thiết lập callback sau khi sequence hoàn thành
+            _panelSequence.OnComplete(() => onComplete.Invoke());
+        }
     }
 
     // HÀM LÕI XỬ LÝ CHUNG DUY NHẤT
