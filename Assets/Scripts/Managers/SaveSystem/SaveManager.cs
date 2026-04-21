@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using DG.Tweening;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,9 @@ public class SaveManager : Singleton<SaveManager>
     [Header("Default Save Setting")]
     [HideInInspector] public SaveGameShrine activeShrine;
     public GameData MainData { get; private set; }
+    [SerializeField] private int _maxSaveNodes = 3;
+    [SerializeField] private int _currentSavedNodes = 0;
+
     private string _savePath;
     [Header("New Game Setting")]
     [SerializeField] private string _startSceneName;
@@ -20,11 +24,15 @@ public class SaveManager : Singleton<SaveManager>
     [Header("Animation Settings")]
     [SerializeField] private float _animationDuration = 0.5f;
     [SerializeField] private float _closeDelayTime = 2f;
+    [SerializeField] private float _notificationDuration = 2f;
+    private DG.Tweening.Sequence _panelSequence;
+    private RectTransform _savePanelRect;
 
     [Header("Save UI")]
     [SerializeField] private GameObject _saveGamePanel;
     private CanvasGroup _savePanelCanvasGroup;
     [SerializeField] private Button _saveButton;
+    [SerializeField] private TextMeshProUGUI _notifyText;
 
     [Header("Scene Transition")]
     [SerializeField] private CanvasGroup _transitionCanvasGroup;
@@ -87,6 +95,9 @@ public class SaveManager : Singleton<SaveManager>
                         if (string.IsNullOrEmpty(MainData.activeNodeID))
                             MainData.activeNodeID = MainData.allCommits[0].nodeID;
                         RestoreGameState(GetActiveState());
+
+                        _currentSavedNodes = MainData.allCommits.
+                        FindAll(n => string.IsNullOrEmpty(n.parentNodeID)).Count;
                         loadedSuccessfully = true;
                     }
                 }
@@ -116,7 +127,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             nodeID = IDGenerator.GenerateUniqueID("rootnote"),
             parentNodeID = "",
-            commitName = $"New Game {rootCount + 1}", 
+            commitName = $"New Game {rootCount + 1}",
             timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             reviveShrineID = "",
             sceneName = _startSceneName,
@@ -143,8 +154,10 @@ public class SaveManager : Singleton<SaveManager>
             StartCoroutine(LoadSceneRoutine(targetNode));
             MainData.activeNodeID = targetNodeID;
             SaveToDisk();
+            ShowNotification($"Changed to  {targetNode.commitName}");
             return true;
         }
+        ShowNotification("Load failed: Node not found!");
         return false;
     }
 
@@ -209,7 +222,7 @@ public class SaveManager : Singleton<SaveManager>
             respawnPosition = _startPosition;
         }
         SaveGameShrine[] shrines = Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        
+
         PlayerController player = Object.FindAnyObjectByType<PlayerController>();
         bool isPlayerTeleported = false;
 
@@ -218,7 +231,7 @@ public class SaveManager : Singleton<SaveManager>
             // Kiểm tra xem ID của đền này có nằm trong danh sách Đền đã chết (deadShrineIDs) không
             if (node.deadShrineIDs != null && node.deadShrineIDs.Contains(shrine.ID))
             {
-                shrine.DisableShrine(); 
+                shrine.DisableShrine();
             }
             else
             {
@@ -245,11 +258,11 @@ public class SaveManager : Singleton<SaveManager>
                     // Bật lại
                     if (charController != null) charController.enabled = true;
 
-                    isPlayerTeleported = true; 
+                    isPlayerTeleported = true;
                 }
             }
         }
-        
+
         if (!isPlayerTeleported)
         {
             Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.reviveShrineID} để dịch chuyển!");
@@ -293,8 +306,8 @@ public class SaveManager : Singleton<SaveManager>
         activeShrine = null;
 
         SaveToDisk();
-        ShowSaveOption(false, false);
-        Debug.Log($"Đã Save! Active Node mới là: {newCommit.nodeID}");
+        ShowSaveOption(false, waiting: false);
+        ShowNotification($"Saved successfully at {newCommit.commitName}");
     }
     #endregion
 
@@ -341,38 +354,74 @@ public class SaveManager : Singleton<SaveManager>
     #region UI Animation
     public void ShowSaveOption(bool open, bool waiting = true)
     {
-        if (_savePanelCanvasGroup == null)
-            _savePanelCanvasGroup = _saveGamePanel.GetComponent<CanvasGroup>();
+        UpdatePanelState(show: open, isNotification: false, message: "", waiting: waiting);
+    }
 
-        RectTransform panelRect = _saveGamePanel.GetComponent<RectTransform>();
+    public void ShowNotification(string message)
+    {
+        UpdatePanelState(show: true, isNotification: true, message: message, waiting: false);
+    }
 
-        panelRect.DOKill();
-        _savePanelCanvasGroup.DOKill();
+    // HÀM LÕI XỬ LÝ CHUNG DUY NHẤT
+    private void UpdatePanelState(bool show, bool isNotification, string message, bool waiting)
+    {
+        if (_savePanelCanvasGroup == null) _savePanelCanvasGroup = _saveGamePanel.GetComponent<CanvasGroup>();
+        if (_savePanelRect == null) _savePanelRect = _saveGamePanel.GetComponent<RectTransform>();
 
-        if (open)
+        // Dọn dẹp animation cũ để không bị giật lag nếu user thao tác liên tục
+        _panelSequence?.Kill();
+        _panelSequence = DOTween.Sequence().SetUpdate(true);
+
+        if (show)
         {
             _saveGamePanel.SetActive(true);
-            panelRect.localScale = Vector3.zero;
-            _savePanelCanvasGroup.alpha = 0f;
 
-            panelRect.DOScale(Vector3.one, _animationDuration)
-                     .SetEase(Ease.OutBack)
-                     .SetUpdate(true);
+            // 1. CHUYỂN ĐỔI TRẠNG THÁI HIỂN THỊ CON (CHILDREN)
+            // Hiện nút nếu KHÔNG phải là thông báo. 
+            if (_saveButton != null) _saveButton.gameObject.SetActive(!isNotification);
 
-            _savePanelCanvasGroup.DOFade(1f, _animationDuration)
-                                 .SetUpdate(true);
+            // (Nếu bạn có nút Cancel/Đóng thứ 2, thêm dòng tương tự ở đây)
+            // if (_cancelButton != null) _cancelButton.gameObject.SetActive(!isNotification);
+
+            // Hiện Text nếu LÀ thông báo
+            if (_notifyText != null)
+            {
+                _notifyText.gameObject.SetActive(isNotification);
+                if (isNotification) _notifyText.text = message;
+            }
+
+            // 2. ANIMATION MỞ PANEL LÊN 
+            // (Chỉ scale lên nếu panel đang tàng hình, nếu đang bật sẵn nút rồi thì bỏ qua để tránh giật hình)
+            if (_savePanelCanvasGroup.alpha < 1f || _savePanelRect.localScale.x < 1f)
+            {
+                _savePanelRect.localScale = Vector3.zero;
+                _savePanelCanvasGroup.alpha = 0f;
+
+                _panelSequence.Join(_savePanelRect.DOScale(Vector3.one, _animationDuration).SetEase(Ease.OutBack))
+                              .Join(_savePanelCanvasGroup.DOFade(1f, _animationDuration));
+            }
+
+            // 3. XỬ LÝ AUTO-CLOSE (Chỉ dành cho thông báo)
+            if (isNotification)
+            {
+                // Chờ một lúc rồi tự động thu nhỏ + mờ dần và tắt Panel
+                _panelSequence.AppendInterval(_notificationDuration)
+                              .Append(_savePanelRect.DOScale(Vector3.zero, _animationDuration).SetEase(Ease.InBack))
+                              .Join(_savePanelCanvasGroup.DOFade(0f, _animationDuration))
+                              .OnComplete(() => _saveGamePanel.SetActive(false));
+            }
         }
         else
         {
-            panelRect.DOScale(Vector3.zero, _animationDuration)
-                     .SetEase(Ease.InBack)
-                     .SetUpdate(true)
-                     .SetDelay(waiting ? _closeDelayTime : 0);
+            // 4. CHỦ ĐỘNG ĐÓNG PANEL (Khi gọi ShowSaveOption(false))
+            float delayTime = waiting ? _closeDelayTime : 0f;
 
-            _savePanelCanvasGroup.DOFade(0f, _animationDuration)
-                                 .SetUpdate(true)
-                                 .SetDelay(waiting ? _closeDelayTime : 0)
-                                 .OnComplete(() => _saveGamePanel.SetActive(false));
+            if (delayTime > 0)
+                _panelSequence.AppendInterval(delayTime);
+
+            _panelSequence.Append(_savePanelRect.DOScale(Vector3.zero, _animationDuration).SetEase(Ease.InBack))
+                          .Join(_savePanelCanvasGroup.DOFade(0f, _animationDuration))
+                          .OnComplete(() => _saveGamePanel.SetActive(false));
         }
     }
 
