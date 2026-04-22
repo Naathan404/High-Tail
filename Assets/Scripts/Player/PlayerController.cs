@@ -223,9 +223,16 @@ public partial class PlayerController : MonoBehaviour
         _stateMachine.CurrentState.PhysicsUpdate();
 
         // Limit the player's speed
-        if (Rb.linearVelocity.magnitude > Data.maxSpeed)
+        if (Mathf.Abs(Rb.linearVelocity.x) > Data.maxSpeedX)
         {
-            Rb.linearVelocity = Rb.linearVelocity.normalized * Data.maxSpeed;
+            // Sign: return 1 if positive and -1 if negative
+            float velocityX = Mathf.Sign(Rb.linearVelocity.x) * Data.maxSpeedX;
+            Rb.linearVelocity = new Vector2(velocityX, Rb.linearVelocity.y);
+        }
+        if (Mathf.Abs(Rb.linearVelocity.y) > Data.maxSpeedY)
+        {
+            float velocityY = Mathf.Sign(Rb.linearVelocity.y) * Data.maxSpeedY;
+            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, velocityY);
         }
     }
     #endregion
