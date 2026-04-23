@@ -43,9 +43,18 @@ public partial class PlayerController
 
     private IEnumerator DeathSequenceCo()
     {
-        yield return new WaitForSeconds(Data.respawnDuration);
-        _stateMachine.ChangeState(IdleState); 
-        CheckpointManager.Instance.RespawnPlayer(this);
+        DeathScreenManager.Instance.TriggerDeathWipe(
+            transform.position, 
+            CheckpointManager.Instance.CurrentSpawnPoint.position,
+            () =>
+            {
+                CheckpointManager.Instance.RespawnPlayer(this);
+                _stateMachine.ChangeState(IdleState); 
+            },
+            Data.respawnDuration
+        );
+        yield return null;
+        
     }
 
     public void ApplyEnergy(int amount)

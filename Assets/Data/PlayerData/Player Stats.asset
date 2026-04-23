@@ -16,9 +16,9 @@ MonoBehaviour:
   WallSlideUnlocked: 1
   DashUnlocked: 1
   AirGlideUnlocked: 1
-  PogoUnlocked: 0
+  PogoUnlocked: 1
   GlowUnlocked: 1
-  DoubleJumpUnlocked: 0
+  DoubleJumpUnlocked: 1
   maxMoveSpeed: 11
   acceleration: 50
   deceleration: 90
@@ -45,8 +45,8 @@ MonoBehaviour:
   jumpBufferTime: 0.15
   coyoteTime: 0.15
   respawnDuration: 1
-  maxSpeedX: 35
-  maxSpeedY: 35
+  maxSpeedX: 100
+  maxSpeedY: 50
   maxHP: 5
   maxEnergy: 100
   energyCostJump: 4
