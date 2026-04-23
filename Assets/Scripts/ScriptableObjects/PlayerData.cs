@@ -32,7 +32,7 @@ public class PlayerData : ScriptableObject
     public float fallMultiplier = 8;
 
     [Header("Dash")]
-    public float dashForce = 30;
+    public float dashForce = 50;
     public float dashDuration = 0.15f;
 
     [Header("Bounce/Push")]
@@ -63,7 +63,7 @@ public class PlayerData : ScriptableObject
     public float coyoteTime = 0.1f;
     public float respawnDuration = 0.5f;
     [Range(0, 30)]
-    public float maxSpeed = 25f; // The player's max speed in any direction, to limit the speed
+    public float maxSpeed = 30f; // The player's max speed in any direction, to limit the speed
 
     // năng lượng
     [Header("Energy Consumption & Regeneration")]
