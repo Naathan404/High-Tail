@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   WallJumpUnlocked: 1
   WallSlideUnlocked: 1
-  DashUnlocked: 1
-  AirGlideUnlocked: 1
-  PogoUnlocked: 1
-  GlowUnlocked: 1
-  DoubleJumpUnlocked: 1
+  DashUnlocked: 0
+  AirGlideUnlocked: 0
+  PogoUnlocked: 0
+  GlowUnlocked: 0
+  DoubleJumpUnlocked: 0
   maxMoveSpeed: 11
   acceleration: 50
   deceleration: 90
@@ -46,7 +46,7 @@ MonoBehaviour:
   coyoteTime: 0.15
   respawnDuration: 1
   maxSpeedX: 100
-  maxSpeedY: 50
+  maxSpeedY: 30
   maxHP: 5
   maxEnergy: 100
   energyCostJump: 4

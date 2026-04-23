@@ -30,6 +30,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerUpperJumpState UpperJumpState { get; private set; }
     public PlayerVineClimbState VineClimbState { get; private set; }
     public PlayerVineSwingState VineSwingState { get; private set; }
+    public PlayerBounceState BounceState { get; private set; }
 
 
 
@@ -119,6 +120,7 @@ public partial class PlayerController : MonoBehaviour
         UpperJumpState = new PlayerUpperJumpState(this, _stateMachine);
         VineClimbState = new PlayerVineClimbState(this, _stateMachine);
         VineSwingState = new PlayerVineSwingState(this, _stateMachine);
+        BounceState = new PlayerBounceState(this, _stateMachine);
 
         _coreScene = gameObject.scene;
     }
