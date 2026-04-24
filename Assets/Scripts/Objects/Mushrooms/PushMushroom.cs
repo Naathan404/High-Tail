@@ -5,10 +5,12 @@ using UnityEngine;
 public class PushMushroom : MonoBehaviour, IPushable
 {
     [SerializeField] private Transform _visual;
+    [SerializeField] private float _pushX = 20f;
+    [SerializeField] private float _pushY = 10f;
     
     // Đổi Force thành Vector2 để có lực nẩy chéo
     [Header("Push Force (X: Ngang, Y: Nảy lên)")]
-    [SerializeField] private Vector2 _pushForce = new Vector2(20f, 10f); 
+    [SerializeField] private Vector2 _pushForce;
     
     [SerializeField] private bool _isFacingRight;
     
@@ -19,6 +21,7 @@ public class PushMushroom : MonoBehaviour, IPushable
 
     private void Start()
     {
+        _pushForce = new Vector2(_pushX, _pushY);
         _visual.transform.localScale = new Vector3(_visual.transform.localScale.x * IsRight, _visual.transform.localScale.y, 1f);
         _originalScale = _visual.transform.localScale;
     }

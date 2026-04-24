@@ -8,12 +8,15 @@ public class UIManager : Singleton<UIManager>
     [Header("Skill Unlock Setting")]
     [SerializeField] private GameObject _skillUnlockedPanel;
     [SerializeField] private TextMeshProUGUI _skillUnlockedText;
+    [SerializeField] private TextMeshProUGUI _howToUseText;
     [SerializeField] private CanvasGroup _panelCanvasGroup; 
+    
 
     [Header("Animation Settings")]
     [SerializeField] private float _animationDuration = 0.5f;   // thời gian anim ẩn/hiện
     [SerializeField] private float _typewriterDuration = 1.0f; // thời gian đánh text
     [SerializeField] private float _skillUnlockedPanelShowTime = 3f;    // thời gian tồn tại 
+    [SerializeField] private float _howToUseFadeDuration = 0.5f;
 
     private void Start()
     {
@@ -23,14 +26,16 @@ public class UIManager : Singleton<UIManager>
         }
     }
 
-    public void ShowSkillUnlocked(Text skillName)
+    public void ShowSkillUnlocked(Text skillName, Text skillDes)
     {
-        StartCoroutine(SkillUnlockRoutine(skillName));
+        StartCoroutine(SkillUnlockRoutine(skillName, skillDes));
     }
 
-    private IEnumerator SkillUnlockRoutine(Text skillName)
+    private IEnumerator SkillUnlockRoutine(Text skillName, Text skillDes)
     {
         _skillUnlockedPanel.SetActive(true);
+        _howToUseText.text = "";
+        _howToUseText.alpha = 0f;
         _skillUnlockedText.text = ""; 
         
         RectTransform panelRect = _skillUnlockedPanel.GetComponent<RectTransform>();
@@ -52,6 +57,9 @@ public class UIManager : Singleton<UIManager>
                 x => _skillUnlockedText.maxVisibleCharacters = x, 
                 skillName.GetLength(), 
                 _typewriterDuration).SetUpdate(true);
+
+        _howToUseText.text = skillDes.GetText();
+        _howToUseText.DOFade(1f, _howToUseFadeDuration);
         yield return new WaitForSecondsRealtime(_typewriterDuration);
 
         // đợi hết thời gian tồn tại

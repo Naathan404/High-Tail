@@ -2,6 +2,7 @@ using UnityEngine;
 using DG.Tweening; // Nhớ cài đặt DOTween
 using System.Collections;
 using System;
+using UnityEngine.Rendering.Universal;
 
 public class AstralGift : MonoBehaviour
 {
@@ -12,11 +13,14 @@ public class AstralGift : MonoBehaviour
     [SerializeField] private float _maxScale = 1.5f; 
     [SerializeField] private float _floatingDuration = 1f;
     [SerializeField] private float _floatingOffsetY = 1f;
+    [SerializeField] private Light2D _light;
+    [SerializeField] private float _lightDuration = 1f;
 
     [Header("Cài đặt khác")]
     private bool _isCollected = false;
     private Collider2D _collider;
     private SpriteRenderer _spriteRenderer;
+
 
     private float _startPosY;
 
@@ -48,6 +52,13 @@ public class AstralGift : MonoBehaviour
     {
         _isCollected = true;
         _collider.enabled = false; 
+        DOTween.To
+        (
+            () => _light.intensity,
+            x => _light.intensity = x,
+            0f,
+            _lightDuration
+        ).SetEase(Ease.OutQuad);
 
         OnCollected?.Invoke(transform);
         StartCoroutine(HandleCollect(_hitStopDuration));

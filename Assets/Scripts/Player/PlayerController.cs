@@ -328,15 +328,13 @@ public partial class PlayerController : MonoBehaviour
     {
         float actualCastDist = (CurrentSwingPlatform != null) ? _castDistance * 3f : _castDistance;
 
-        RaycastHit2D hit = Physics2D.BoxCast
-        (
-            this.transform.position + _footPosition,
-            _footSize,
-            0f,
-            Vector2.down,
-            actualCastDist,
-            _groundLayerMask
-        );
+        ContactFilter2D groundFilter = new ContactFilter2D();
+        groundFilter.SetLayerMask(_groundLayerMask);
+        groundFilter.useTriggers = false;
+
+        RaycastHit2D[] groundHits = new RaycastHit2D[1];
+        int groundHitCount = Physics2D.BoxCast(this.transform.position + _footPosition, _footSize, 0f, Vector2.down, groundFilter, groundHits, actualCastDist);
+        RaycastHit2D hit = groundHitCount > 0 ? groundHits[0] : default;
 
         RaycastHit2D hitResin = Physics2D.BoxCast
         (
@@ -407,6 +405,11 @@ public partial class PlayerController : MonoBehaviour
         CanDash = false;
         Rb.linearVelocity = force;
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
+
+        if (force.y > 0f || !IsOnGround())
+        {
+            _stateMachine.ChangeState(FallState);
+        }
     }
 
     public void ApplyWindForce(Vector2 windForce)

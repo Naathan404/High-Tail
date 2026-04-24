@@ -31,7 +31,9 @@ public class ShockwaveController : MonoBehaviour
         // _shockWaveCoroutine = StartCoroutine(HandleShockWave(-0.1f, 1f));
         this.transform.position = center.position; 
 
-        this.gameObject.SetActive(true);
+        //this.gameObject.SetActive(true);
+        //GetComponent<SpriteRenderer>().enabled = true;
+
         _material.SetVector("_ShockwaveSpawnPosition", new Vector2(0.5f, 0.5f));
         if (_shockWaveCoroutine != null) StopCoroutine(_shockWaveCoroutine);
         _shockWaveCoroutine = StartCoroutine(HandleShockWave(-0.1f, 1f));       
@@ -53,6 +55,8 @@ public class ShockwaveController : MonoBehaviour
             yield return null;
         }
 
-        gameObject.SetActive(false);
+        // không hiểu sao mà ở đây tắt cái màn đi là ánh sáng biến mất
+        //gameObject.SetActive(false);
+        //GetComponent<SpriteRenderer>().enabled = false;
     }
 }
