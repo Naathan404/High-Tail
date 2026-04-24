@@ -6,6 +6,7 @@ public class CameraShakeManager : Singleton<CameraShakeManager>
     [Header("Impulse Sources")]
     public CinemachineImpulseSource dashShakeSource;
     public CinemachineImpulseSource damageShakeSource;
+    public CinemachineImpulseSource landingShakeSource;
     public CinemachineImpulseSource defaultShakeSource;
 
 
@@ -17,6 +18,11 @@ public class CameraShakeManager : Singleton<CameraShakeManager>
     public void ShakeForDamage()
     {
         if (damageShakeSource != null) damageShakeSource.GenerateImpulse();
+    }
+
+    public void ShakeForLanding()
+    {
+        if(landingShakeSource != null) landingShakeSource.GenerateImpulse();
     }
 
     public void ShakeCustom(float forceMultiplier)

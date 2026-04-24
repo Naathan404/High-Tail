@@ -22,6 +22,12 @@ public class CameraManager : Singleton<CameraManager>
     [SerializeField] private float _dialogueScreenY = 0.35f; 
     private float _defaultScreenY;
 
+    // [Header("TaleStone Zoom Settings")]
+    // [SerializeField] private float _taleStoneZoomFOV = 40f; 
+    // [SerializeField] private float _taleStoneTransitionTime = 0.8f; 
+    // [SerializeField] private float _taleStoneYOffset = 0.5f; 
+    // [SerializeField] private float _taleStoneScreenY = 0.35f;     
+
     [Header("References")]
     [SerializeField] private Rigidbody2D _playerRb;
     [SerializeField] private CinemachineCamera _cineCam;

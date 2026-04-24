@@ -19,6 +19,8 @@ public class PlayerVisual : MonoBehaviour
     public ParticleSystem DashDustParticle;
     public ParticleSystem SlideDustParticle;
     public ParticleSystem JumpDustParticle;
+    public ParticleSystem FallDustParticle;
+    public ParticleSystem LandingDustParticle;
 
     [Header("Lighting")]
     [SerializeField] private Light2D _spotLight;

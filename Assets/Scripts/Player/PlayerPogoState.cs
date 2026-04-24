@@ -1,3 +1,5 @@
+using System.Numerics;
+
 public class PlayerPogoState : PlayerState
 {
     public PlayerPogoState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine) {}

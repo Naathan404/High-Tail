@@ -172,8 +172,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1037348173
-  m_SortingLayer: 2
+  m_SortingLayerID: -1014729645
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9e773392addc984a8c6d8276ea9b379, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FallingPlatform
-  _fallDelay: 0.5
-  _resetDelay: 4
-  _resetDuration: 0.5
-  _fallDistance: 4
+  _targetPosition: {fileID: 0}
+  _speed: 5
+  _fallDuration: 2.5
+  _returnDuration: 2.5

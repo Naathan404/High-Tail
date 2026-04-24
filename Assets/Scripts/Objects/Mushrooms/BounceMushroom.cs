@@ -52,6 +52,7 @@ public class BouncyMushroom : MonoBehaviour
 
         player.Rb.linearVelocity = Vector2.zero;
         player.Rb.linearVelocity = new Vector2(player.Rb.linearVelocity.x, finalForce);
+        player.StateMachine.ChangeState(player.BounceState);
         player.CanDash = true; 
     }
 }

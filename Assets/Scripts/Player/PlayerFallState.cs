@@ -1,8 +1,12 @@
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.UIElements;
 
 public class PlayerFallState : PlayerState
 {
+    private float _timeToMakeLandingEffect = 1f;
+    private float _timer = 0f;
     public PlayerFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -11,7 +15,7 @@ public class PlayerFallState : PlayerState
     {
         base.Enter();
         Debug.Log("Vào fall state");
-
+        _timer = 0f;
         _player.Visual.Anim.Play("playerFall");
         _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
     }
@@ -19,6 +23,10 @@ public class PlayerFallState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        
+        // timer timer timer
+        _timer += Time.deltaTime;
+
         _player.CheckFlip(_player.MoveX);
         // Kiểm tra tiếp đất
         if (_player.IsOnGround())
@@ -105,9 +113,19 @@ public class PlayerFallState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        if(_timer >= _timeToMakeLandingEffect)
+        {
+            CameraShakeManager.Instance.ShakeForLanding();
+            _player.Visual.LandingDustParticle.gameObject.SetActive(true);
+            _player.Visual.LandingDustParticle.Play();
+            _timer = 0f;
+        }
+        else
+        {
+            _player.Visual.FallDustParticle.gameObject.SetActive(true);
+            _player.Visual.FallDustParticle.Play();
+            _timer = 0f;
+        }
         _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
-        GameObject obj = _player.Visual.FallDustPool.GetObject();
-        obj.transform.position = _player.Visual.transform.position;
-        _player.Visual.JumpDustPool.ReturnToPool(obj);
     }
 }
