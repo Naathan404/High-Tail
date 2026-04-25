@@ -43,6 +43,7 @@ public class CameraManager : Singleton<CameraManager>
     private float _defaultFOV;
     private Vector3 _defaultTargetOffset; 
     private bool _isInDialogue = false;
+    private float _currentFOV;
 
     public BoxCollider2D CurrentBoundary;
 
@@ -72,6 +73,7 @@ public class CameraManager : Singleton<CameraManager>
         }
 
         _defaultFOV = _cineCam.Lens.FieldOfView;
+        _currentFOV = _cineCam.Lens.FieldOfView;
         _defaultScreenY = _composerComponent.Composition.ScreenPosition.y;
 
         InputManager.Instance.Inputs.Camera.Look.performed += OnLookPerformed;
@@ -174,7 +176,7 @@ public class CameraManager : Singleton<CameraManager>
                 lens.FieldOfView = x;
                 _cineCam.Lens = lens;
             },
-            _defaultFOV, 
+            _currentFOV,
             _dialogueTransitionTime).SetEase(Ease.InOutCubic));
             
         _dialogueSequence.OnComplete(() => {
@@ -189,11 +191,13 @@ public class CameraManager : Singleton<CameraManager>
     }
 
     [System.Obsolete]
-    public void SwitchRoom(BoxCollider2D newRoomCollider, int FOV)
+    public void SwitchRoom(BoxCollider2D newRoomCollider, int FOV, bool isDialogue = false)
     {
         if (_confinerComponent.BoundingShape2D == newRoomCollider) return;
         
         _cineCam.Lens.FieldOfView = FOV;
+        if(!isDialogue)
+            _currentFOV = FOV;
         _confinerComponent.BoundingShape2D = newRoomCollider;
         _confinerComponent.InvalidateCache();
         StartCoroutine(RoomTransitionFreeze());
