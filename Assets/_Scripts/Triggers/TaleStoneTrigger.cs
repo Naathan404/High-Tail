@@ -48,7 +48,7 @@ public class TaleStoneTrigger : MonoBehaviour
 
         
         // nếu _canInteract và isActivated = false
-        if(InputManager.Instance.Inputs.Testing.ShockWave.WasPressedThisFrame())
+        if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
             CameraManager.Instance.SwitchRoom(_confiderCollider);
             _canInteract = false;
