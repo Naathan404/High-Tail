@@ -31,7 +31,7 @@ public class DialogueTrigger : MonoBehaviour
             {
                 player.Rb.linearVelocity = Vector2.zero;
             }
-            CameraManager.Instance.SwitchRoom(_confiderCollider);
+            CameraManager.Instance.SwitchRoom(_confiderCollider, 50);
             DialogueManager.Instance.StartDialogue(
                 _dialogueData,
                 _npcTransform,

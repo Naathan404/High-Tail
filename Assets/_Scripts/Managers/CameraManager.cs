@@ -189,10 +189,11 @@ public class CameraManager : Singleton<CameraManager>
     }
 
     [System.Obsolete]
-    public void SwitchRoom(BoxCollider2D newRoomCollider)
+    public void SwitchRoom(BoxCollider2D newRoomCollider, int FOV)
     {
         if (_confinerComponent.BoundingShape2D == newRoomCollider) return;
-
+        
+        _cineCam.Lens.FieldOfView = FOV;
         _confinerComponent.BoundingShape2D = newRoomCollider;
         _confinerComponent.InvalidateCache();
         StartCoroutine(RoomTransitionFreeze());
