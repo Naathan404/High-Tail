@@ -9,6 +9,8 @@ public class DeathScreenManager : Singleton<DeathScreenManager>
     [SerializeField] private float _openDuration = 0.35f;  
     [SerializeField] private float _blackoutTime = 0.2f;  
 
+    public static event System.Action OnDeathScreenTriggered;
+
     private void Start()
     {
         _irisMaterial.SetFloat("_IrisWipeRadius", 1.5f); 
@@ -31,6 +33,7 @@ public class DeathScreenManager : Singleton<DeathScreenManager>
         onRespawnReady?.Invoke(); 
         
         // đợi màn hình đen
+        OnDeathScreenTriggered?.Invoke();
         yield return new WaitForSeconds(_blackoutTime);
 
         // mở lỗ tròn ở vị trí hồi sinh
