@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
 
 public class CameraRoom : MonoBehaviour
 {
     public BoxCollider2D _confinerCollider;
+    [SerializeField] private int _roomFOV = 85;
 
     private void Awake()
     {
@@ -18,7 +20,7 @@ public class CameraRoom : MonoBehaviour
         {
             CameraManager.Instance.CurrentBoundary = _confinerCollider;
             // Gọi CameraManager để đổi phòng
-            CameraManager.Instance.SwitchRoom(_confinerCollider);
+            CameraManager.Instance.SwitchRoom(_confinerCollider, _roomFOV);
         }
     }
 
