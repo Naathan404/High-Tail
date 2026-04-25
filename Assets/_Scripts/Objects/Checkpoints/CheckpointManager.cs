@@ -35,7 +35,7 @@ public class CheckpointManager : Singleton<CheckpointManager>
         player.transform.position = CurrentSpawnPoint.position;
         player.Rb.linearVelocity = Vector2.zero;
         float right = _isFacingRight ? 1f : -1f;
-        player.transform.localScale = new Vector2(right, player.transform.localScale.y);
+        player.transform.localScale = new Vector2(right, 1f);
         player.SetFacingDirection(_isFacingRight);
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class PlayerFallState : PlayerState
 {
-    private float _timeToMakeLandingEffect = 1f;
+    private float _timeToMakeLandingEffect = 0.8f;
     private float _timer = 0f;
     public PlayerFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {

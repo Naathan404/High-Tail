@@ -34,12 +34,12 @@ public class TriggerPlatform : MonoBehaviour
     {
         _player = FindAnyObjectByType<PlayerController>();
         if(_player == null) Debug.Log("Khong tim thay nguoi choi");
-        if (_player != null) _player.OnPlayerDied += ResetPlatform;
+        if (_player != null) PlayerController.OnPlayerDied += ResetPlatform;
     }
 
     private void OnDisable()
     {
-        if (_player != null) _player.OnPlayerDied -= ResetPlatform;
+        if (_player != null) PlayerController.OnPlayerDied -= ResetPlatform;
     }
 
     private void FixedUpdate()

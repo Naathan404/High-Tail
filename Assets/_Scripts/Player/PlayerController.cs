@@ -54,6 +54,7 @@ public partial class PlayerController : MonoBehaviour
     public bool IsBlocked = false;
     public Vector2 DashDirection;
     public bool CanMove = true;
+    private Vector2 _originalScale;
     public float BaseGravity => Data.gravityScale * Data.fallMultiplier;
     [HideInInspector] public Vector2 CurrentWindForce;
 
@@ -98,7 +99,7 @@ public partial class PlayerController : MonoBehaviour
     #region Events
     public event Action OnPlayerHealed;
     public event Action OnPlayerDamaged;
-    public event Action OnPlayerDied;
+    public static event Action OnPlayerDied;
     public event Action OnPlayerHardLanded;
     #endregion
 
@@ -131,7 +132,7 @@ public partial class PlayerController : MonoBehaviour
 
         _isFacingRight = true;
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
-
+        _originalScale = this.transform.localScale;
         InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
     }
 

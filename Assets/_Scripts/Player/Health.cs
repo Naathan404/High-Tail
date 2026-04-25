@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public partial class PlayerController
@@ -49,7 +50,7 @@ public partial class PlayerController
             () =>
             {
                 CheckpointManager.Instance.RespawnPlayer(this);
-                _stateMachine.ChangeState(IdleState); 
+                _stateMachine.ChangeState(IdleState);
             },
             Data.respawnDuration
         );
