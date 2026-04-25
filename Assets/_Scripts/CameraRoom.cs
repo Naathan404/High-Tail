@@ -4,7 +4,7 @@ using UnityEngine;
 public class CameraRoom : MonoBehaviour
 {
     public BoxCollider2D _confinerCollider;
-    [SerializeField] private int _roomFOV = 85;
+    [SerializeField] private int _roomFOV = 80;
 
     private void Awake()
     {
