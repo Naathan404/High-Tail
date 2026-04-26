@@ -28,7 +28,10 @@ public class EndDialogueCallbackHelper : MonoBehaviour
                 break;               
             case (int)Skill.DoubleJump:
                 _player.UnlockDoubleJump();
-                break;                  
+                break;                
+            case (int)Skill.AstralLight:
+                _player.UnlockAstralLight();  
+                break;
             default:
                 break;                    
         }
@@ -42,6 +45,7 @@ public class EndDialogueCallbackHelper : MonoBehaviour
         AirGlide,           // 2
         Glow,              // 3 
         Pogo,              // 4
-        DoubleJump          // 5
+        DoubleJump,          // 5
+        AstralLight         // 6
     }
 }

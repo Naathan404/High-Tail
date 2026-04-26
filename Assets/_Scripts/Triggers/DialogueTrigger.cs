@@ -29,8 +29,16 @@ public class DialogueTrigger : MonoBehaviour
             PlayerController player = collision.GetComponent<PlayerController>();
             if(player != null)
             {
+                if(player.StateMachine.CurrentState != player.IdleState 
+                && player.StateMachine.CurrentState != player.RunState 
+                && player.StateMachine.CurrentState != player.DashState
+                && player.StateMachine.CurrentState != player.JumpState)
+                {
+                    return;
+                }
                 player.Rb.linearVelocity = Vector2.zero;
             }
+
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             DialogueManager.Instance.StartDialogue(
                 _dialogueData,

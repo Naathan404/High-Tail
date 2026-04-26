@@ -31,6 +31,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerVineClimbState VineClimbState { get; private set; }
     public PlayerVineSwingState VineSwingState { get; private set; }
     public PlayerBounceState BounceState { get; private set; }
+    public AstralPulseSkill AstralPulseSkill;
 
 
 
@@ -159,6 +160,11 @@ public partial class PlayerController : MonoBehaviour
             MoveX = 0;
             MoveY = 0;
             return;
+        }
+
+        if(InputManager.Instance.Inputs.Movement.Light.WasPressedThisFrame() && Data.AstralPulseUnlocked)
+        {
+            AstralPulseSkill.CastPulse();
         }
 
         if (_vineGrabCooldownTimer > 0)

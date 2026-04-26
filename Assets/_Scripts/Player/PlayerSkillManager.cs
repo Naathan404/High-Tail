@@ -16,6 +16,8 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private Text _glowDes;
     [SerializeField] private Text _doubleJumpName;
     [SerializeField] private Text _doubleJumpDes;
+    [SerializeField] private Text _astralPulseName;
+    [SerializeField] private Text _astralPulseDes;
 
     public void UnlockWallJumpWallSlide()
     {
@@ -48,5 +50,11 @@ public partial class PlayerController : MonoBehaviour
     {
         Data.DoubleJumpUnlocked = true;
         UIManager.Instance.ShowSkillUnlocked(_doubleJumpName, _doubleJumpDes);
+    }
+
+    public void UnlockAstralLight()
+    {
+        Data.AstralPulseUnlocked = true;
+        UIManager.Instance.ShowSkillUnlocked(_astralPulseName, _astralPulseDes);
     }
 }
