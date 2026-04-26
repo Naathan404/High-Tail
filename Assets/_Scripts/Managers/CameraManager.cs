@@ -14,6 +14,10 @@ public class CameraManager : Singleton<CameraManager>
     [SerializeField] private float _timeFreezeStrength = 0.01f;
     [SerializeField] private float _timeFreezeDuration = 0.05f;
 
+    [Header("Dynamic Zoom Settings")]
+    [SerializeField] private float _speedThreshold = 10f;
+    // [SerializeField] private float _zoomLerpSpeed = 3f;
+
     [Header("Dialogue Zoom Settings")]
     [SerializeField] private float _setUpFOV = 70f;
     [SerializeField] private float _dialogueZoomFOV = 40f; 
@@ -43,7 +47,10 @@ public class CameraManager : Singleton<CameraManager>
     private float _defaultFOV;
     private Vector3 _defaultTargetOffset; 
     private bool _isInDialogue = false;
-    private float _currentFOV;
+    private float _currentFOV;     
+    private float _roomBaseFOV;     
+    private float _roomDashFOV;     
+    private bool _isDynamicRoom;    
 
     public BoxCollider2D CurrentBoundary;
 
@@ -72,8 +79,8 @@ public class CameraManager : Singleton<CameraManager>
             _defaultTargetOffset = _composerComponent.TargetOffset;
         }
 
-        _defaultFOV = _cineCam.Lens.FieldOfView;
-        _currentFOV = _cineCam.Lens.FieldOfView;
+        _roomBaseFOV = _cineCam.Lens.FieldOfView;
+        _currentFOV = _roomBaseFOV;
         _defaultScreenY = _composerComponent.Composition.ScreenPosition.y;
 
         InputManager.Instance.Inputs.Camera.Look.performed += OnLookPerformed;
@@ -95,6 +102,38 @@ public class CameraManager : Singleton<CameraManager>
         {
             StartLookTween(0);
         }
+
+        float targetFOV = _roomBaseFOV; // Mặc định là FOV tĩnh của phòng
+
+        if (_isDynamicRoom)
+        {
+            // Nếu là phòng Dynamic, FOV thay đổi theo vận tốc
+            float speed = Mathf.Abs(_playerRb.linearVelocity.x);
+            if (speed > _speedThreshold) 
+            {
+                targetFOV = _roomDashFOV;
+            }
+        }
+        
+        
+        // if (!Mathf.Approximately(_cineCam.Lens.FieldOfView, targetFOV))
+        // {
+        //     var lens = _cineCam.Lens;
+        //     lens.FieldOfView = Mathf.Lerp(lens.FieldOfView, targetFOV, Time.deltaTime * _zoomLerpSpeed);
+        //     _cineCam.Lens = lens;
+        // }     
+    }
+
+    public void ForceUpdateRoomSettings(float baseFOV, bool isDynamic, float dashFOV)
+    {
+        _roomBaseFOV = baseFOV;
+        _currentFOV = baseFOV;
+        _isDynamicRoom = isDynamic;
+        _roomDashFOV = dashFOV;
+
+        var lens = _cineCam.Lens;
+        lens.FieldOfView = baseFOV;
+        _cineCam.Lens = lens;
     }
 
     public void ZoomIntoDialogue(Transform npcTransform, System.Action onComplete = null)
@@ -123,7 +162,7 @@ public class CameraManager : Singleton<CameraManager>
             _dialogueTransitionTime).SetEase(Ease.InOutCubic));
 
         _dialogueSequence.Join(DOTween.To(
-            () => /*_cineCam.Lens.FieldOfView*/ _setUpFOV,
+            () => _cineCam.Lens.FieldOfView,
             x => {
                 var lens = _cineCam.Lens;
                 lens.FieldOfView = x;
@@ -191,17 +230,24 @@ public class CameraManager : Singleton<CameraManager>
     }
 
     [System.Obsolete]
-    public void SwitchRoom(BoxCollider2D newRoomCollider, int FOV, bool isDialogue = false)
+    public void SwitchRoom(BoxCollider2D newRoomCollider, float baseFOV, bool isDynamic, float dashFOV, bool isDialogue = false)
     {
         if (_confinerComponent.BoundingShape2D == newRoomCollider) return;
         
-        _cineCam.Lens.FieldOfView = FOV;
         if(!isDialogue)
-            _currentFOV = FOV;
+        {
+            _roomBaseFOV = baseFOV;
+            _isDynamicRoom = isDynamic;
+            _roomDashFOV = dashFOV;
+            _currentFOV = baseFOV;
+        }
+
+        // Đổi ranh giới và Invalid Cache
         _confinerComponent.BoundingShape2D = newRoomCollider;
         _confinerComponent.InvalidateCache();
+        
         StartCoroutine(RoomTransitionFreeze());
-    }
+    }   
 
     private IEnumerator RoomTransitionFreeze()
     {

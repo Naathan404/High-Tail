@@ -50,7 +50,7 @@ public class TaleStoneTrigger : MonoBehaviour
         // nếu _canInteract và isActivated = false
         if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
-            CameraManager.Instance.SwitchRoom(_confiderCollider, 50, true);
+            CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             _canInteract = false;
             TaleStoneManager.Instance.StartTale(
             _taleStoneData,
