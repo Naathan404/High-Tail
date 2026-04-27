@@ -5,6 +5,7 @@ using UnityEngine.PlayerLoop; // Dùng để làm Sóc bẹp dúm
 public class CrusherDamage : MonoBehaviour
 {
     public bool IsDangerous = false; 
+    public bool IsVerticle = true;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -30,7 +31,10 @@ public class CrusherDamage : MonoBehaviour
             PlayerController player = collision.GetComponent<PlayerController>();
             if (player != null)
             {
-                collision.transform.DOScale(new Vector3(1.2f, 0.5f, 1f), 0.1f);
+                if(IsVerticle)
+                    collision.transform.DOScale(new Vector3(1.1f, 0.9f, 1f), 0.1f);
+                else
+                    collision.transform.DOScale(new Vector3(0.9f, 1.1f, 1f), 0.1f);
                 player.KillPlayer();
             }
         }
@@ -60,7 +64,10 @@ public class CrusherDamage : MonoBehaviour
             PlayerController player = collision.GetComponent<PlayerController>();
             if (player != null)
             {
-                collision.transform.DOScale(new Vector3(1.05f, 0.95f, 1f), 0.1f);
+                if(IsVerticle)
+                    collision.transform.DOScale(new Vector3(1.1f, 0.9f, 1f), 0.1f);
+                else
+                    collision.transform.DOScale(new Vector3(0.9f, 1.1f, 1f), 0.1f);
                 player.KillPlayer();
             }
         }
