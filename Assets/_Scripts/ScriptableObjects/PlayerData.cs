@@ -14,6 +14,7 @@ public class PlayerData : ScriptableObject
     public bool PogoUnlocked = false;
     public bool GlowUnlocked = false;
     public bool DoubleJumpUnlocked = false;
+    public bool AstralPulseUnlocked = false;
 
     [Header("Run")]
     public float maxMoveSpeed = 10;

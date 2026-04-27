@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
+  m_Name: Mushroom_M2R7
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  Name:
+    textVI: Timid
+    textEN: Timid
+  CharSprite: {fileID: 4909223577637351308, guid: 835da090a4feaa24a9bf418b76de31a0, type: 3}
+  DialogueLines:
+  - IsYou: 0
+    textVI: "Ch\xE0o..."
+    textEN: Hi...
+    autoSkip: 0
+  - IsYou: 0
+    textVI: "Xin h\xE3y gi\xFAp t\xF4i, t\xF4i b\u1ECB l\u1EA1c v\xE0 kh\xF4ng bi\u1EBFt
+      \u0111\u01B0\u1EDDng ra..."
+    textEN: Please help me find the way out, I got lost...
+    autoSkip: 0
+  - IsYou: 1
+    textVI: "H\xE3y \u0111i th\u1EED v\u1EC1 ph\xEDa \u0111\xF4ng, t\xF4i v\u1EEBa
+      t\u1EEB ph\xEDa \u0111\xF3 \u0111\u1EBFn \u0111\xE2y"
+    textEN: Go to the east, I just got here from that direction.
+    autoSkip: 0
+  - IsYou: 0
+    textVI: "Oh c\u1EA3m \u01A1n. "
+    textEN: Oh thank you...
+    autoSkip: 0
+  - IsYou: 1
+    textVI: "\u0110\u1EC3 c\u1EA3m \u01A1n t\xF4i s\u1EBD ch\u1EC9 b\u1EA1n \u0111i\u1EC1u
+      m\xE0 t\xF4i h\u1ECDc \u0111\u01B0\u1EE3c trong l\xFAc b\u1ECB l\u1EA1c \u1EDF
+      \u0111\xE2y"
+    textEN: I wll show youi the thing that I learnt while I lost here.
+    autoSkip: 0
+  EndDialogue: 
+  AutoProgressDelay: 1.5
+  TypingSpeed: 0.05
+  VoiceSound: {fileID: 0}
+  VoicePitch: 1
+  IsActivated: 0

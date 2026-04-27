@@ -58,11 +58,14 @@ public class CameraManager : Singleton<CameraManager>
     private void OnEnable()
     {
         AstralGift.OnCollected += _shockWave.CallShockWave;
+        AstralPulseSkill.OnPulsed += _shockWave.CallShockWave;
     }
 
     private void OnDisable()
     {
         AstralGift.OnCollected -= _shockWave.CallShockWave;
+        AstralPulseSkill.OnPulsed -= _shockWave.CallShockWave;
+
     }
 
     private void Start()
