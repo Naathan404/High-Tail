@@ -12,29 +12,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c888ce374e546d49a1fa397dec45be9, type: 3}
   m_Name: PlayerDataScene1
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
+  WallJumpUnlocked: 0
+  WallSlideUnlocked: 0
+  DashUnlocked: 0
+  AirGlideUnlocked: 0
+  PogoUnlocked: 0
+  GlowUnlocked: 0
+  DoubleJumpUnlocked: 0
   maxMoveSpeed: 8
-  jumpForce: 25
-  upperJumpForce: 30
-  jumpWallForce: 12
-  dashForce: 50
-  wallSlideGravityScale: 0.5
-  airGlideGravityScale: 0.3
-  maxGlideSpeed: 4
-  pogoForce: 20
-  maxHP: 5
-  maxEnergy: 100
-  jumpBufferTime: 0.15
-  coyoteTime: 0.15
-  gravityScale: 1
-  fallMultiplier: 8
   acceleration: 50
-  decceleration: 90
+  deceleration: 90
   boostVelocity: 1
   velocityPower: 0.9
+  jumpForce: 25
+  upperJumpForce: 30
+  jumpWallForce: {x: 12, y: 20}
+  gravityScale: 1
+  fallMultiplier: 8
+  dashForce: 50
   dashDuration: 0.15
   bounceHorizontalForce: 10
   bounceVerticalForce: 5
-  glideAccelaration: 5
+  glideAcceleration: 5
+  airGlideGravityScale: 0.3
+  maxGlideSpeed: 4
+  wallSlideGravityScale: 0.5
+  pogoForce: 20
+  climbForce: 5
+  swingForce: 60
+  impulseForce: 10
+  kickbackForce: 10
+  jumpBufferTime: 0.15
+  coyoteTime: 0.15
+  respawnDuration: 0.5
+  maxSpeedX: 100
+  maxSpeedY: 25
+  maxHP: 5
+  maxEnergy: 100
   energyCostJump: 4
   energyCostDash: 20
   energyRegenPerSecond: 1
