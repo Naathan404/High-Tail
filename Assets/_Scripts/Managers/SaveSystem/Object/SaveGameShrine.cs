@@ -1,14 +1,28 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SaveGameShrine : MonoBehaviour, IInteractable
 {
+    [Header("Save settings")]
     private bool _canInteract = true;
     [SerializeField] private string _id;
     public string ID => _id;
 
+    [Header("Detection")]
+    [SerializeField] private float _radius = 2f; // Bán kính kiểm tra player
+    [SerializeField] private LayerMask _playerLayer; // Layer của Player
+    [SerializeField] private GameObject _visualIndicator;
+    private bool _isPlayerNearby = false;
+
     private void Start()
     {
         EnableShrine();
+        if (_visualIndicator != null) _visualIndicator.SetActive(false);
+    }
+
+    private void Update()
+    {
+        CheckForPlayer();
     }
 
     private void OnEnable()
@@ -48,10 +62,51 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     {
         _canInteract = false;
         GetComponent<SpriteRenderer>().color =Color.gray;
+        ShowIndicator(false);
     }
     public void EnableShrine()
     {
         _canInteract = true;
         GetComponent<SpriteRenderer>().color = Color.white;
     }
+
+    #region Detection
+    private void CheckForPlayer()
+    {
+        // Kiểm tra xem có Player trong vùng bán kính không
+        Collider2D player = Physics2D.OverlapCircle(transform.position, _radius, _playerLayer);
+
+        if (player != null)
+        {
+            if (!_isPlayerNearby)
+            {
+                _isPlayerNearby = true;
+                ShowIndicator(true);
+            }
+        }
+        else
+        {
+            if (_isPlayerNearby)
+            {
+                _isPlayerNearby = false;
+                ShowIndicator(false);
+            }
+        }
+    }
+
+    private void ShowIndicator(bool show)
+    {
+        // Chỉ hiện bảng khi Shrine đang hoạt động và có player ở gần
+        if (_visualIndicator != null)
+        {
+            _visualIndicator.SetActive(show && _canInteract);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, _radius);
+    }
+    #endregion
 }
