@@ -99,7 +99,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
         // Chỉ hiện bảng khi Shrine đang hoạt động và có player ở gần
         if (_visualIndicator != null)
         {
-            _visualIndicator.SetActive(show && _canInteract);
+            UIHelper.AnimateZoom(_visualIndicator, show && _canInteract);
         }
     }
 

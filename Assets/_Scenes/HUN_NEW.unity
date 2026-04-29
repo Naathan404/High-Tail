@@ -2629,10 +2629,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   _skillUnlockedPanel: {fileID: 1704269457}
   _skillUnlockedText: {fileID: 210625958}
+  _howToUseText: {fileID: 0}
   _panelCanvasGroup: {fileID: 1704269458}
   _animationDuration: 0.5
   _typewriterDuration: 1
   _skillUnlockedPanelShowTime: 3
+  _howToUseFadeDuration: 0.5
 --- !u!4 &874906035
 Transform:
   m_ObjectHideFlags: 0
@@ -4717,6 +4719,7 @@ MonoBehaviour:
   _lookDuration: 0.5
   _timeFreezeStrength: 0.01
   _timeFreezeDuration: 0.05
+  _speedThreshold: 10
   _setUpFOV: 85
   _dialogueZoomFOV: 60
   _dialogueTransitionTime: 2
@@ -5059,6 +5062,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraShakeManager
   dashShakeSource: {fileID: 1679556243}
   damageShakeSource: {fileID: 702042332}
+  landingShakeSource: {fileID: 0}
   defaultShakeSource: {fileID: 1629862523}
 --- !u!114 &1679556243 stripped
 MonoBehaviour:
@@ -5844,7 +5848,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -2002534917
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 9d1a3e0bc36dfc9468a738d92b6e92d4, type: 3}

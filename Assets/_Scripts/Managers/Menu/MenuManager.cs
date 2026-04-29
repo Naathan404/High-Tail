@@ -82,13 +82,32 @@ public class MenuManager : Singleton<MenuManager>
 
     void Update()
     {
+        //Keyboard
+        if (InputManager.Instance.Inputs.UI.Menu.WasPressedThisFrame())
+        {
+            // Tận dụng hàm OnBackClicked vì nó đã có sẵn logic đóng sub-panel hoặc tắt main menu
+            if (isSidePanelOpen || settingsPanel.activeSelf || creditPanel.activeSelf || continuePanel.activeSelf)
+            {
+                OnBackClicked();
+            }
+            else
+            {
+                // Mở menu nếu đang ở trong game
+                OnPauseClicked(); 
+            }
+        }
         if (!isSidePanelOpen || sidePanelButtons.Count == 0) return;
         if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
         {
-            if (currentButtonIndex != -1)
+            RectTransform panelRect = sidePanel.GetComponent<RectTransform>();
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            if (panelRect != null && RectTransformUtility.RectangleContainsScreenPoint(panelRect, mousePosition, null))
             {
-                currentButtonIndex = -1;
-                EventSystem.current.SetSelectedGameObject(null);
+                if (currentButtonIndex != -1)
+                {
+                    currentButtonIndex = -1;
+                    EventSystem.current.SetSelectedGameObject(null);
+                }
             }
         }
         if (Keyboard.current == null) return;
