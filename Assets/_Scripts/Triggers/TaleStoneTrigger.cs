@@ -24,7 +24,6 @@ public class TaleStoneTrigger : MonoBehaviour
     private void Awake()
     {
         _trigger = GetComponent<Collider2D>();
-        _interactMark.SetActive(false);
     }
 
     [System.Obsolete]
@@ -33,8 +32,6 @@ public class TaleStoneTrigger : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             if(_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) return;
-
-            _interactMark.SetActive(true);
             _canInteract = true;
         }
         
@@ -43,6 +40,7 @@ public class TaleStoneTrigger : MonoBehaviour
     [System.Obsolete]
     private void Update()
     {
+        _interactMark.SetActive(_canInteract);
         if(_type == TaleStoneType.SkillUnlock && (!_canInteract || _taleStoneData.IsActivated )) return;
         if(_type != TaleStoneType.SkillUnlock && !_canInteract) return;
 
@@ -58,6 +56,14 @@ public class TaleStoneTrigger : MonoBehaviour
             () =>
             {
                 OnTaleStoneDialogueCompleted?.Invoke();
+                if(_type == TaleStoneType.SkillUnlock)
+                {
+                    _canInteract = false;
+                }
+                else
+                {
+                    _canInteract = true;
+                }
             });
             _taleStoneData.IsActivated = true;
         }

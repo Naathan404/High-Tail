@@ -241,6 +241,9 @@ public class CameraManager : Singleton<CameraManager>
             _isDynamicRoom = isDynamic;
             _roomDashFOV = dashFOV;
             _currentFOV = baseFOV;
+            var lens = _cineCam.Lens;
+            lens.FieldOfView = baseFOV;
+            _cineCam.Lens = lens;
         }
 
         // Đổi ranh giới và Invalid Cache

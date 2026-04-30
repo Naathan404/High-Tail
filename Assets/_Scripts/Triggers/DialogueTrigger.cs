@@ -7,6 +7,9 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private DialogueData _dialogueData;
     [SerializeField] private Transform _npcTransform;
+    [SerializeField] private bool _canInteract = false;
+    [SerializeField] private GameObject _interactMark;
+    [SerializeField] private bool _isOneTimeTrigger = false;
 
     [Header("Camera Collider")]
     [SerializeField] private BoxCollider2D _confiderCollider;
@@ -21,24 +24,12 @@ public class DialogueTrigger : MonoBehaviour
     }
 
     [System.Obsolete]
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void Update()
     {
-        if(_dialogueData.IsActivated) return;
-        if(collision.gameObject.CompareTag("Player"))
+        _interactMark.SetActive(_canInteract);
+        if(!_canInteract) return;
+        if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
-            PlayerController player = collision.GetComponent<PlayerController>();
-            if(player != null)
-            {
-                if(player.StateMachine.CurrentState != player.IdleState 
-                && player.StateMachine.CurrentState != player.RunState 
-                && player.StateMachine.CurrentState != player.DashState
-                && player.StateMachine.CurrentState != player.JumpState)
-                {
-                    return;
-                }
-                player.Rb.linearVelocity = Vector2.zero;
-            }
-
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             DialogueManager.Instance.StartDialogue(
                 _dialogueData,
@@ -46,9 +37,44 @@ public class DialogueTrigger : MonoBehaviour
                 () =>
                 {
                     OnDialogueCompleted?.Invoke();
+                    if(_isOneTimeTrigger)
+                    {
+                        _canInteract = false;
+                    }
+                    else
+                    {
+                        _canInteract = true;
+                    }
+                    _dialogueData.IsActivated = true;
                 });
-            _dialogueData.IsActivated = true;
         }
+    }
+
+    [System.Obsolete]
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(_isOneTimeTrigger && _dialogueData.IsActivated) return;
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            PlayerController player = collision.GetComponent<PlayerController>();
+            if(player != null)
+            {
+                if(player.StateMachine.CurrentState != player.DashState
+                && player.StateMachine.CurrentState != player.JumpState)
+                {
+                    return;
+                }
+
+                _canInteract = true;
+            }
+
+
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        _canInteract = false;
     }
 
     private void OnDrawGizmos()
