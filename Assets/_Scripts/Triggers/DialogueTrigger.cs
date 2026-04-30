@@ -6,6 +6,7 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Trigger Setting")]
     [SerializeField] private BoxCollider2D _collider;
     [SerializeField] private DialogueData _dialogueData;
+    [SerializeField] private DialogueData _secondDaryDialogueData;
     [SerializeField] private Transform _npcTransform;
     [SerializeField] private bool _canInteract = false;
     [SerializeField] private GameObject _interactMark;
@@ -31,8 +32,9 @@ public class DialogueTrigger : MonoBehaviour
         if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
+            _canInteract = false;
             DialogueManager.Instance.StartDialogue(
-                _dialogueData,
+                _dialogueData.IsActivated && !_isOneTimeTrigger ? _secondDaryDialogueData : _dialogueData,
                 _npcTransform,
                 () =>
                 {
@@ -59,8 +61,8 @@ public class DialogueTrigger : MonoBehaviour
             PlayerController player = collision.GetComponent<PlayerController>();
             if(player != null)
             {
-                if(player.StateMachine.CurrentState != player.DashState
-                && player.StateMachine.CurrentState != player.JumpState)
+                if(player.StateMachine.CurrentState == player.DashState
+                && player.StateMachine.CurrentState == player.JumpState)
                 {
                     return;
                 }

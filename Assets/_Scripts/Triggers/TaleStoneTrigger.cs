@@ -41,10 +41,8 @@ public class TaleStoneTrigger : MonoBehaviour
     private void Update()
     {
         _interactMark.SetActive(_canInteract);
+        if(_canInteract == false) return;
         if(_type == TaleStoneType.SkillUnlock && (!_canInteract || _taleStoneData.IsActivated )) return;
-        if(_type != TaleStoneType.SkillUnlock && !_canInteract) return;
-
-        
         // nếu _canInteract và isActivated = false
         if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
