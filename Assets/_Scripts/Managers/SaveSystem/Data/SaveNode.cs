@@ -12,4 +12,5 @@ public class SaveNode
     public string reviveShrineID;   
     public string sceneName;        
     public List<string> deadShrineIDs = new List<string>(); 
+    public SkillSaveData unlockedSkills;
 }

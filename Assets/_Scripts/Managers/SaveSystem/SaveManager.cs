@@ -17,8 +17,8 @@ public class SaveManager : Singleton<SaveManager>
     public GameData MainData { get; private set; }
     [SerializeField] private int _maxSaveNodes = 3;
     [SerializeField] private int _currentSavedNodes = 0;
-
     private string _savePath;
+    [SerializeField] private PlayerController _player;
     [Header("New Game Setting")]
     [SerializeField] private string _startSceneName;
     [SerializeField] private Vector3 _startPosition;
@@ -63,6 +63,10 @@ public class SaveManager : Singleton<SaveManager>
         {
             _transitionCanvasGroup.alpha = 0f;
             _transitionCanvasGroup.blocksRaycasts = false;
+        }
+        if (_player == null)
+        {
+            _player = FindAnyObjectByType<PlayerController>();
         }
     }
 
@@ -208,6 +212,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         RestoreShrinesState(node);
         RestorePlayerPosition(node);
+        RestorePlayerSkills(node);
     }
 
     private void RestoreShrinesState(SaveNode node)
@@ -224,6 +229,13 @@ public class SaveManager : Singleton<SaveManager>
             {
                 shrine.EnableShrine();
             }
+        }
+    }
+    private void RestorePlayerSkills(SaveNode node)
+    {
+        if (_player != null)
+        {
+            _player.Data.LoadSkillSaveData(node.unlockedSkills);
         }
     }
 
@@ -299,7 +311,8 @@ public class SaveManager : Singleton<SaveManager>
             timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             reviveShrineID = activeShrine.ID,
             sceneName = SceneManager.GetActiveScene().name,
-            deadShrineIDs = new List<string>(currentNode.deadShrineIDs)
+            deadShrineIDs = new List<string>(currentNode.deadShrineIDs),
+            unlockedSkills = _player != null ? _player.Data.GetSkillSaveData() : new SkillSaveData()
         };
         if (!newCommit.deadShrineIDs.Contains(activeShrine.ID))
         {
@@ -339,7 +352,10 @@ public class SaveManager : Singleton<SaveManager>
             if (MainData.activeNodeID == nodeID)
             {
                 MainData.activeNodeID = nodeToStay;
-                RestoreShrinesState(GetActiveState());
+
+                SaveNode nodeToRestore = GetActiveState();
+                RestoreShrinesState(nodeToRestore);
+                RestorePlayerSkills(nodeToRestore);                
             }
 
             SaveToDisk();

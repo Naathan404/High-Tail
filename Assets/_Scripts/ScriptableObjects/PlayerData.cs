@@ -1,5 +1,19 @@
 using UnityEngine;
 
+[System.Serializable]
+public struct SkillSaveData
+{
+    public bool WallJumpUnlocked;
+    public bool WallSlideUnlocked;
+    public bool DashUnlocked;
+    public bool AirGlideUnlocked;
+    public bool PogoUnlocked;
+    public bool GlowUnlocked;
+    public bool DoubleJumpUnlocked;
+    public bool AstralPulseUnlocked;
+}
+
+
 [CreateAssetMenu(fileName = "Player Stats",menuName = "High Tail/Player Stats")]
 public class PlayerData : ScriptableObject
 {
@@ -15,6 +29,31 @@ public class PlayerData : ScriptableObject
     public bool GlowUnlocked = false;
     public bool DoubleJumpUnlocked = false;
     public bool AstralPulseUnlocked = false;
+    public SkillSaveData GetSkillSaveData()
+    {
+        return new SkillSaveData
+        {
+            WallJumpUnlocked = this.WallJumpUnlocked,
+            WallSlideUnlocked = this.WallSlideUnlocked,
+            DashUnlocked = this.DashUnlocked,
+            AirGlideUnlocked = this.AirGlideUnlocked,
+            PogoUnlocked = this.PogoUnlocked,
+            GlowUnlocked = this.GlowUnlocked,
+            DoubleJumpUnlocked = this.DoubleJumpUnlocked,
+            AstralPulseUnlocked = this.AstralPulseUnlocked
+        };
+    }
+    public void LoadSkillSaveData(SkillSaveData data)
+    {
+        this.WallJumpUnlocked = data.WallJumpUnlocked;
+        this.WallSlideUnlocked = data.WallSlideUnlocked;
+        this.DashUnlocked = data.DashUnlocked;
+        this.AirGlideUnlocked = data.AirGlideUnlocked;
+        this.PogoUnlocked = data.PogoUnlocked;
+        this.GlowUnlocked = data.GlowUnlocked;
+        this.DoubleJumpUnlocked = data.DoubleJumpUnlocked;
+        this.AstralPulseUnlocked = data.AstralPulseUnlocked;
+    }
 
     [Header("Run")]
     public float maxMoveSpeed = 10;
