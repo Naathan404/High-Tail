@@ -206,15 +206,13 @@ public class SaveManager : Singleton<SaveManager>
 
     private void RestoreGameState(SaveNode node)
     {
-        Vector3 respawnPosition = Vector3.zero;
-        if (string.IsNullOrEmpty(node.reviveShrineID))
-        {
-            respawnPosition = _startPosition;
-        }
-        SaveGameShrine[] shrines = UnityEngine.Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        RestoreShrinesState(node);
+        RestorePlayerPosition(node);
+    }
 
-        PlayerController player = UnityEngine.Object.FindAnyObjectByType<PlayerController>();
-        bool isPlayerTeleported = false;
+    private void RestoreShrinesState(SaveNode node)
+    {
+        SaveGameShrine[] shrines = UnityEngine.Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         foreach (var shrine in shrines)
         {
@@ -226,14 +224,28 @@ public class SaveManager : Singleton<SaveManager>
             {
                 shrine.EnableShrine();
             }
+        }
+    }
 
+    private void RestorePlayerPosition(SaveNode node)
+    {
+        Vector3 respawnPosition = _startPosition;
+        SaveGameShrine[] shrines = UnityEngine.Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        PlayerController player = UnityEngine.Object.FindAnyObjectByType<PlayerController>();
+        bool isPlayerTeleported = false;
+
+        foreach (var shrine in shrines)
+        {
             if (!isPlayerTeleported && (shrine.ID == node.reviveShrineID || string.IsNullOrEmpty(node.reviveShrineID)))
             {
                 if (string.IsNullOrEmpty(node.reviveShrineID))
                 {
                     respawnPosition = _startPosition;
                 }
-                else respawnPosition = shrine.transform.position;
+                else 
+                {
+                    respawnPosition = shrine.transform.position;
+                }
 
                 if (player != null)
                 {
@@ -327,12 +339,12 @@ public class SaveManager : Singleton<SaveManager>
             if (MainData.activeNodeID == nodeID)
             {
                 MainData.activeNodeID = nodeToStay;
+                RestoreShrinesState(GetActiveState());
             }
 
             SaveToDisk();
             Debug.Log($"Đã xóa thành công Node: {nodeID}");
             _saveMenuUI.RefreshUI();
-            RestoreGameState(GetActiveState());
         }
     }
     #endregion
