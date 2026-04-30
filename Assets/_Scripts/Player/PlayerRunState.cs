@@ -22,6 +22,7 @@ public class PlayerRunState : PlayerState
 
         _player.CheckFlip(_player.MoveX);
 
+        
         if(Mathf.Abs(_player.MoveX) < 0.01f && Mathf.Abs(_player.Rb.linearVelocity.x) < 0.1f)
         {
             _stateMachine.ChangeState(_player.IdleState);
@@ -31,14 +32,11 @@ public class PlayerRunState : PlayerState
         if(_player.CanJump())
         {
             _stateMachine.ChangeState(_player.JumpState);
-            return;
         }
-        if(_player.Visual.RunDustParticle.isPlaying) return;
-
         // sau khi kiểm tra mấy cái kia, thì kiểm tra có chạm đất không, không thì chuyển về Rơi
-        if(!_player.IsOnGround())
+        else if(!_player.IsOnGround() && _player.Rb.linearVelocity.y < 0)
         {
-            _player.StateMachine.ChangeState(_player.FallState);
+            _stateMachine.ChangeState(_player.FallState);
             return;
         }
     }
