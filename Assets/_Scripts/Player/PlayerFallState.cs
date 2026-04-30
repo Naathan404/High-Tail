@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class PlayerFallState : PlayerState
 {
-    private float _timeToMakeLandingEffect = 0.6f;
+    private float _timeToMakeLandingEffect = 0.75f;
     private float _timer = 0f;
     public PlayerFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -58,6 +58,12 @@ public class PlayerFallState : PlayerState
         if (_player.JumpPressed)
         {
             _player.SetJumpBufferTimer();
+        }
+
+        if (_player.CanJump())
+        {
+            _stateMachine.ChangeState(_player.JumpState);
+            return;
         }
     }
 
@@ -127,5 +133,7 @@ public class PlayerFallState : PlayerState
             _timer = 0f;
         }
         _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+        Vector2 tempVector = _player.Rb.linearVelocity;
+        _player.Rb.linearVelocity = new Vector2(tempVector.x * 0.5f, tempVector.y);
     }
 }
