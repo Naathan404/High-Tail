@@ -1,7 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using DG.Tweening; // Bắt buộc phải có namespace này
+using DG.Tweening;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -18,12 +18,18 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private float _skillUnlockedPanelShowTime = 3f;    // thời gian tồn tại 
     [SerializeField] private float _howToUseFadeDuration = 0.5f;
 
+    [Header("Debug")]
+    [SerializeField] private TextMeshProUGUI _deathCountText;
+    private int _deathCount = 0;
+
     private void Start()
     {
         if (_skillUnlockedPanel != null)
         {
             _skillUnlockedPanel.SetActive(false);
         }
+
+        _deathCountText.text = _deathCount.ToString();
     }
 
     public void ShowSkillUnlocked(Text skillName, Text skillDes)
@@ -72,5 +78,11 @@ public class UIManager : Singleton<UIManager>
 
         yield return new WaitForSecondsRealtime(0.5f);
         _skillUnlockedPanel.SetActive(false);
+    }
+
+    public void AddDeathCount()
+    {
+        _deathCount++;
+        _deathCountText.text = _deathCount.ToString();
     }
 }

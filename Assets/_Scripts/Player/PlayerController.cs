@@ -376,11 +376,9 @@ public partial class PlayerController : MonoBehaviour
         {
             // Kiểm tra xem mặt đất đang đạp lên là MovingPlatform hay SwingPlatform
             _activePlatform = hit.collider.GetComponent<MovingPlatform>();
-            CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>(); // BỔ SUNG DÒNG NÀY
-
+            CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>();
             return true;
         }
-
         return false;
     }
 

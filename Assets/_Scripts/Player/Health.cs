@@ -33,6 +33,7 @@ public partial class PlayerController
     #region HP and Energy
     public void KillPlayer()
     {
+        UIManager.Instance.AddDeathCount();
         if (_stateMachine.CurrentState == DeathState) return;
 
         _stateMachine.ChangeState(DeathState);

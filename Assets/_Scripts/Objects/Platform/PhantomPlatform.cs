@@ -28,12 +28,14 @@ public class PhantomPlatform : MonoBehaviour, ILightPulseReactive
     {
         _collider.isTrigger = true;
         _spriteRenderer.color = _fadeColor;
+        gameObject.layer = 0;
     }
     public void ReactToLightPulse()
     {
         _spriteRenderer.DOFade(1f, _fadeDuration).SetEase(Ease.InOutQuad)
         .OnComplete(() =>
         {
+           gameObject.layer = 6;
            _collider.isTrigger = false; 
             StartCoroutine(HandleRemainSolid());
         });
@@ -47,6 +49,7 @@ public class PhantomPlatform : MonoBehaviour, ILightPulseReactive
         {
             _spriteRenderer.color = _fadeColor;
             _collider.isTrigger = true;
+            gameObject.layer = 0;
         });
     }
 
