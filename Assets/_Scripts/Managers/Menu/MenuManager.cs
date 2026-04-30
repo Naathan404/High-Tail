@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MenuManager : Singleton<MenuManager>
@@ -57,46 +54,51 @@ public class MenuManager : Singleton<MenuManager>
 
     private void InitializeUI()
     {
-
         sidePanelButtons = new List<Button> {
             contButton,
             newButton,
             setButton,
             creditButton,
-            exitButton };
+            exitButton 
+        };
 
-        ClosePanel();
-        OpenSideMenu(open: true, reset: true);
+        // Khởi tạo ban đầu: Đảm bảo mọi Menu đều đóng và Game đang chạy
+        // (Nếu đây là Scene Main Menu riêng biệt, bạn có thể đổi thành OpenMenu() nhé)
+        CloseAllMenus(); 
     }
 
     private void SetupButtonListeners()
     {
-        pauseButton.onClick.AddListener(OnPauseClicked);
+        // Gán trực tiếp vào các API công khai cho gọn code
+        pauseButton.onClick.AddListener(OpenMenu);
         backButton.onClick.AddListener(OnBackClicked);
         newButton.onClick.AddListener(OnNewGameClicked);
-        contButton.onClick.AddListener(OnContinueClicked);
-        setButton.onClick.AddListener(OnSettingsClicked);
-        creditButton.onClick.AddListener(OnCreditClicked);
+        
+        contButton.onClick.AddListener(() => OpenSubPanel(PanelType.Continue));
+        setButton.onClick.AddListener(() => OpenSubPanel(PanelType.Settings));
+        creditButton.onClick.AddListener(() => OpenSubPanel(PanelType.Credit));
+        
         exitButton.onClick.AddListener(OnExitClicked);
     }
 
     void Update()
     {
-        //Keyboard
+        // 1. Logic bật/tắt bằng phím (ESC)
         if (InputManager.Instance.Inputs.UI.Menu.WasPressedThisFrame())
         {
-            // Tận dụng hàm OnBackClicked vì nó đã có sẵn logic đóng sub-panel hoặc tắt main menu
             if (isSidePanelOpen || settingsPanel.activeSelf || creditPanel.activeSelf || continuePanel.activeSelf)
             {
                 OnBackClicked();
             }
             else
             {
-                // Mở menu nếu đang ở trong game
-                OnPauseClicked(); 
+                OpenMenu(); 
             }
         }
+
         if (!isSidePanelOpen || sidePanelButtons.Count == 0) return;
+
+        // 2. Logic Reset lựa chọn khi rê chuột
         if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
         {
             RectTransform panelRect = sidePanel.GetComponent<RectTransform>();
@@ -105,12 +107,14 @@ public class MenuManager : Singleton<MenuManager>
             {
                 if (currentButtonIndex != -1)
                 {
-                    currentButtonIndex = -1;
-                    EventSystem.current.SetSelectedGameObject(null);
+                    ResetSelection();
                 }
             }
         }
+
         if (Keyboard.current == null) return;
+
+        // 3. Logic điều hướng bàn phím
         if (/*PauseGameManager.IsGamePaused*/ true)
         {
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
@@ -121,20 +125,32 @@ public class MenuManager : Singleton<MenuManager>
             {
                 SelectNext();
             }
+            
             if (currentButtonIndex != -1 &&
-                Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)
+                (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame))
             {
                 sidePanelButtons[currentButtonIndex].onClick.Invoke();
             }
         }
-
     }
 
-    #region Public API
+    #region Public API (LUỒNG CHÍNH ĐỂ QUẢN LÝ PAUSE/UNPAUSE)
+
     public void OpenMenu()
     {
+        PauseGameManager.SetPause(true); // NGỪNG GAME
         SwitchTopLeftButton(isMenuOpen: true);
+        ClosePanel(); // Đảm bảo các sub-panel bị tắt trước khi mở Side Menu
         OpenSideMenu(open: true, reset: true);
+    }
+
+    public void CloseAllMenus()
+    {
+        PauseGameManager.SetPause(false); // TIẾP TỤC GAME
+        SwitchTopLeftButton(isMenuOpen: false);
+        
+        if (isSidePanelOpen) OpenSideMenu(false);
+        ClosePanel(); // Tắt toàn bộ sub-panel
     }
 
     public enum PanelType
@@ -146,80 +162,43 @@ public class MenuManager : Singleton<MenuManager>
 
     public void OpenSubPanel(PanelType type)
     {
+        PauseGameManager.SetPause(true); // NGỪNG GAME (Trường hợp gọi từ script khác)
         SwitchTopLeftButton(isMenuOpen: true);
+        
+        if (isSidePanelOpen) OpenSideMenu(false); // Tắt Side Menu đi
+        ClosePanel(); // Đóng các sub-panel khác trước khi mở cái mới
+
         switch (type)
         {
-            case PanelType.Settings:
-                OnSettingsClicked();
-                break;
-            case PanelType.Credit:
-                OnCreditClicked();
-                break;
-            case PanelType.Continue:
-                OnContinueClicked();
-                break;
+            case PanelType.Settings: OpenPanel(settingsPanel, true); break;
+            case PanelType.Credit: OpenPanel(creditPanel, true); break;
+            case PanelType.Continue: OpenPanel(continuePanel, true); break;
         }
     }
-
-    public void CloseMenu()
-    {
-        if (isSidePanelOpen)
-        {
-            OpenSideMenu(false);
-        }
-        SwitchTopLeftButton(isMenuOpen: false);
-        ClosePanel();
-    }
-
     #endregion
 
     #region Click Handlers
-    private void OnPauseClicked()
-    {
-        SwitchTopLeftButton(isMenuOpen: true);
-        ClosePanel();
-        OpenSideMenu(open: true);
-    }
 
     private void OnBackClicked()
     {
         if (settingsPanel.activeSelf || creditPanel.activeSelf || continuePanel.activeSelf)
         {
-            ClosePanel();          // Đóng Menu con
-            OpenSideMenu(true);    // Bật lại Side Menu
-            //SwitchTopLeftButton(true); // Vẫn giữ nút Back
+            // Đang ở Menu Con -> Tắt Menu Con, Quay về Side Menu
+            ClosePanel();          
+            OpenSideMenu(true);    
+            // (Không đụng tới PauseGameManager vì vẫn đang ở trong giao diện Menu)
         }
         else if (isSidePanelOpen)
         {
-            OpenSideMenu(false);   // Tắt Side Menu
-            SwitchTopLeftButton(false); // Đổi về nút Pause (Về lại Game)
+            // Đang ở Side Menu -> Tắt sạch, quay lại chơi Game
+            CloseAllMenus(); 
         }
     }
 
     private void OnNewGameClicked()
     {
-        OpenSideMenu(false);
-        SwitchTopLeftButton(false);
+        CloseAllMenus(); 
         SaveManager.Instance.StartNewGame();
-    }
-
-    private void OnContinueClicked()
-    {
-        OpenSideMenu(false);
-        OpenPanel(continuePanel, true);
-        Debug.Log("Continue game");
-    }
-
-    private void OnSettingsClicked()
-    {
-        OpenSideMenu(false);
-        OpenPanel(settingsPanel, true);
-    }
-
-    private void OnCreditClicked()
-    {
-        OpenSideMenu(false);
-        OpenPanel(creditPanel, true);
     }
 
     private void OnExitClicked()
@@ -252,18 +231,16 @@ public class MenuManager : Singleton<MenuManager>
             .SetUpdate(true)
             .OnComplete(() =>
             {
-                btnToHide.gameObject.SetActive(false); // Chỉ tắt hẳn khi đã thu nhỏ xong
+                btnToHide.gameObject.SetActive(false); 
             });
 
+        btnToShow.gameObject.SetActive(true); 
+        btnToShow.transform.localScale = Vector3.zero; 
 
-        btnToShow.gameObject.SetActive(true); // Bật lên trước
-        btnToShow.transform.localScale = Vector3.zero; // Ép về 0 trước khi phóng
-
-        btnToShow.transform.DOScale(Vector3.one, _switchDuration + 0.1f) // Bật lên chậm hơn lúc tắt một chút cho đẹp
-            .SetEase(Ease.OutBack) // Nảy lên quá đà một xíu rồi bật về vị trí cũ
+        btnToShow.transform.DOScale(Vector3.one, _switchDuration + 0.1f) 
+            .SetEase(Ease.OutBack) 
             .SetUpdate(true);
     }
-
     #endregion
 
     #region Panel open
@@ -271,7 +248,6 @@ public class MenuManager : Singleton<MenuManager>
     public void OpenSideMenu(bool open, bool reset = false)
     {
         isSidePanelOpen = open;
-
         sidePanelCanvasGroup.DOKill();
 
         if (open)
@@ -280,10 +256,7 @@ public class MenuManager : Singleton<MenuManager>
             if (reset) ResetSelection();
 
             sidePanel.SetActive(true);
-            // TODO: PauseGameManager.SetPause(true);
-
-            sidePanelCanvasGroup.DOFade(1f, fadeDuration)
-                                .SetUpdate(true);
+            sidePanelCanvasGroup.DOFade(1f, fadeDuration).SetUpdate(true);
         }
         else
         {
@@ -292,7 +265,6 @@ public class MenuManager : Singleton<MenuManager>
                                 .OnComplete(() =>
                                 {
                                     sidePanel.SetActive(false);
-                                    //TODO: PauseGameManager.SetPause(false);
                                 });
         }
     }
@@ -309,7 +281,7 @@ public class MenuManager : Singleton<MenuManager>
         if (open)
         {
             panel.SetActive(true);
-            cg.alpha = 0f; // Đảm bảo bắt đầu từ 0
+            cg.alpha = 0f; 
             cg.DOFade(1f, fadeDuration).SetUpdate(true);
         }
         else
@@ -324,11 +296,10 @@ public class MenuManager : Singleton<MenuManager>
     {
         if (panel != null)
         {
-            OpenPanel(panel, false); // Tận dụng luôn hàm OpenPanel ở trên cho gọn
+            OpenPanel(panel, false); 
         }
         else
         {
-            // Tắt tất cả các bảng đang mở
             if (settingsPanel.activeSelf) OpenPanel(settingsPanel, false);
             if (creditPanel.activeSelf) OpenPanel(creditPanel, false);
             if (continuePanel.activeSelf) OpenPanel(continuePanel, false);
@@ -336,7 +307,6 @@ public class MenuManager : Singleton<MenuManager>
     }
 
     #endregion
-
 
     #region Handle Keyboard Selection
     public void ResetSelection()

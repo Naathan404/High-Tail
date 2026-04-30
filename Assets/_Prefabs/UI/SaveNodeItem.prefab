@@ -410,6 +410,7 @@ MonoBehaviour:
   _hoverScale: {x: 1.1, y: 1.1, z: 1.1}
   _clickScale: {x: 0.9, y: 0.9, z: 0.9}
   _tweenDuration: 0.2
+  isLockedByExternalTween: 0
 --- !u!1 &7485795961748281537
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,6 +551,7 @@ MonoBehaviour:
   _hoverScale: {x: 1.1, y: 1.1, z: 1.1}
   _clickScale: {x: 0.9, y: 0.9, z: 0.9}
   _tweenDuration: 0.2
+  isLockedByExternalTween: 0
 --- !u!114 &8888249489936740631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,3 +567,4 @@ MonoBehaviour:
   _nameText: {fileID: 1095396688948640080}
   _timeText: {fileID: 5165589805770744127}
   _loadButton: {fileID: 6402968182128986253}
+  _deleteButton: {fileID: 8523724178924808891}

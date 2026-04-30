@@ -7,6 +7,7 @@ public class SaveSlotUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _nameText;
     [SerializeField] private TextMeshProUGUI _timeText;
     [SerializeField] private Button _loadButton;
+    [SerializeField] private Button _deleteButton;
 
     private string _nodeID;
 
@@ -19,11 +20,17 @@ public class SaveSlotUI : MonoBehaviour
 
         _loadButton.onClick.RemoveAllListeners();
         _loadButton.onClick.AddListener(OnLoadClicked);
+        _deleteButton.onClick.AddListener(OnDeleteClicked);
     }
 
     private void OnLoadClicked()
     {
         SaveManager.Instance.LoadGameFromNode(_nodeID);
-        MenuManager.Instance.CloseMenu();
+        MenuManager.Instance.CloseAllMenus();
+    }
+
+    private void OnDeleteClicked()
+    {
+        SaveManager.Instance.DeleteSaveNode(_nodeID);
     }
 }
