@@ -27,6 +27,11 @@ public class PlayerVineClimbState : PlayerState
     {
         base.LogicUpdate();
         _player.CheckFlip(_player.MoveX);
+        if (!_player.IsTouchingVine())
+        {
+            _stateMachine.ChangeState(_player.FallState);
+            return;
+        }
         if(!_player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.FallState);
@@ -64,8 +69,10 @@ public class PlayerVineClimbState : PlayerState
     {
         base.Exit();
         _player.Rb.gravityScale = _player.BaseGravity;
-    }
 
+        _player.CurrentVineRb = null;
+        _player.CurrentVineTransform = null;
+    }
     private void AttachToVine(Rigidbody2D segment)
     {
         
