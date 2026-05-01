@@ -19,7 +19,6 @@ public class CameraManager : Singleton<CameraManager>
     // [SerializeField] private float _zoomLerpSpeed = 3f;
 
     [Header("Dialogue Zoom Settings")]
-    [SerializeField] private float _setUpFOV = 70f;
     [SerializeField] private float _dialogueZoomFOV = 40f; 
     [SerializeField] private float _dialogueTransitionTime = 0.8f; 
     [SerializeField] private float _dialogueYOffset = 0.5f; 
@@ -44,7 +43,6 @@ public class CameraManager : Singleton<CameraManager>
     private Tween _lookTween;
     private Sequence _dialogueSequence;
 
-    private float _defaultFOV;
     private Vector3 _defaultTargetOffset; 
     private bool _isInDialogue = false;
     private float _currentFOV;     
@@ -243,6 +241,9 @@ public class CameraManager : Singleton<CameraManager>
             _isDynamicRoom = isDynamic;
             _roomDashFOV = dashFOV;
             _currentFOV = baseFOV;
+            var lens = _cineCam.Lens;
+            lens.FieldOfView = baseFOV;
+            _cineCam.Lens = lens;
         }
 
         // Đổi ranh giới và Invalid Cache
