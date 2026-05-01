@@ -6,6 +6,7 @@ public class BouncyMushroom : MonoBehaviour
     [Header("Bounce Settings")]
     [SerializeField] private float _normalBounceForce = 15f; 
     [SerializeField] private float _pogoBounceForce = 25f;
+    [SerializeField] private bool _isShortMushroom = false;
 
     [Header("Animation Settings")]
     [SerializeField] private Transform _visual;
@@ -27,9 +28,16 @@ public class BouncyMushroom : MonoBehaviour
             bool isHitFromAbove = collision.transform.position.y > transform.position.y;
             bool isFalling = player.Rb.linearVelocity.y <= 0.1f;
 
-            if (isHitFromAbove && isFalling)
+            if(_isShortMushroom)
             {
                 DoBounce(player);
+            }
+            else
+            {
+                if (isHitFromAbove && isFalling)
+                {
+                    DoBounce(player);
+                }
             }
         }
     }
@@ -50,9 +58,9 @@ public class BouncyMushroom : MonoBehaviour
             finalForce = _pogoBounceForce;
         }
 
+        player.StateMachine.ChangeState(player.BounceState);
         player.Rb.linearVelocity = Vector2.zero;
         player.Rb.linearVelocity = new Vector2(player.Rb.linearVelocity.x, finalForce);
-        player.StateMachine.ChangeState(player.BounceState);
         player.CanDash = true; 
     }
 }

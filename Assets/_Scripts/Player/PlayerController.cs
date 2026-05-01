@@ -409,6 +409,8 @@ public partial class PlayerController : MonoBehaviour
     {
         CanDash = false;
         Rb.linearVelocity = force;
+        _isFacingRight = dir > 0;
+        transform.localScale = new Vector2(_originalScale.x * dir, _originalScale.y);
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
 
         if (force.y > 0f || !IsOnGround())
