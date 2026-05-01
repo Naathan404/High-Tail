@@ -18,6 +18,7 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Event Callback")]
     public UnityEvent OnDialogueCompleted;
 
+    PlayerController _player;
 
     private void Awake()
     {
@@ -31,6 +32,7 @@ public class DialogueTrigger : MonoBehaviour
         if(!_canInteract) return;
         if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
+            _player.Rb.linearVelocity = Vector2.zero;
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             _canInteract = false;
             DialogueManager.Instance.StartDialogue(
@@ -68,6 +70,7 @@ public class DialogueTrigger : MonoBehaviour
                 }
 
                 _canInteract = true;
+                _player = player;
             }
 
 

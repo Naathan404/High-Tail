@@ -18,6 +18,7 @@ public class TaleStoneTrigger : MonoBehaviour
     [Header("Event Callback")]
     public UnityEvent OnTaleStoneDialogueCompleted;
 
+    PlayerController _player;
     private bool _canInteract = false;
 
 
@@ -33,6 +34,7 @@ public class TaleStoneTrigger : MonoBehaviour
         {
             if(_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) return;
             _canInteract = true;
+            collision.TryGetComponent<PlayerController>(out _player);
         }
         
     }
@@ -46,6 +48,7 @@ public class TaleStoneTrigger : MonoBehaviour
         // nếu _canInteract và isActivated = false
         if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
+            _player.Rb.linearVelocity = Vector2.zero;
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             _canInteract = false;
             TaleStoneManager.Instance.StartTale(
