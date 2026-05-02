@@ -69,7 +69,6 @@ public class SaveManager : Singleton<SaveManager>
         {
             _player = FindAnyObjectByType<PlayerController>();
         }
-        StartCoroutine(RequireTimelineSelection());
     }
 
     public SaveSlot GetActiveSlot()
@@ -133,7 +132,7 @@ public class SaveManager : Singleton<SaveManager>
 
         if (MenuManager.Instance != null)
         {
-            MenuManager.Instance.OpenSubPanel(MenuManager.SubPanelType.SavedGame);
+            MenuManager.Instance.OpenPauseMenu();
         }
         else
         {

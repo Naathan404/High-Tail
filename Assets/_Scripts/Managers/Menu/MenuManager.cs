@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
@@ -29,12 +28,16 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private int _currentButtonIndex = 0;
     private bool _isSidePanelOpen = false;
 
+    // Biến lưu trữ nút cuối cùng được chọn để quay lại đúng vị trí
+    private GameObject _lastSelectedButton; 
+
     [Header("Panels")]
     [SerializeField] private GameObject _savedGamePanel;
     [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private GameObject _creditPanel;
+    
     [Header("Title Bar")]
-    [SerializeField] private TextMeshProUGUI _titleText; // Kéo Text của Title vào đây
+    [SerializeField] private TextMeshProUGUI _titleText; 
     [SerializeField] private GameObject _title;
     private string _currentDefaultTitle = "Pause Menu";
     private string _titleTweenId = "MenuTitleTween";
@@ -67,14 +70,16 @@ public class MenuManager : Singleton<MenuManager>
             _exitButton
         };
 
-        // Khởi tạo ban đầu: Đảm bảo mọi Menu đều đóng và Game đang chạy
-        // (Nếu đây là Scene Main Menu riêng biệt, bạn có thể đổi thành OpenMenu() nhé)
-        ClosePauseMenu();
+        foreach (var btn in _sidePanelButtons)
+        {
+            Navigation nav = new Navigation();
+            nav.mode = Navigation.Mode.None; 
+            btn.navigation = nav;
+        }
     }
 
     private void SetupButtonListeners()
     {
-        // Gán trực tiếp vào các API công khai cho gọn code
         _pauseButton.onClick.AddListener(OpenPauseMenu);
         _backButton.onClick.AddListener(OnBackClicked);
 
@@ -87,7 +92,7 @@ public class MenuManager : Singleton<MenuManager>
 
     void Update()
     {
-        // 1. Logic bật/tắt bằng phím (ESC)
+        // 1. Phím ESC xử lý Đóng/Mở
         if (InputManager.Instance.Inputs.UI.Menu.WasPressedThisFrame())
         {
             if (_isSidePanelOpen || _settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf)
@@ -102,25 +107,25 @@ public class MenuManager : Singleton<MenuManager>
 
         if (!_isSidePanelOpen || _sidePanelButtons.Count == 0) return;
 
-        // 2. Logic Reset lựa chọn khi rê chuột
-        if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
+        // 2. Chuột: Giải phóng con trỏ khi rê chuột
+        if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 5.0f)
         {
             RectTransform panelRect = _sidePanel.GetComponent<RectTransform>();
             Vector2 mousePosition = Mouse.current.position.ReadValue();
             if (panelRect != null && RectTransformUtility.RectangleContainsScreenPoint(panelRect, mousePosition, null))
             {
-                if (_currentButtonIndex != -1)
-                {
-                    ResetSelection();
-                }
+                EventSystem.current.SetSelectedGameObject(null);
             }
         }
 
         if (Keyboard.current == null) return;
 
-        // 3. Logic điều hướng bàn phím
-        if (/*PauseGameManager.IsGamePaused*/ true)
+        // 3. ĐIỀU HƯỚNG THỦ CÔNG: Chỉ kích hoạt khi đang ở Menu chính
+        if (_isSidePanelOpen && !(_settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf))
         {
+            // Đồng bộ Index phòng trường hợp người chơi click chuột xen ngang
+            SyncIndexWithPointer();
+
             if (Keyboard.current.upArrowKey.wasPressedThisFrame)
             {
                 SelectPrevious();
@@ -130,25 +135,34 @@ public class MenuManager : Singleton<MenuManager>
                 SelectNext();
             }
 
-            if (_currentButtonIndex != -1 &&
-                (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame))
+            if (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)
             {
-                _sidePanelButtons[_currentButtonIndex].onClick.Invoke();
+                if (_currentButtonIndex != -1)
+                {
+                    // Ghi nhớ lại nút vừa bấm trước khi mở SubPanel
+                    _lastSelectedButton = _sidePanelButtons[_currentButtonIndex].gameObject;
+                    _sidePanelButtons[_currentButtonIndex].onClick.Invoke();
+                }
             }
         }
     }
 
     #region Open menu
-    public void OpenPauseMenu() // Mở sidepanel
+    public void OpenPauseMenu() 
     {
-        PauseGameManager.SetPause(true); // NGỪNG GAME
+        PauseGameManager.SetPause(true); 
         SwitchTopLeftButton(isMenuOpen: true);
-        CloseAllSubPanels(); // Đảm bảo các sub-panel bị tắt trước khi mở Side Menu
-        OpenSideMenu(open: true, reset: true);
+        CloseAllSubPanels(); 
         ShowTitleBar(false);
+
+        // MỞ TỪ GAME: Luôn ép chọn nút đầu tiên (Saved Game)
+        _currentButtonIndex = 0;
+        _lastSelectedButton = _sidePanelButtons[0].gameObject;
+
+        OpenSideMenu(open: true);
     }
 
-    public void ClosePauseMenu() //Tiếp tục game
+    public void ClosePauseMenu() 
     {
         if (!CanResumeGame())
         {
@@ -157,11 +171,11 @@ public class MenuManager : Singleton<MenuManager>
             return;
         }
 
-        CloseAllSubPanels(); // Tắt toàn bộ sub-panel
-        ResetSelection();
+        CloseAllSubPanels(); 
+        EventSystem.current.SetSelectedGameObject(null);
         ShowTitleBar(false);
 
-        PauseGameManager.SetPause(false); // TIẾP TỤC GAME
+        PauseGameManager.SetPause(false); 
         SwitchTopLeftButton(isMenuOpen: false);
 
         if (_isSidePanelOpen) OpenSideMenu(false);
@@ -173,13 +187,15 @@ public class MenuManager : Singleton<MenuManager>
         return !string.IsNullOrEmpty(SaveManager.Instance.MainData.activeSlotID);
     }
 
-    private void OpenSideMenu(bool open, bool reset = false)
+    private void OpenSideMenu(bool open)
     {
         _isSidePanelOpen = open;
-        UpdateSelectionUI();
-
-        if (reset) ResetSelection();
         UIHelper.AnimateFade(_sidePanel, open);
+
+        if (open)
+        {
+            UpdateSelectionUI();
+        }
     }
     #endregion
 
@@ -192,13 +208,13 @@ public class MenuManager : Singleton<MenuManager>
         SavedGame
     }
 
-    public void OpenSubPanel(SubPanelType type) //Mở các chức năng con
+    public void OpenSubPanel(SubPanelType type) 
     {
-        PauseGameManager.SetPause(true); // NGỪNG GAME (Trường hợp gọi từ script khác)
+        PauseGameManager.SetPause(true); 
         SwitchTopLeftButton(isMenuOpen: true);
 
-        if (_isSidePanelOpen) OpenSideMenu(false); // Tắt Side Menu đi
-        CloseAllSubPanels(); // Đóng các sub-panel khác trước khi mở cái mới
+        if (_isSidePanelOpen) OpenSideMenu(false); 
+        CloseAllSubPanels(); 
         ShowTitleBar(true);
 
         switch (type)
@@ -227,7 +243,7 @@ public class MenuManager : Singleton<MenuManager>
         UIHelper.AnimateFade(panel, open);
     }
 
-    private void CloseAllSubPanels() //Close one or all panels
+    private void CloseAllSubPanels() 
     {
         if (_settingsPanel.activeSelf) OpenPanel(_settingsPanel, false);
         if (_creditPanel.activeSelf) OpenPanel(_creditPanel, false);
@@ -239,14 +255,13 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnBackClicked()
     {
-        // Đang ở Menu Con -> Tắt Menu Con, Quay về Side Menu
+        // QUAY LẠI TỪ SUB-PANEL: Mở Menu chính và nó sẽ tự focus vào _lastSelectedButton
         if (_settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf)
         {
             CloseAllSubPanels();
-            OpenSideMenu(true);
             ShowTitleBar(false);
+            OpenSideMenu(true); 
         }
-        // Đang ở Side Menu -> Tắt sạch, quay lại chơi Game
         else if (_isSidePanelOpen)
         {
             ClosePauseMenu();
@@ -255,7 +270,6 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnExitClicked()
     {
-        //TODO: Show confirmation dialog before quitting
         Application.Quit();
     }
     #endregion
@@ -275,11 +289,10 @@ public class MenuManager : Singleton<MenuManager>
 
     private void AnimateButtonSwitch(Button btnToHide, Button btnToShow)
     {
-        // CHỐT CHẶN: Nếu nút cần hiện đã hiển thị sẵn và đã to bằng kích thước chuẩn
         if (btnToShow.gameObject.activeSelf && btnToShow.transform.localScale.x >= 0.95f)
         {
-            btnToHide.gameObject.SetActive(false); // Dọn dẹp nút kia cho chắc ăn
-            return; // Bỏ qua không chạy hiệu ứng nữa
+            btnToHide.gameObject.SetActive(false); 
+            return; 
         }
 
         btnToHide.transform.DOKill();
@@ -349,9 +362,7 @@ public class MenuManager : Singleton<MenuManager>
             UIHelper.SetTextAnimated(_titleText, _currentDefaultTitle);
         }).SetId(_titleTweenId).SetUpdate(true);
     }
-
     #endregion
-
 
     #region Handle Keyboard Selection
     public void ResetSelection()
@@ -364,17 +375,10 @@ public class MenuManager : Singleton<MenuManager>
     {
         if (_sidePanelButtons == null || _sidePanelButtons.Count == 0) return;
 
-        if (_currentButtonIndex == -1)
+        _currentButtonIndex--;
+        if (_currentButtonIndex < 0)
         {
             _currentButtonIndex = _sidePanelButtons.Count - 1;
-        }
-        else
-        {
-            _currentButtonIndex--;
-            if (_currentButtonIndex < 0)
-            {
-                _currentButtonIndex = _sidePanelButtons.Count - 1;
-            }
         }
         UpdateSelectionUI();
     }
@@ -383,17 +387,10 @@ public class MenuManager : Singleton<MenuManager>
     {
         if (_sidePanelButtons == null || _sidePanelButtons.Count == 0) return;
 
-        if (_currentButtonIndex == -1)
+        _currentButtonIndex++;
+        if (_currentButtonIndex >= _sidePanelButtons.Count)
         {
             _currentButtonIndex = 0;
-        }
-        else
-        {
-            _currentButtonIndex++;
-            if (_currentButtonIndex >= _sidePanelButtons.Count)
-            {
-                _currentButtonIndex = 0;
-            }
         }
         UpdateSelectionUI();
     }
@@ -402,8 +399,21 @@ public class MenuManager : Singleton<MenuManager>
     {
         if (_currentButtonIndex >= 0 && _currentButtonIndex < _sidePanelButtons.Count)
         {
-            EventSystem.current.
-                SetSelectedGameObject(_sidePanelButtons[_currentButtonIndex].gameObject);
+            _lastSelectedButton = _sidePanelButtons[_currentButtonIndex].gameObject;
+            EventSystem.current.SetSelectedGameObject(_lastSelectedButton);
+        }
+    }
+
+    private void SyncIndexWithPointer()
+    {
+        GameObject selectedObj = EventSystem.current.currentSelectedGameObject;
+        if (selectedObj != null)
+        {
+            int index = _sidePanelButtons.FindIndex(b => b.gameObject == selectedObj);
+            if (index != -1 && index != _currentButtonIndex)
+            {
+                _currentButtonIndex = index;
+            }
         }
     }
     #endregion
