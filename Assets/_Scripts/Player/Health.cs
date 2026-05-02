@@ -33,21 +33,24 @@ public partial class PlayerController
     #region HP and Energy
     public void KillPlayer()
     {
-        UIManager.Instance.AddDeathCount();
         if (_stateMachine.CurrentState == DeathState) return;
+        UIManager.Instance.AddDeathCount();
+        Vector3 deathPosition = transform.position;
+        Vector3 respawnPosition = CheckpointManager.Instance.CurrentSpawnPoint.position;
 
         _stateMachine.ChangeState(DeathState);
         OnPlayerDamaged?.Invoke(); 
         OnPlayerDied?.Invoke(); 
 
-        StartCoroutine(DeathSequenceCo());
+        StartCoroutine(DeathSequenceCo(deathPosition, respawnPosition));
     }
 
-    private IEnumerator DeathSequenceCo()
+    private IEnumerator DeathSequenceCo(Vector3 deathPosition, Vector3 respawnPosition)
     {
+
         DeathScreenManager.Instance.TriggerDeathWipe(
-            transform.position, 
-            CheckpointManager.Instance.CurrentSpawnPoint.position,
+            deathPosition, 
+            respawnPosition,
             () =>
             {
                 CheckpointManager.Instance.RespawnPlayer(this);

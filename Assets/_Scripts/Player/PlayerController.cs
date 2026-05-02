@@ -397,6 +397,19 @@ public partial class PlayerController : MonoBehaviour
         return false;
     }
 
+    public bool IsTouchingVine()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.5f); 
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.GetComponent<VineSegment>() != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     #endregion
 
     private void ApplyBounce(float force)
