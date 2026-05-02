@@ -1,4 +1,5 @@
-using System.Runtime.CompilerServices;
+using System;
+using TMPro;
 using UnityEngine;
 
 public class SaveGameShrine : MonoBehaviour, IInteractable
@@ -14,10 +15,20 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     [SerializeField] private GameObject _visualIndicator;
     private bool _isPlayerNearby = false;
 
-    private void Start()
+    [Header("Interact")]
+    [SerializeField] private TextMeshPro saveInstruction;
+
+    // 1. CHUYỂN START() THÀNH AWAKE()
+    private void Awake()
     {
-        EnableShrine();
+        EnableShrine(); // Mặc định mở lúc khởi tạo, SaveManager sẽ quyết định đóng hay mở sau
+
         if (_visualIndicator != null) _visualIndicator.SetActive(false);
+        if (saveInstruction != null)
+        {
+            saveInstruction.SetText("Press up arrow to save");
+            saveInstruction.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -25,43 +36,67 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
         CheckForPlayer();
     }
 
-    private void OnEnable()
+    #region Auto Generate ID (Chống trùng lặp)
+#if UNITY_EDITOR
+    // 2. DÙNG ONVALIDATE ĐỂ CẬP NHẬT THEO THỜI GIAN THỰC KHI Ở TRONG EDITOR
+    private void OnValidate()
     {
-        #if UNITY_EDITOR
         if (string.IsNullOrEmpty(_id))
         {
-            // Tự động sinh ID dựa trên tên và một mã ngẫu nhiên để đảm bảo duy nhất
-            _id = $"{gameObject.name}_{System.Guid.NewGuid().ToString().Substring(0, 8)}";
-            
-            UnityEditor.EditorUtility.SetDirty(this);
-            UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
-            
-            Debug.Log($"[Auto-Save] Đã 'khắc' ID vĩnh viễn cho {gameObject.name}: {_id}");
+            GenerateUniqueID();
         }
-        #endif
+        else
+        {
+            // Quét để kiểm tra xem có bị trùng ID do thao tác Duplicate (Ctrl + D) không
+            SaveGameShrine[] allShrines = FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var shrine in allShrines)
+            {
+                // Nếu tìm thấy một đền khác (không phải mình) mà ID y chang mình -> Bị trùng!
+                if (shrine != this && shrine.ID == this._id)
+                {
+                    Debug.Log($"[Auto-Fix] Đã phát hiện trùng ID tại {gameObject.name}. Đang tạo ID mới...");
+                    GenerateUniqueID();
+                    break;
+                }
+            }
+        }
     }
 
-    #region IInteratable
+    // Gắn thêm nút này để bạn có thể Click chuột phải vào component và tự tạo lại ID nếu thích
+    [ContextMenu("Force Generate New ID")]
+    private void GenerateUniqueID()
+    {
+        _id = $"Shrine_{System.Guid.NewGuid().ToString().Substring(0, 8)}";
+        UnityEditor.EditorUtility.SetDirty(this); // Đánh dấu để Unity lưu lại thay đổi
+    }
+#endif
+    #endregion
+
+    #region IInteractable
     public bool CanInteract() => _canInteract;
+
     public void OnInteract(bool on = true)
     {
         if (!CanInteract()) return;
         SaveManager.Instance.activeShrine = on ? this : null;
+        UIHelper.AnimateZoom(saveInstruction.gameObject, on);
+        UIHelper.AnimateZoom(_visualIndicator, !on);
     }
 
     public void Interact()
     {
         SaveManager.Instance.ExcuteSave();
     }
-
     #endregion
 
     public void DisableShrine()
     {
         _canInteract = false;
-        GetComponent<SpriteRenderer>().color =Color.gray;
+        GetComponent<SpriteRenderer>().color = Color.gray;
+        UIHelper.AnimateZoom(saveInstruction.gameObject, false);
         ShowIndicator(false);
     }
+
     public void EnableShrine()
     {
         _canInteract = true;
@@ -71,6 +106,15 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     #region Detection
     private void CheckForPlayer()
     {
+        if (!_canInteract)
+        {
+            if (_isPlayerNearby)
+            {
+                _isPlayerNearby = false;
+                ShowIndicator(false);
+            }
+            return;
+        }
         // Kiểm tra xem có Player trong vùng bán kính không
         Collider2D player = Physics2D.OverlapCircle(transform.position, _indicateRadius, _playerLayer);
 

@@ -324,6 +324,7 @@ public class SaveManager : Singleton<SaveManager>
         activeShrine = null;
 
         SaveToDisk();
+        RestoreShrinesState(currentNode);
         ShowOnGameNotification($"Saved successfully");
     }
     #endregion
