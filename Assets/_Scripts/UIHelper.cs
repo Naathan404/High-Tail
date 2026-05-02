@@ -32,15 +32,15 @@ public static class UIHelper
             if (cg.alpha == 0) cg.alpha = 0f; 
             if (obj.transform.localScale.x < 0.95f) obj.transform.localScale = Vector3.one * 0.95f;
 
-            cg.DOFade(1f, 0.3f).SetEase(Ease.OutQuad);
-            obj.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack);
+            cg.DOFade(1f, 0.3f).SetEase(Ease.OutQuad).SetUpdate(true);
+            obj.transform.DOScale(Vector3.one, 0.3f).SetEase(Ease.OutBack).SetUpdate(true);
         }
         else
         {
             layout.ignoreLayout = true;
             
-            cg.DOFade(0f, 0.2f).SetEase(Ease.InQuad);
-            obj.transform.DOScale(Vector3.one * 0.95f, 0.2f).SetEase(Ease.InBack)
+            cg.DOFade(0f, 0.2f).SetEase(Ease.InQuad).SetUpdate(true);
+            obj.transform.DOScale(Vector3.one * 0.95f, 0.2f).SetEase(Ease.InBack).SetUpdate(true)
                 .OnComplete(() => obj.SetActive(false));
         }
     }
@@ -64,11 +64,11 @@ public static class UIHelper
             // Nếu đang to sẵn (bị lỗi ngầm) thì ép dẹp về 0 trước khi nảy lên
             if (obj.transform.localScale.x > 0.95f) obj.transform.localScale = Vector3.zero;
 
-            obj.transform.DOScale(Vector3.one, duration).SetEase(Ease.OutBack);
+            obj.transform.DOScale(Vector3.one, duration).SetEase(Ease.OutBack).SetUpdate(true);
         }
         else
         {
-            obj.transform.DOScale(Vector3.zero, duration * 0.8f).SetEase(Ease.InBack)
+            obj.transform.DOScale(Vector3.zero, duration * 0.8f).SetEase(Ease.InBack).SetUpdate(true)
                 .OnComplete(() => obj.SetActive(false));
         }
     }

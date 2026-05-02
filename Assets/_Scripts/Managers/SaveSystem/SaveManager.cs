@@ -134,8 +134,14 @@ public class SaveManager : Singleton<SaveManager>
             timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             reviveShrineID = "",
             sceneName = _startSceneName,
-            deadShrineIDs = new List<string>()
+            deadShrineIDs = new List<string>(),
+            unlockedSkills = new SkillSaveData()
         };
+
+        if (_currentSavedNodes >= _maxSaveNodes)
+        {
+            ShowNotification("Đang có 3 file lưu, xóa để lưu thêm");
+        }
 
         MainData.allCommits.Add(rootNode);
         MainData.activeNodeID = rootNode.nodeID;
@@ -288,7 +294,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             ShowNotification($"Can only save {_maxSaveNodes} times. Please delete some old saves to create a new one.", () =>
             {
-                MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Continue);
+                MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Play);
             });
             return;
         }
