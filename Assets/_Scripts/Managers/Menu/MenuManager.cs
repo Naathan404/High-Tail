@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -29,9 +30,14 @@ public class MenuManager : Singleton<MenuManager>
     private bool _isSidePanelOpen = false;
 
     [Header("Panels")]
+    [SerializeField] private GameObject _savedGamePanel;
     [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private GameObject _creditPanel;
-    [SerializeField] private GameObject _playPanel;
+    [Header("Title Bar")]
+    [SerializeField] private TextMeshProUGUI _titleText; // Kéo Text của Title vào đây
+    [SerializeField] private GameObject _title;
+    private string _currentDefaultTitle = "Pause Menu";
+    private string _titleTweenId = "MenuTitleTween";
 
     public override void Awake()
     {
@@ -49,6 +55,7 @@ public class MenuManager : Singleton<MenuManager>
     {
         InitializeUI();
         SetupButtonListeners();
+        OpenPauseMenu();
     }
 
     private void InitializeUI()
@@ -62,18 +69,18 @@ public class MenuManager : Singleton<MenuManager>
 
         // Khởi tạo ban đầu: Đảm bảo mọi Menu đều đóng và Game đang chạy
         // (Nếu đây là Scene Main Menu riêng biệt, bạn có thể đổi thành OpenMenu() nhé)
-        CloseAllMenus();
+        ClosePauseMenu();
     }
 
     private void SetupButtonListeners()
     {
         // Gán trực tiếp vào các API công khai cho gọn code
-        _pauseButton.onClick.AddListener(OpenMenu);
+        _pauseButton.onClick.AddListener(OpenPauseMenu);
         _backButton.onClick.AddListener(OnBackClicked);
 
-        _playButton.onClick.AddListener(() => OpenSubPanel(PanelType.Play));
-        _settingButton.onClick.AddListener(() => OpenSubPanel(PanelType.Settings));
-        _creditButton.onClick.AddListener(() => OpenSubPanel(PanelType.Credit));
+        _playButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.SavedGame));
+        _settingButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Settings));
+        _creditButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Credit));
 
         _exitButton.onClick.AddListener(OnExitClicked);
     }
@@ -83,13 +90,13 @@ public class MenuManager : Singleton<MenuManager>
         // 1. Logic bật/tắt bằng phím (ESC)
         if (InputManager.Instance.Inputs.UI.Menu.WasPressedThisFrame())
         {
-            if (_isSidePanelOpen || _settingsPanel.activeSelf || _creditPanel.activeSelf || _playPanel.activeSelf)
+            if (_isSidePanelOpen || _settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf)
             {
                 OnBackClicked();
             }
             else
             {
-                OpenMenu();
+                OpenPauseMenu();
             }
         }
 
@@ -131,46 +138,100 @@ public class MenuManager : Singleton<MenuManager>
         }
     }
 
-    #region Public API (LUỒNG CHÍNH ĐỂ QUẢN LÝ PAUSE/UNPAUSE)
-
-    public void OpenMenu() // Mở sidepanel
+    #region Open menu
+    public void OpenPauseMenu() // Mở sidepanel
     {
         PauseGameManager.SetPause(true); // NGỪNG GAME
         SwitchTopLeftButton(isMenuOpen: true);
-        ClosePanel(); // Đảm bảo các sub-panel bị tắt trước khi mở Side Menu
+        CloseAllSubPanels(); // Đảm bảo các sub-panel bị tắt trước khi mở Side Menu
         OpenSideMenu(open: true, reset: true);
+        ShowTitleBar(false);
     }
 
-    public void CloseAllMenus() //Tiếp tục game
+    public void ClosePauseMenu() //Tiếp tục game
     {
+        if (!CanResumeGame())
+        {
+            OpenSubPanel(SubPanelType.SavedGame);
+            ShowTitleNotification("Select a saved game to play");
+            return;
+        }
+
+        CloseAllSubPanels(); // Tắt toàn bộ sub-panel
+        ResetSelection();
+        ShowTitleBar(false);
+
         PauseGameManager.SetPause(false); // TIẾP TỤC GAME
         SwitchTopLeftButton(isMenuOpen: false);
 
         if (_isSidePanelOpen) OpenSideMenu(false);
-        ClosePanel(); // Tắt toàn bộ sub-panel
     }
 
-    public enum PanelType
+    private bool CanResumeGame()
+    {
+        if (SaveManager.Instance == null || SaveManager.Instance.MainData == null) return false;
+        return !string.IsNullOrEmpty(SaveManager.Instance.MainData.activeSlotID);
+    }
+
+    private void OpenSideMenu(bool open, bool reset = false)
+    {
+        _isSidePanelOpen = open;
+        UpdateSelectionUI();
+
+        if (reset) ResetSelection();
+        UIHelper.AnimateFade(_sidePanel, open);
+    }
+    #endregion
+
+    #region Open sub menu
+
+    public enum SubPanelType
     {
         Settings,
         Credit,
-        Play
+        SavedGame
     }
 
-    public void OpenSubPanel(PanelType type) //Mở các chức năng con
+    public void OpenSubPanel(SubPanelType type) //Mở các chức năng con
     {
         PauseGameManager.SetPause(true); // NGỪNG GAME (Trường hợp gọi từ script khác)
         SwitchTopLeftButton(isMenuOpen: true);
 
         if (_isSidePanelOpen) OpenSideMenu(false); // Tắt Side Menu đi
-        ClosePanel(); // Đóng các sub-panel khác trước khi mở cái mới
+        CloseAllSubPanels(); // Đóng các sub-panel khác trước khi mở cái mới
+        ShowTitleBar(true);
 
         switch (type)
         {
-            case PanelType.Settings: OpenPanel(_settingsPanel, true); break;
-            case PanelType.Credit: OpenPanel(_creditPanel, true); break;
-            case PanelType.Play: OpenPanel(_playPanel, true); break;
+            case SubPanelType.Settings:
+                OpenPanel(_settingsPanel, true);
+                SetPanelTitle("Settings");
+                break;
+            case SubPanelType.Credit:
+                OpenPanel(_creditPanel, true);
+                SetPanelTitle("Credits");
+                break;
+            case SubPanelType.SavedGame:
+                OpenPanel(_savedGamePanel, true);
+                SetPanelTitle("Saved Games");
+                break;
         }
+    }
+
+    private void OpenPanel(GameObject panel, bool open)
+    {
+        if (!panel.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+        {
+            cg = panel.AddComponent<CanvasGroup>();
+        }
+        UIHelper.AnimateFade(panel, open);
+    }
+
+    private void CloseAllSubPanels() //Close one or all panels
+    {
+        if (_settingsPanel.activeSelf) OpenPanel(_settingsPanel, false);
+        if (_creditPanel.activeSelf) OpenPanel(_creditPanel, false);
+        if (_savedGamePanel.activeSelf) OpenPanel(_savedGamePanel, false);
     }
     #endregion
 
@@ -178,17 +239,17 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnBackClicked()
     {
-        if (_settingsPanel.activeSelf || _creditPanel.activeSelf || _playPanel.activeSelf)
+        // Đang ở Menu Con -> Tắt Menu Con, Quay về Side Menu
+        if (_settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf)
         {
-            // Đang ở Menu Con -> Tắt Menu Con, Quay về Side Menu
-            ClosePanel();
+            CloseAllSubPanels();
             OpenSideMenu(true);
-            // (Không đụng tới PauseGameManager vì vẫn đang ở trong giao diện Menu)
+            ShowTitleBar(false);
         }
+        // Đang ở Side Menu -> Tắt sạch, quay lại chơi Game
         else if (_isSidePanelOpen)
         {
-            // Đang ở Side Menu -> Tắt sạch, quay lại chơi Game
-            CloseAllMenus();
+            ClosePauseMenu();
         }
     }
 
@@ -214,19 +275,33 @@ public class MenuManager : Singleton<MenuManager>
 
     private void AnimateButtonSwitch(Button btnToHide, Button btnToShow)
     {
+        // CHỐT CHẶN: Nếu nút cần hiện đã hiển thị sẵn và đã to bằng kích thước chuẩn
+        if (btnToShow.gameObject.activeSelf && btnToShow.transform.localScale.x >= 0.95f)
+        {
+            btnToHide.gameObject.SetActive(false); // Dọn dẹp nút kia cho chắc ăn
+            return; // Bỏ qua không chạy hiệu ứng nữa
+        }
+
         btnToHide.transform.DOKill();
         btnToShow.transform.DOKill();
 
-        btnToHide.transform.DOScale(Vector3.zero, _switchDuration)
-            .SetEase(Ease.InBack)
-            .SetUpdate(true)
-            .OnComplete(() =>
-            {
-                btnToHide.gameObject.SetActive(false);
-            });
+        if (btnToHide.gameObject.activeSelf)
+        {
+            btnToHide.transform.DOScale(Vector3.zero, _switchDuration)
+                .SetEase(Ease.InBack)
+                .SetUpdate(true)
+                .OnComplete(() =>
+                {
+                    btnToHide.gameObject.SetActive(false);
+                });
+        }
 
         btnToShow.gameObject.SetActive(true);
-        btnToShow.transform.localScale = Vector3.zero;
+        
+        if (btnToShow.transform.localScale.x < 0.1f)
+        {
+            btnToShow.transform.localScale = Vector3.zero;
+        }
 
         btnToShow.transform.DOScale(Vector3.one, _switchDuration + 0.1f)
             .SetEase(Ease.OutBack)
@@ -234,41 +309,49 @@ public class MenuManager : Singleton<MenuManager>
     }
     #endregion
 
-    #region Panel open
-
-    public void OpenSideMenu(bool open, bool reset = false)
+    #region Title Bar Logic
+    public void ShowTitleBar(bool show)
     {
-        _isSidePanelOpen = open;
-        UpdateSelectionUI();
-
-        if (reset) ResetSelection();
-        UIHelper.AnimateFade(_sidePanel, open);
-    }
-
-    private void OpenPanel(GameObject panel, bool open)
-    {
-        if (!panel.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+        if (_title != null)
         {
-            cg = panel.AddComponent<CanvasGroup>();
+            UIHelper.AnimateFade(_title, show);
         }
-        UIHelper.AnimateFade(panel, open);
     }
 
-    private void ClosePanel(GameObject panel = null) //Close one or all panels
+    public void SetPanelTitle(string title, bool animation = false)
     {
-        if (panel != null)
+        _currentDefaultTitle = title;
+
+        if (animation)
         {
-            OpenPanel(panel, false);
+            DOTween.Kill(_titleTweenId);
+
+            if (_titleText != null)
+            {
+                UIHelper.SetTextAnimated(_titleText, _currentDefaultTitle);
+            }
         }
         else
         {
-            if (_settingsPanel.activeSelf) OpenPanel(_settingsPanel, false);
-            if (_creditPanel.activeSelf) OpenPanel(_creditPanel, false);
-            if (_playPanel.activeSelf) OpenPanel(_playPanel, false);
+            _titleText.SetText(title);
         }
     }
 
+    public void ShowTitleNotification(string message, float displayDuration = 2f)
+    {
+        if (_titleText == null) return;
+
+        DOTween.Kill(_titleTweenId);
+        UIHelper.SetTextAnimated(_titleText, message);
+
+        DOVirtual.DelayedCall(displayDuration, () =>
+        {
+            UIHelper.SetTextAnimated(_titleText, _currentDefaultTitle);
+        }).SetId(_titleTweenId).SetUpdate(true);
+    }
+
     #endregion
+
 
     #region Handle Keyboard Selection
     public void ResetSelection()

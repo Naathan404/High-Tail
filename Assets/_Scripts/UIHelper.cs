@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -86,21 +87,14 @@ public static class UIHelper
     public static void SetTextAnimated(TextMeshProUGUI textComponent, string newText, float duration = 0.3f)
     {
         if (textComponent == null) return;
-
-        // Nếu chữ truyền vào giống hệt chữ cũ thì bỏ qua, không cần chạy hiệu ứng
         if (textComponent.text == newText) return;
 
-        // Dừng mọi hiệu ứng cũ đang chạy trên chữ này để tránh lỗi giật hình
         textComponent.transform.DOKill();
 
-        // Hiệu ứng: Ép dẹp chữ xuống trục Y (tốc độ bằng nửa thời gian)
-        textComponent.transform.DOScaleY(0f, duration / 2f).SetEase(Ease.InQuad).OnComplete(() =>
+        textComponent.transform.DOScaleY(0f, duration / 2f).SetEase(Ease.InQuad).SetUpdate(true).OnComplete(() =>
         {
-            // Khi chữ đã dẹp lép (không nhìn thấy), tiến hành đổi nội dung
             textComponent.SetText(newText);
-
-            // Bật nảy chữ trở lại kích thước cũ
-            textComponent.transform.DOScaleY(1f, duration / 2f).SetEase(Ease.OutBack);
+            textComponent.transform.DOScaleY(1f, duration / 2f).SetEase(Ease.OutBack).SetUpdate(true);
         });
     }
 
@@ -133,5 +127,83 @@ public static class UIHelper
             // Trả về kích thước gốc một cách nhanh gọn
             obj.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutQuad);
         }
+    }
+
+    public static void AnimatePopup(GameObject obj, string message, TextMeshProUGUI textComponent = null, 
+                                    bool autoClose = true, float displayDuration = 2f, 
+                                    float animDuration = 0.5f, Action onComplete = null)
+    {
+        // 1. Biện pháp an toàn: Kiểm tra null
+        if (obj == null) return;
+
+        // 2. Biện pháp an toàn: Đảm bảo có CanvasGroup
+        if (!obj.TryGetComponent<CanvasGroup>(out CanvasGroup cg))
+        {
+            cg = obj.AddComponent<CanvasGroup>();
+        }
+
+        // Đổi text nếu có truyền TextMeshPro vào
+        if (textComponent != null && !string.IsNullOrEmpty(message))
+        {
+            SetTextAnimated(textComponent, message, animDuration);
+        }
+
+        // 3. Biện pháp an toàn: Tạo ID độc lập để dọn dẹp Sequence cũ, tránh kẹt hiệu ứng
+        string seqId = obj.GetInstanceID() + "_popupSequence";
+        DOTween.Kill(seqId); 
+        obj.transform.DOKill();
+        cg.DOKill();
+
+        obj.SetActive(true);
+
+        // Thiết lập trạng thái ban đầu nếu Popup đang bị ẩn
+        if (cg.alpha < 1f || obj.transform.localScale.x < 1f)
+        {
+            obj.transform.localScale = Vector3.zero;
+            cg.alpha = 0f;
+        }
+
+        // Tạo Sequence mới, đánh dấu SetUpdate(true) để không bị ảnh hưởng khi Pause Game
+        Sequence seq = DOTween.Sequence().SetId(seqId).SetUpdate(true);
+
+        // Pha 1: Phóng to xuất hiện
+        seq.Append(obj.transform.DOScale(Vector3.one, animDuration).SetEase(Ease.OutBack))
+           .Join(cg.DOFade(1f, animDuration));
+
+        // Pha 2: Tự động thu nhỏ biến mất (nếu autoClose = true)
+        if (autoClose)
+        {
+            seq.AppendInterval(displayDuration) // Thời gian chờ
+               .Append(obj.transform.DOScale(Vector3.zero, animDuration).SetEase(Ease.InBack))
+               .Join(cg.DOFade(0f, animDuration))
+               .OnComplete(() =>
+               {
+                   obj.SetActive(false);
+                   onComplete?.Invoke();
+               });
+        }
+    }
+
+    // Hàm chủ động tắt Popup
+    public static void HidePopup(GameObject obj, float delayTime = 0f, float animDuration = 0.5f)
+    {
+        if (obj == null || !obj.activeSelf) return;
+        if (!obj.TryGetComponent<CanvasGroup>(out CanvasGroup cg)) return;
+
+        string seqId = obj.GetInstanceID() + "_popupSequence";
+        DOTween.Kill(seqId);
+        obj.transform.DOKill();
+        cg.DOKill();
+
+        Sequence seq = DOTween.Sequence().SetId(seqId).SetUpdate(true);
+
+        if (delayTime > 0)
+        {
+            seq.AppendInterval(delayTime);
+        }
+
+        seq.Append(obj.transform.DOScale(Vector3.zero, animDuration).SetEase(Ease.InBack))
+           .Join(cg.DOFade(0f, animDuration))
+           .OnComplete(() => obj.SetActive(false));
     }
 }

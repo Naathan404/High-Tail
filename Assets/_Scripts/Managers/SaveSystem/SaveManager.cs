@@ -15,10 +15,11 @@ public class SaveManager : Singleton<SaveManager>
     [Header("Default Save Setting")]
     [HideInInspector] public SaveGameShrine activeShrine;
     public GameData MainData { get; private set; }
-    [SerializeField] private int _maxSaveNodes = 3;
-    [SerializeField] private int _currentSavedNodes = 0;
+    public int MaxSaveSlots { get; private set; } = 3;
+    [SerializeField] private int _currentSaveSlotCount = 0;
     private string _savePath;
     [SerializeField] private PlayerController _player;
+
     [Header("New Game Setting")]
     [SerializeField] private string _startSceneName;
     [SerializeField] private Vector3 _startPosition;
@@ -68,16 +69,17 @@ public class SaveManager : Singleton<SaveManager>
         {
             _player = FindAnyObjectByType<PlayerController>();
         }
+        StartCoroutine(RequireTimelineSelection());
     }
 
-    public SaveNode GetActiveState()
+    public SaveSlot GetActiveSlot()
     {
-        return MainData.allCommits.Find(n => n.nodeID == MainData.activeNodeID);
+        return MainData.allSlots.Find(s => s.saveID == MainData.activeSlotID);
     }
 
-    #region Version Control
-    #region init, load
-    private void LoadMainData() 
+    #region Save logic
+    #region Load game
+    private void LoadMainData()
     {
         bool loadedSuccessfully = false;
 
@@ -93,14 +95,12 @@ public class SaveManager : Singleton<SaveManager>
 
                     if (MainData != null)
                     {
-                        if (MainData.allCommits == null)
-                            MainData.allCommits = new List<SaveNode>();
-                        if (string.IsNullOrEmpty(MainData.activeNodeID))
-                            MainData.activeNodeID = MainData.allCommits[0].nodeID;
-                        RestoreGameState(GetActiveState());
+                        if (MainData.allSlots == null)
+                            MainData.allSlots = new List<SaveSlot>();
+                        if (!string.IsNullOrEmpty(MainData.activeSlotID))
+                            MainData.activeSlotID = "";
 
-                        _currentSavedNodes = MainData.allCommits.
-                        FindAll(n => !string.IsNullOrEmpty(n.parentNodeID)).Count;
+                        _currentSaveSlotCount = MainData.allSlots.Count;
                         loadedSuccessfully = true;
                     }
                 }
@@ -114,63 +114,79 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogWarning("Dữ liệu save không hợp lệ hoặc trống. Đang khởi tạo mới...");
             MainData = new GameData();
-            if (MainData.allCommits == null)
-                MainData.allCommits = new List<SaveNode>();
+            if (MainData.allSlots == null)
+                MainData.allSlots = new List<SaveSlot>();
         }
-        if (MainData.allCommits.Count == 0)
-        {
-            StartNewGame();
-        }
-    }
-
-    public void StartNewGame() 
-    {
-        int rootCount = MainData.allCommits.FindAll(n => n.parentNodeID == "").Count;
-        SaveNode rootNode = new SaveNode
-        {
-            nodeID = IDGenerator.GenerateUniqueID("rootnote"),
-            parentNodeID = "",
-            commitName = $"New Game {rootCount + 1}",
-            timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-            reviveShrineID = "",
-            sceneName = _startSceneName,
-            deadShrineIDs = new List<string>(),
-            unlockedSkills = new SkillSaveData()
-        };
-
-        if (_currentSavedNodes >= _maxSaveNodes)
-        {
-            ShowNotification("Đang có 3 file lưu, xóa để lưu thêm");
-        }
-
-        MainData.allCommits.Add(rootNode);
-        MainData.activeNodeID = rootNode.nodeID;
-        SaveToDisk();
-        StartCoroutine(LoadSceneRoutine(rootNode));
+        // if (_currentSaveSlotCount == 0)
+        // {
+        //     MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Play);
+        // }
     }
     #endregion
 
-    #region checkout
-
-    public bool LoadGameFromNode(string targetNodeID)
+    #region New timeline
+    private IEnumerator RequireTimelineSelection()
     {
-        if (_isLoading) return false; 
+        yield return null;
 
-        SaveNode targetNode = MainData.allCommits.Find(n => n.nodeID == targetNodeID);
+        Debug.Log("[SaveManager] Đang chờ người chơi chọn dòng thời gian...");
+
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenSubPanel(MenuManager.SubPanelType.SavedGame);
+        }
+        else
+        {
+            PauseGameManager.SetPause(true);
+        }
+    }
+
+    public void CreateNewGame(string saveName = "")
+    {
+        if (_currentSaveSlotCount >= MaxSaveSlots)
+        {
+            return;
+        }
+        SaveSlot newSlot = new SaveSlot
+        {
+            saveID = IDGenerator.GenerateUniqueID("slot"),
+            saveName = string.IsNullOrEmpty(saveName) ? $"Save {_currentSaveSlotCount + 1}" : saveName,
+            firstSaveTimestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+            lastSaveTimestamp = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+            lastShrineID = "",
+            sceneName = _startSceneName,
+            unlockedSkills = new SkillSaveData()
+        };
+
+        MainData.allSlots.Add(newSlot);
+        _currentSaveSlotCount++;
+        MainData.activeSlotID = "";
+        SaveToDisk();
+
+        _saveMenuUI.RefreshSaveSlotContainer();
+    }
+    #endregion
+
+    #region Load slot
+    public bool LoadGameFromSlot(string targetSlotID)
+    {
+        if (_isLoading) return false;
+
+        SaveSlot targetNode = MainData.allSlots.Find(n => n.saveID == targetSlotID);
         if (targetNode != null)
         {
-            MainData.activeNodeID = targetNodeID;
+            MainData.activeSlotID = targetSlotID;
             StartCoroutine(LoadSceneRoutine(targetNode));
-            MainData.activeNodeID = targetNodeID;
+            MainData.activeSlotID = targetSlotID;
             SaveToDisk();
-            ShowNotification($"Changed to  {targetNode.commitName}");
+            ShowOnGameNotification($"Changed to  {targetNode.saveName}");
             return true;
         }
-        ShowNotification("Load failed: Node not found!");
+        ShowOnGameNotification("Load failed: Node not found!");
         return false;
     }
 
-    private IEnumerator LoadSceneRoutine(SaveNode node)
+    private IEnumerator LoadSceneRoutine(SaveSlot node)
     {
         _isLoading = true;
 
@@ -210,34 +226,32 @@ public class SaveManager : Singleton<SaveManager>
             _transitionCanvasGroup.blocksRaycasts = false;
         }
 
-        MenuManager.Instance?.OpenSideMenu(false);
+        MenuManager.Instance?.ClosePauseMenu();
         _isLoading = false;
     }
-
-    private void RestoreGameState(SaveNode node)
+    private void RestoreGameState(SaveSlot node)
     {
         RestoreShrinesState(node);
         RestorePlayerPosition(node);
         RestorePlayerSkills(node);
     }
-
-    private void RestoreShrinesState(SaveNode node)
+    private void RestoreShrinesState(SaveSlot node)
     {
-        SaveGameShrine[] shrines = UnityEngine.Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        SaveGameShrine[] shrines = FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         foreach (var shrine in shrines)
         {
-            if (node.deadShrineIDs != null && node.deadShrineIDs.Contains(shrine.ID))
+            if (!string.IsNullOrEmpty(node.lastShrineID) && shrine.ID == node.lastShrineID)
             {
-                shrine.DisableShrine();
+                shrine.DisableShrine(); // Vô hiệu hóa đền hiện tại
             }
             else
             {
-                shrine.EnableShrine();
+                shrine.EnableShrine();  // Mở lại tất cả các đền khác
             }
         }
     }
-    private void RestorePlayerSkills(SaveNode node)
+    private void RestorePlayerSkills(SaveSlot node)
     {
         if (_player != null)
         {
@@ -245,128 +259,94 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
-    private void RestorePlayerPosition(SaveNode node)
+    private void RestorePlayerPosition(SaveSlot node)
     {
-        Vector3 respawnPosition = _startPosition;
-        SaveGameShrine[] shrines = UnityEngine.Object.FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         PlayerController player = UnityEngine.Object.FindAnyObjectByType<PlayerController>();
-        bool isPlayerTeleported = false;
+        if (player == null) return;
 
-        foreach (var shrine in shrines)
+        var charController = player.GetComponent<CharacterController>();
+        if (charController != null) charController.enabled = false;
+
+        if (string.IsNullOrEmpty(node.lastShrineID))
         {
-            if (!isPlayerTeleported && (shrine.ID == node.reviveShrineID || string.IsNullOrEmpty(node.reviveShrineID)))
+            player.transform.position = _startPosition;
+        }
+        else
+        {
+            SaveGameShrine targetShrine = null;
+            SaveGameShrine[] shrines = FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+
+            foreach (var shrine in shrines)
             {
-                if (string.IsNullOrEmpty(node.reviveShrineID))
+                if (shrine.ID == node.lastShrineID)
                 {
-                    respawnPosition = _startPosition;
+                    targetShrine = shrine;
+                    break;
                 }
-                else 
-                {
-                    respawnPosition = shrine.transform.position;
-                }
+            }
 
-                if (player != null)
-                {
-                    var charController = player.GetComponent<CharacterController>();
-                    if (charController != null) charController.enabled = false;
-
-                    player.transform.position = respawnPosition;
-
-                    if (charController != null) charController.enabled = true;
-
-                    isPlayerTeleported = true;
-                }
+            if (targetShrine != null)
+            {
+                player.transform.position = targetShrine.transform.position;
+            }
+            else
+            {
+                Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.lastShrineID}! Trở về mặc định.");
+                player.transform.position = _startPosition;
             }
         }
 
-        if (!isPlayerTeleported)
-        {
-            Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.reviveShrineID} để dịch chuyển!");
-        }
+        if (charController != null) charController.enabled = true; // Bật lại sau khi dịch chuyển xong
     }
     #endregion
 
     #region commit
-    public void ExcuteSave() 
+    public void ExcuteSave()
     {
-        if (MainData == null || MainData.allCommits == null) return;
-        if (_currentSavedNodes >= _maxSaveNodes)
-        {
-            ShowNotification($"Can only save {_maxSaveNodes} times. Please delete some old saves to create a new one.", () =>
-            {
-                MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Play);
-            });
-            return;
-        }
+        if (MainData == null || MainData.allSlots == null) return;
         if (activeShrine == null)
         {
-            ShowNotification("Cannot save game. Please select a shrine to save.");
+            ShowOnGameNotification("Cannot save game. Please select a shrine to save.");
             return;
         }
-        SaveNode currentNode = MainData.allCommits.Find(n => n.nodeID == MainData.activeNodeID);
+        SaveSlot currentNode = MainData.allSlots.Find(n => n.saveID == MainData.activeSlotID);
         if (currentNode == null)
         {
+            ShowOnGameNotification("Cannot find current save game file!");
             return;
         }
 
-        SaveNode newCommit = new SaveNode
-        {
-            nodeID = IDGenerator.GenerateUniqueID("node"),
-            parentNodeID = currentNode.nodeID,
-            commitName = $"{activeShrine.gameObject.name}",
-            timestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
-            reviveShrineID = activeShrine.ID,
-            sceneName = SceneManager.GetActiveScene().name,
-            deadShrineIDs = new List<string>(currentNode.deadShrineIDs),
-            unlockedSkills = _player != null ? _player.Data.GetSkillSaveData() : new SkillSaveData()
-        };
-        if (!newCommit.deadShrineIDs.Contains(activeShrine.ID))
-        {
-            newCommit.deadShrineIDs.Add(activeShrine.ID);
-        }
+        currentNode.lastSaveTimestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+        currentNode.lastShrineID = activeShrine.ID;
+        currentNode.sceneName = SceneManager.GetActiveScene().name;
+        currentNode.unlockedSkills = _player != null ? _player.Data.GetSkillSaveData() : new SkillSaveData();
 
-        MainData.allCommits.Add(newCommit);
-        MainData.activeNodeID = newCommit.nodeID;
         activeShrine.DisableShrine();
         activeShrine = null;
-        _currentSavedNodes++;
 
         SaveToDisk();
-        ShowSaveOption(false, waiting: false);
-        ShowNotification($"Saved successfully at {newCommit.commitName}");
+        ShowOnGameNotification($"Saved successfully");
     }
     #endregion
 
     #region delete
-    public void DeleteSaveNode(string nodeID) 
+    public void DeleteSaveNode(string nodeID)
     {
-        if (MainData == null || MainData.allCommits == null) return;
+        if (MainData == null || MainData.allSlots == null) return;
+        if (nodeID == MainData.activeSlotID)
+        {
+            ShowOnMenuNotification("Cannot delete current saved file!");
+            return;
+        }
 
-        SaveNode nodeToDelete = MainData.allCommits.Find(n => n.nodeID == nodeID);
+        SaveSlot nodeToDelete = MainData.allSlots.Find(n => n.saveID == nodeID);
         if (nodeToDelete != null)
         {
-            if (nodeToDelete.parentNodeID == "")
-            {
-                Debug.LogWarning("Không thể xóa bản lưu Gốc (Root)!");
-                return;
-            }
-
-            string nodeToStay = nodeToDelete.parentNodeID;
-            MainData.allCommits.Remove(nodeToDelete);
-            _currentSavedNodes--;
-
-            if (MainData.activeNodeID == nodeID)
-            {
-                MainData.activeNodeID = nodeToStay;
-
-                SaveNode nodeToRestore = GetActiveState();
-                RestoreShrinesState(nodeToRestore);
-                RestorePlayerSkills(nodeToRestore);                
-            }
-
+            MainData.allSlots.Remove(nodeToDelete);
+            _currentSaveSlotCount--;
             SaveToDisk();
-            Debug.Log($"Đã xóa thành công Node: {nodeID}");
-            _saveMenuUI.RefreshUI();
+            ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
+            _saveMenuUI.RefreshSaveSlotContainer();
         }
     }
     #endregion
@@ -378,78 +358,22 @@ public class SaveManager : Singleton<SaveManager>
         File.WriteAllText(_savePath, json);
     }
 
-    #region UI Animation
-    
-    // Dùng để hiện hoặc ẩn dòng chữ "Press ↑ to save" khi lại gần Shrine
-    public void ShowSaveOption(bool open, bool waiting = true)
+    #region Notification
+    // Hàm duy nhất để hiển thị Popup. Tham số autoClose mặc định là true.
+    public void ShowOnGameNotification(string message, bool autoClose = true, Action onComplete = null)
     {
-        if (open)
-        {
-            DisplayMessage("Press ↑ to save", autoClose: false);
-        }
-        else
-        {
-            HideMessage(waiting ? _closeDelayTime : 0f);
-        }
+        UIHelper.AnimatePopup(_saveGamePanel, message, _notifyText, autoClose, _notificationDuration, _animationDuration, onComplete);
     }
 
-    // Dùng để nảy lên các Popup thông báo (thành công, lỗi...) rồi tự tắt
-    public void ShowNotification(string message, Action onComplete = null)
+    // Gọi tắt Popup chủ động
+    public void HideNotification(float delayTime = 0f)
     {
-        DisplayMessage(message, autoClose: true, onComplete);
+        UIHelper.HidePopup(_saveGamePanel, delayTime, _animationDuration);
     }
 
-    private void DisplayMessage(string message, bool autoClose, Action onComplete = null)
+    public void ShowOnMenuNotification(string message)
     {
-        if (_savePanelCanvasGroup == null) _savePanelCanvasGroup = _saveGamePanel.GetComponent<CanvasGroup>();
-        if (_savePanelRect == null) _savePanelRect = _saveGamePanel.GetComponent<RectTransform>();
-
-        _panelSequence?.Kill();
-        _panelSequence = DOTween.Sequence().SetUpdate(true);
-
-        _saveGamePanel.SetActive(true);
-        if (_notifyText != null)
-        {
-            UIHelper.SetTextAnimated(_notifyText, message);
-        }
-
-        // Chỉ chạy animation phóng to nếu Panel đang bị ẩn đi
-        if (_savePanelCanvasGroup.alpha < 1f || _savePanelRect.localScale.x < 1f)
-        {
-            _savePanelRect.localScale = Vector3.zero;
-            _savePanelCanvasGroup.alpha = 0f;
-
-            _panelSequence.Append(_savePanelRect.DOScale(Vector3.one, _animationDuration).SetEase(Ease.OutBack))
-                          .Join(_savePanelCanvasGroup.DOFade(1f, _animationDuration));
-        }
-
-        // Tự động thu nhỏ và gọi callback sau khi xong
-        if (autoClose)
-        {
-            _panelSequence.AppendInterval(_notificationDuration)
-                          .Append(_savePanelRect.DOScale(Vector3.zero, _animationDuration).SetEase(Ease.InBack))
-                          .Join(_savePanelCanvasGroup.DOFade(0f, _animationDuration))
-                          .OnComplete(() => 
-                          {
-                              _saveGamePanel.SetActive(false);
-                              onComplete?.Invoke();
-                          });
-        }
-    }
-
-    private void HideMessage(float delayTime)
-    {
-        _panelSequence?.Kill();
-        _panelSequence = DOTween.Sequence().SetUpdate(true);
-
-        if (delayTime > 0)
-        {
-            _panelSequence.AppendInterval(delayTime);
-        }
-
-        _panelSequence.Append(_savePanelRect.DOScale(Vector3.zero, _animationDuration).SetEase(Ease.InBack))
-                      .Join(_savePanelCanvasGroup.DOFade(0f, _animationDuration))
-                      .OnComplete(() => _saveGamePanel.SetActive(false));
+        MenuManager.Instance.ShowTitleNotification(message);
     }
     #endregion
 }

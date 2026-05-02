@@ -9,8 +9,8 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     public string ID => _id;
 
     [Header("Detection")]
-    [SerializeField] private float _radius = 2f; // Bán kính kiểm tra player
     [SerializeField] private LayerMask _playerLayer; // Layer của Player
+    [SerializeField] private float _indicateRadius = 2f; // Bán kính kiểm tra player
     [SerializeField] private GameObject _visualIndicator;
     private bool _isPlayerNearby = false;
 
@@ -46,8 +46,6 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     public void OnInteract(bool on = true)
     {
         if (!CanInteract()) return;
-
-        SaveManager.Instance.ShowSaveOption(on);
         SaveManager.Instance.activeShrine = on ? this : null;
     }
 
@@ -74,7 +72,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     private void CheckForPlayer()
     {
         // Kiểm tra xem có Player trong vùng bán kính không
-        Collider2D player = Physics2D.OverlapCircle(transform.position, _radius, _playerLayer);
+        Collider2D player = Physics2D.OverlapCircle(transform.position, _indicateRadius, _playerLayer);
 
         if (player != null)
         {
@@ -106,7 +104,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, _radius);
+        Gizmos.DrawWireSphere(transform.position, _indicateRadius);
     }
     #endregion
 }
