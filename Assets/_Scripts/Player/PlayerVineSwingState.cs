@@ -76,5 +76,8 @@ public class PlayerVineSwingState : PlayerState
     {
         base.Exit();
         if (_grabJoint != null) Object.Destroy(_grabJoint);
+
+        _player.CurrentVineRb = null;
+        _player.CurrentVineTransform = null;
     }
 }
