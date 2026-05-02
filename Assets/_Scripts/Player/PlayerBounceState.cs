@@ -9,7 +9,7 @@ public class PlayerBounceState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        _player.Visual.Anim.Play("playerJump");
+        _player.Visual.Anim.Play("pJump");
     }
 
     public override void LogicUpdate()

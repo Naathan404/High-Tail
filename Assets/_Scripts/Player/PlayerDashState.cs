@@ -32,7 +32,7 @@ public class PlayerDashState : PlayerState
 
         _player.CanDash = false;
 
-        _player.Visual.Anim.Play("playerDash");
+        _player.Visual.Anim.Play("pDash");
         _player.Visual.DashDustParticle.Play();
         //CameraShaker.Instance.OneTimeShake(Vector2.right, 0.5f);
         CameraShakeManager.Instance.ShakeForDash();
