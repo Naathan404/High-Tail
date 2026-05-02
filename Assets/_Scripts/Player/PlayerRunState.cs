@@ -13,7 +13,7 @@ public class PlayerRunState : PlayerState
         Debug.Log("Vào run state");
         _player.CanDash = true;
 
-        _player.Visual.Anim.Play("playerRun");
+        _player.Visual.Anim.Play("pRun");
         _player.Visual.RunDustParticle.Play();
     }
     public override void LogicUpdate()
