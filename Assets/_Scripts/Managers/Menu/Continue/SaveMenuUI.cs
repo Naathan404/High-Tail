@@ -4,6 +4,8 @@ using System;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using TMPro;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class SaveMenuUI : MonoBehaviour
 {
@@ -16,6 +18,10 @@ public class SaveMenuUI : MonoBehaviour
     [SerializeField] private GameObject _nameSavePanel;      
     [SerializeField] private TMP_InputField _nameInputField;
     [SerializeField] private Button _confirmNameButton;
+
+    [Header("Navigation")]
+    [SerializeField] private List<Button> _navigableButtons = new List<Button>();
+    [SerializeField] private int _currentIndex = 0;
     
 
     private void OnEnable()
@@ -26,6 +32,7 @@ public class SaveMenuUI : MonoBehaviour
             _nameSavePanel.SetActive(false);
         }
     }
+
 
     public void RefreshSaveSlotContainer()
     {
@@ -41,10 +48,16 @@ public class SaveMenuUI : MonoBehaviour
         int maxSaveSlotCount = SaveManager.Instance.MaxSaveSlots;
         Debug.Log($"Lịch sử commit có {currentSaveSlotCount} node");
 
+        _navigableButtons.Clear();
+        _currentIndex = 0;
+
         foreach (SaveSlot node in history)
         {
             SaveSlotUI newSlot = Instantiate(_saveSlotPrefab, _contentContainer);
             newSlot.Setup(node);
+
+            Button slotBtn = newSlot.GetComponentInChildren<Button>();
+            if (slotBtn != null) _navigableButtons.Add(slotBtn);
         }
         if (currentSaveSlotCount < maxSaveSlotCount) 
         {
@@ -52,7 +65,11 @@ public class SaveMenuUI : MonoBehaviour
 
             newGameBtn.onClick.RemoveAllListeners(); 
             newGameBtn.onClick.AddListener(HandleNewGameClicked);
+
+            _navigableButtons.Add(newGameBtn);
         }
+
+        SetupButtonNavigation();
     }
 
     private void HandleNewGameClicked()
@@ -65,6 +82,12 @@ public class SaveMenuUI : MonoBehaviour
 
         _confirmNameButton.onClick.RemoveAllListeners();
         _confirmNameButton.onClick.AddListener(OnConfirmNameClicked);
+
+        _nameInputField.onSubmit.RemoveAllListeners();
+        _nameInputField.onSubmit.AddListener((text) => OnConfirmNameClicked());
+
+        _nameInputField.Select();
+        _nameInputField.ActivateInputField();
     }
 
     private void OnConfirmNameClicked()
@@ -81,4 +104,33 @@ public class SaveMenuUI : MonoBehaviour
         SaveManager.Instance.CreateNewGame(finalName);
         UIHelper.AnimateFade(_contentContainer.gameObject, true);
     }
+
+    #region Handle Keyboard Navigation
+    private void SetupButtonNavigation()
+    {
+        if (_navigableButtons.Count == 0) return;
+
+        for (int i = 0; i < _navigableButtons.Count; i++)
+        {
+            Navigation nav = new Navigation();
+            nav.mode = Navigation.Mode.Explicit;
+
+            // Tính toán Index để nối vòng (nếu là nút đầu thì nối với nút cuối, và ngược lại)
+            int prevIndex = (i == 0) ? _navigableButtons.Count - 1 : i - 1;
+            int nextIndex = (i == _navigableButtons.Count - 1) ? 0 : i + 1;
+
+            nav.selectOnLeft = _navigableButtons[prevIndex];
+            nav.selectOnRight = _navigableButtons[nextIndex];
+            
+            // Khóa đi lên đi xuống
+            nav.selectOnUp = _navigableButtons[i];
+            nav.selectOnDown = _navigableButtons[i];
+
+            _navigableButtons[i].navigation = nav;
+        }
+
+        // Tự động focus nút đầu tiên
+        _navigableButtons[0].Select();
+    }
+    #endregion
 }
