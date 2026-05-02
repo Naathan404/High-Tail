@@ -85,6 +85,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
 
     public void Interact()
     {
+        if (!CanInteract()) return;
         SaveManager.Instance.ExcuteSave();
     }
     #endregion
