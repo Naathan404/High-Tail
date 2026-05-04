@@ -26,19 +26,19 @@ public partial class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<IBouncy>(out IBouncy bouncer))
-        {
-            _stateMachine.ChangeState(IdleState);
-            ApplyBounce(bouncer.BouncyForce);
-            bouncer.PlayBounceAnimation();
-        }
+        // if (collision.gameObject.TryGetComponent<IBouncy>(out IBouncy bouncer))
+        // {
+        //     _stateMachine.ChangeState(IdleState);
+        //     ApplyBounce(bouncer.BouncyForce);
+        //     bouncer.PlayBounceAnimation();
+        // }
 
-        if (collision.gameObject.TryGetComponent<IPushable>(out IPushable pusher))
-        {
-            _stateMachine.ChangeState(IdleState);
-            ApplyPush(pusher.PushForce, pusher.IsRight);
-            pusher.PlayPushAnimation();
-        }
+        // if (collision.gameObject.TryGetComponent<IPushable>(out IPushable pusher))
+        // {
+        //     _stateMachine.ChangeState(IdleState);
+        //     ApplyPush(pusher.PushForce, pusher.IsRight);
+        //     pusher.PlayPushAnimation();
+        // }
 
         if (collision.gameObject.TryGetComponent<Trigger>(out Trigger trigger))
         {

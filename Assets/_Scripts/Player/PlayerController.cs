@@ -380,11 +380,9 @@ public partial class PlayerController : MonoBehaviour
         {
             // Kiểm tra xem mặt đất đang đạp lên là MovingPlatform hay SwingPlatform
             _activePlatform = hit.collider.GetComponent<MovingPlatform>();
-            CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>(); // BỔ SUNG DÒNG NÀY
-
+            CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>();
             return true;
         }
-
         return false;
     }
 
@@ -403,6 +401,19 @@ public partial class PlayerController : MonoBehaviour
         return false;
     }
 
+    public bool IsTouchingVine()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 0.5f); 
+        foreach (Collider2D hit in hits)
+        {
+            if (hit.GetComponent<VineSegment>() != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     #endregion
 
     private void ApplyBounce(float force)
@@ -415,6 +426,8 @@ public partial class PlayerController : MonoBehaviour
     {
         CanDash = false;
         Rb.linearVelocity = force;
+        _isFacingRight = dir > 0;
+        transform.localScale = new Vector2(_originalScale.x * dir, _originalScale.y);
         Visual.ApplySquashStretch(new Vector3(1.2f, 0.8f, 1f));
 
         if (force.y > 0f || !IsOnGround())

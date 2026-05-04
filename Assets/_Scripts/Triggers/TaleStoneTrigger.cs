@@ -18,13 +18,13 @@ public class TaleStoneTrigger : MonoBehaviour
     [Header("Event Callback")]
     public UnityEvent OnTaleStoneDialogueCompleted;
 
+    PlayerController _player;
     private bool _canInteract = false;
 
 
     private void Awake()
     {
         _trigger = GetComponent<Collider2D>();
-        _interactMark.SetActive(false);
     }
 
     [System.Obsolete]
@@ -33,9 +33,8 @@ public class TaleStoneTrigger : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             if(_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) return;
-
-            _interactMark.SetActive(true);
             _canInteract = true;
+            collision.TryGetComponent<PlayerController>(out _player);
         }
         
     }
@@ -43,13 +42,13 @@ public class TaleStoneTrigger : MonoBehaviour
     [System.Obsolete]
     private void Update()
     {
+        _interactMark.SetActive(_canInteract);
+        if(_canInteract == false) return;
         if(_type == TaleStoneType.SkillUnlock && (!_canInteract || _taleStoneData.IsActivated )) return;
-        if(_type != TaleStoneType.SkillUnlock && !_canInteract) return;
-
-        
         // nếu _canInteract và isActivated = false
         if(InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
         {
+            _player.Rb.linearVelocity = Vector2.zero;
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             _canInteract = false;
             TaleStoneManager.Instance.StartTale(
@@ -58,6 +57,14 @@ public class TaleStoneTrigger : MonoBehaviour
             () =>
             {
                 OnTaleStoneDialogueCompleted?.Invoke();
+                if(_type == TaleStoneType.SkillUnlock)
+                {
+                    _canInteract = false;
+                }
+                else
+                {
+                    _canInteract = true;
+                }
             });
             _taleStoneData.IsActivated = true;
         }
