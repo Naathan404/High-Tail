@@ -8123,6 +8123,71 @@ MonoBehaviour:
   - {x: -9.176796, y: -14.302335, z: 0}
   - {x: -9.153748, y: 29.568214, z: 0}
   - {x: -91.965866, y: 29.429752, z: 0}
+--- !u!1001 &1333513016
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -57.05173
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.873775
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 126972633731377265, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3015775993090298605, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: m_Name
+      value: BounceMushroom
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205850409291409043, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: _pogoBounceForce
+      value: 49.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205850409291409043, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
+      propertyPath: _normalBounceForce
+      value: 202.1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9f316d8b52fa6854098c304b9e2eb344, type: 3}
 --- !u!1 &1385340889
 GameObject:
   m_ObjectHideFlags: 0
@@ -9703,3 +9768,4 @@ SceneRoots:
   - {fileID: 264651719}
   - {fileID: 993975405}
   - {fileID: 2015738306}
+  - {fileID: 1333513016}
