@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class GameData
 {
     public float masterVolume = 1.0f;
-    public string activeNodeID; 
-    public List<SaveNode> allCommits = new List<SaveNode>();
-    
+    public string activeSlotID; 
+    public List<SaveSlot> allSlots = new List<SaveSlot>();
 }

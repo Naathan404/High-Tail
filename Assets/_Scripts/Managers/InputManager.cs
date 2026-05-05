@@ -24,6 +24,7 @@ public class InputManager : MonoBehaviour
         Inputs.Camera.Enable();
         Inputs.Interaction.Enable();
         Inputs.Testing.Enable();
+        Inputs.UI.Enable();
     }
 
     private void OnDisable()
@@ -32,6 +33,7 @@ public class InputManager : MonoBehaviour
         Inputs.Camera.Disable();
         Inputs.Interaction.Disable();
         Inputs.Testing.Disable();
+        Inputs.UI.Disable();
     }
 
     public void DisableControl()
