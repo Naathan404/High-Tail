@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 910304ee60d66e34f9b25014a6c9ca9a
+guid: 2b14a82779c6a504fb76d6ffe2fbfb2a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2167765295380174255
-    second: gravestone_ 1_0
+      213: 5907716787038289216
+    second: shrineIndicator_0
+  - first:
+      213: 5418768289469820727
+    second: shrineIndicator_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +54,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 8
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +78,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -101,7 +104,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -114,7 +117,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -126,23 +129,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: gravestone_ 1_0
+      name: shrineIndicator_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 98
         y: 0
-        width: 64
-        height: 63
+        width: 112
+        height: 308
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 15ae17cf2fc8ae1e0800000000000000
-      internalID: -2167765295380174255
+      spriteID: 04d770d0e1d6cf150800000000000000
+      internalID: 5907716787038289216
       vertices: []
       indices: 
       edges: []
@@ -151,7 +154,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 907f310917b29e84c83a8e445d23ab71
     internalID: 0
     vertices: []
     indices: 
@@ -161,7 +164,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      gravestone_ 1_0: -2167765295380174255
+      shrineIndicator_0: 5907716787038289216
+      shrineIndicator_1: 5418768289469820727
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems; // Bắt buộc phải có cho UI
-using DG.Tweening; // Thư viện DOTween
+using DG.Tweening;
+using UnityEngine.UI; // Thư viện DOTween
 
 public class TweenButton : MonoBehaviour,
     IPointerEnterHandler, IPointerExitHandler,
@@ -13,6 +14,8 @@ public class TweenButton : MonoBehaviour,
     [SerializeField] private Vector3 _clickScale = new Vector3(0.9f, 0.9f, 0.9f); // Khi bấm lún xuống
     [SerializeField] private float _tweenDuration = 0.2f;
     private Vector3 _originalScale;
+    private Selectable _selectable;
+    public bool isLockedByExternalTween = false;
 
     private void Awake()
     {
@@ -25,9 +28,17 @@ public class TweenButton : MonoBehaviour,
         transform.localScale = _originalScale;
     }
 
+    private bool CanPlayEffect()
+    {
+        if (isLockedByExternalTween) return false;
+        if (_selectable != null && !_selectable.interactable) return false;
+        return true;
+    }
+
     #region General effect
     private void Highlight()
     {
+        if (!CanPlayEffect()) return;
         transform.DOKill();
         transform.DOScale(_hoverScale, _tweenDuration)
                  .SetEase(Ease.OutBack)
@@ -35,6 +46,7 @@ public class TweenButton : MonoBehaviour,
     }
     private void Unhighlight()
     {
+        if (!CanPlayEffect()) return;
         transform.DOKill();
         transform.DOScale(_originalScale, _tweenDuration)
                  .SetEase(Ease.OutQuad)
@@ -51,6 +63,7 @@ public class TweenButton : MonoBehaviour,
     // 3. Chuột bấm click xuống
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!CanPlayEffect()) return;
         transform.DOKill();
         transform.DOScale(_clickScale, _tweenDuration / 2f) // Tốc độ bấm xuống thường nhanh gấp đôi
                  .SetEase(Ease.OutQuad)
@@ -60,6 +73,7 @@ public class TweenButton : MonoBehaviour,
     // 4. Chuột nhả click ra
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!CanPlayEffect()) return;
         transform.DOKill();
         // Nhả ra thì nảy trở lại trạng thái Hover
         transform.DOScale(_hoverScale, _tweenDuration / 2f)
@@ -76,6 +90,7 @@ public class TweenButton : MonoBehaviour,
 
     public void OnSubmit(BaseEventData eventData)
     {
+        if (!CanPlayEffect()) return;
         transform.DOKill();
         
         Sequence submitSequence = DOTween.Sequence();

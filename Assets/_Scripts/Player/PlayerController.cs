@@ -162,7 +162,7 @@ public partial class PlayerController : MonoBehaviour
             return;
         }
 
-        if(InputManager.Instance.Inputs.Movement.Light.WasPressedThisFrame() && Data.AstralPulseUnlocked)
+        if (InputManager.Instance.Inputs.Movement.Light.WasPressedThisFrame() && Data.AstralPulseUnlocked)
         {
             AstralPulseSkill.CastPulse();
         }
@@ -231,17 +231,21 @@ public partial class PlayerController : MonoBehaviour
         }
         _stateMachine.CurrentState.PhysicsUpdate();
 
-        // Limit the player's speed
-        if (Mathf.Abs(Rb.linearVelocity.x) > Data.maxSpeedX)
+
+        if (_stateMachine.CurrentState is PlayerAirGlideState || _stateMachine.CurrentState is PlayerFallState)
         {
-            // Sign: return 1 if positive and -1 if negative
-            float velocityX = Mathf.Sign(Rb.linearVelocity.x) * Data.maxSpeedX;
-            Rb.linearVelocity = new Vector2(velocityX, Rb.linearVelocity.y);
-        }
-        if (Mathf.Abs(Rb.linearVelocity.y) > Data.maxSpeedY)
-        {
-            float velocityY = Mathf.Sign(Rb.linearVelocity.y) * Data.maxSpeedY;
-            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, velocityY);
+            // Limit the player's speed
+            if (Mathf.Abs(Rb.linearVelocity.x) > Data.maxSpeedX)
+            {
+                // Sign: return 1 if positive and -1 if negative
+                float velocityX = Mathf.Sign(Rb.linearVelocity.x) * Data.maxSpeedX;
+                Rb.linearVelocity = new Vector2(velocityX, Rb.linearVelocity.y);
+            }
+            if (Mathf.Abs(Rb.linearVelocity.y) > Data.maxSpeedY)
+            {
+                float velocityY = Mathf.Sign(Rb.linearVelocity.y) * Data.maxSpeedY;
+                Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, velocityY);
+            }
         }
     }
     #endregion
