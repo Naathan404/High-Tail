@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 7239281485850454181}
   m_Layer: 0
   m_Name: LeftPushMushroom
-  m_TagString: Untagged
+  m_TagString: Mushroom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -138,8 +138,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PushMushroom
   _visual: {fileID: 4848644955653879977}
-  _pushForce: {x: 35, y: 15}
+  _pushX: 20
+  _pushY: 10
   _isFacingRight: 1
+  _isShortMushroom: 1
 --- !u!61 &7239281485850454181
 BoxCollider2D:
   m_ObjectHideFlags: 0
