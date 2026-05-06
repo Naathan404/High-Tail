@@ -162,7 +162,7 @@ public partial class PlayerController : MonoBehaviour
             return;
         }
 
-        if(InputManager.Instance.Inputs.Movement.Light.WasPressedThisFrame() && Data.AstralPulseUnlocked)
+        if (InputManager.Instance.Inputs.Movement.Light.WasPressedThisFrame() && Data.AstralPulseUnlocked)
         {
             AstralPulseSkill.CastPulse();
         }
@@ -231,17 +231,21 @@ public partial class PlayerController : MonoBehaviour
         }
         _stateMachine.CurrentState.PhysicsUpdate();
 
-        // Limit the player's speed
-        if (Mathf.Abs(Rb.linearVelocity.x) > Data.maxSpeedX)
+
+        if (_stateMachine.CurrentState is PlayerAirGlideState || _stateMachine.CurrentState is PlayerFallState)
         {
-            // Sign: return 1 if positive and -1 if negative
-            float velocityX = Mathf.Sign(Rb.linearVelocity.x) * Data.maxSpeedX;
-            Rb.linearVelocity = new Vector2(velocityX, Rb.linearVelocity.y);
-        }
-        if (Mathf.Abs(Rb.linearVelocity.y) > Data.maxSpeedY)
-        {
-            float velocityY = Mathf.Sign(Rb.linearVelocity.y) * Data.maxSpeedY;
-            Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, velocityY);
+            // Limit the player's speed
+            if (Mathf.Abs(Rb.linearVelocity.x) > Data.maxSpeedX)
+            {
+                // Sign: return 1 if positive and -1 if negative
+                float velocityX = Mathf.Sign(Rb.linearVelocity.x) * Data.maxSpeedX;
+                Rb.linearVelocity = new Vector2(velocityX, Rb.linearVelocity.y);
+            }
+            if (Mathf.Abs(Rb.linearVelocity.y) > Data.maxSpeedY)
+            {
+                float velocityY = Mathf.Sign(Rb.linearVelocity.y) * Data.maxSpeedY;
+                Rb.linearVelocity = new Vector2(Rb.linearVelocity.x, velocityY);
+            }
         }
     }
     #endregion
@@ -387,11 +391,34 @@ public partial class PlayerController : MonoBehaviour
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
 
+    // public bool IsPogoHit()
+    // {
+    //     Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
+    //     if (hit && Data.PogoUnlocked)
+    //     {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    // Trong PlayerController.cs, sửa lại hàm này:
     public bool IsPogoHit()
     {
+        // Trả về thẳng Collider va chạm
         Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
-        if (hit && Data.PogoUnlocked)
+        
+        if (hit != null && Data.PogoUnlocked)
         {
+            if (hit.CompareTag("Mushroom"))
+            {
+                Data.pogoForce = Data.jumpForce * 1.5f; // Nảy cao
+            }
+            else if (hit.CompareTag("Enemy"))
+            {
+                Data.pogoForce = Data.jumpForce; // Nảy bình thường
+            }
+            GameManager.Instance.DoTimeFreeze(0.05f, 0f); 
+
             return true;
         }
         return false;

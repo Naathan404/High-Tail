@@ -15,6 +15,7 @@ public class AstralGift : MonoBehaviour
     [SerializeField] private float _floatingOffsetY = 1f;
     [SerializeField] private Light2D _light;
     [SerializeField] private float _lightDuration = 1f;
+    [SerializeField] private Transform _iconPosition; 
 
     [Header("Cài đặt khác")]
     private bool _isCollected = false;
@@ -50,6 +51,8 @@ public class AstralGift : MonoBehaviour
 
     private void Collect()
     {
+        ItemDataManager.Instance.CollectItem();
+
         _isCollected = true;
         _collider.enabled = false; 
         DOTween.To
@@ -82,13 +85,15 @@ public class AstralGift : MonoBehaviour
             CameraShakeManager.Instance.ShakeForDash();
         }
 
+
         // play anim 
         Sequence collectSequence = DOTween.Sequence();
         collectSequence.Append(transform.DOScale(_maxScale, _scaleDuration * 0.4f).SetEase(Ease.OutBack));
-        collectSequence.Append(transform.DOScale(0f, _scaleDuration * 0.6f).SetEase(Ease.InBack));
+        collectSequence.Append(transform.DOScale(_maxScale * 0.4f, _scaleDuration * 3f).SetEase(Ease.InBack));
+        collectSequence.Join(transform.DOMove(ItemUI.Instance.IconPosition, _scaleDuration * 3f).SetEase(Ease.InExpo));
         collectSequence.OnComplete(() => {
             // PlayerController.Instance.AddScore(1); 
-            Destroy(gameObject, 0.5f);
+            Destroy(gameObject);
         });        
     }
 

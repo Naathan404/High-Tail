@@ -14,7 +14,7 @@ public class PlayerIdleState : PlayerState
         _player.CanDash = true;
         if(_player.IsStickyGround) _player.CanDash = false;
         
-        _player.Visual.Anim.Play("playerIdle");
+        _player.Visual.Anim.Play("pIdle");
     }
 
     public override void HandleInput()

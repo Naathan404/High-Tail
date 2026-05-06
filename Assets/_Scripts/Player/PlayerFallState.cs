@@ -16,7 +16,7 @@ public class PlayerFallState : PlayerState
         base.Enter();
         Debug.Log("Vào fall state");
         _timer = 0f;
-        _player.Visual.Anim.Play("playerFall");
+        _player.Visual.Anim.Play("pFall");
         _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
     }
 

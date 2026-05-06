@@ -23,7 +23,7 @@ public class PlayerUpperJumpState : PlayerState
         //_player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
         _player.Rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-        _player.Visual.Anim.Play("playerJump");
+        _player.Visual.Anim.Play("pJump");
         _player.Visual.JumpDustParticle.Play();
     }
 
