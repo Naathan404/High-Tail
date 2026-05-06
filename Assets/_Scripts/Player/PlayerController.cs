@@ -387,11 +387,34 @@ public partial class PlayerController : MonoBehaviour
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
 
+    // public bool IsPogoHit()
+    // {
+    //     Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
+    //     if (hit && Data.PogoUnlocked)
+    //     {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    // Trong PlayerController.cs, sửa lại hàm này:
     public bool IsPogoHit()
     {
+        // Trả về thẳng Collider va chạm
         Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
-        if (hit && Data.PogoUnlocked)
+        
+        if (hit != null && Data.PogoUnlocked)
         {
+            if (hit.CompareTag("Mushroom"))
+            {
+                Data.pogoForce = Data.jumpForce * 1.5f; // Nảy cao
+            }
+            else if (hit.CompareTag("Enemy"))
+            {
+                Data.pogoForce = Data.jumpForce; // Nảy bình thường
+            }
+            GameManager.Instance.DoTimeFreeze(0.05f, 0f); 
+
             return true;
         }
         return false;
