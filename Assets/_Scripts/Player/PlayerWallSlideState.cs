@@ -24,6 +24,7 @@ public class PlayerWallSlideState : PlayerState
                 startVelX = parentRb.linearVelocity.x;
         }
 
+        _player.Visual.Anim.Play("pJump");
         _player.Rb.linearVelocity = new Vector2(startVelX, 0f);
         _player.Visual.SlideDustParticle.Play();
     }
