@@ -48,7 +48,7 @@ public class PlayerFallState : PlayerState
         //     return;
         // }
 
-        // Kiểm tra Dash trên không
+        // Kiểm tra Player_Dash trên không
         // if (_player.DashPressed && _player.CanDash && _player.CurrentEnergy >= 20) {
         //     _stateMachine.ChangeState(_player.DashState);
         //     return;

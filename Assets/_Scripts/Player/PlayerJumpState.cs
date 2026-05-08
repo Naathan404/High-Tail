@@ -9,6 +9,7 @@ public class PlayerJumpState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        AudioManager.Instance.PlaySFX(SoundName.Player_JumpGrass);
         Debug.Log("Vào jump state");
         _player.UseJumpBuffer();
         _player.Visual.ApplySquashStretch(new Vector3(0.8f, 1.3f, 1f));

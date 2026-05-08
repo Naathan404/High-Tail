@@ -56,6 +56,7 @@ public class PushMushroom : MonoBehaviour, IPushable
     private void DoPush(PlayerController player)
     {
         PlayPushAnimation();
+        AudioManager.Instance.PlaySFX(SoundName.Player_JumpMushroom);
 
         player.CanDash = false;
         player.SetFacingDirection(_isFacingRight);

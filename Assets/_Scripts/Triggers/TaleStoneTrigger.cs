@@ -20,7 +20,7 @@ public class TaleStoneTrigger : MonoBehaviour
 
     PlayerController _player;
     private bool _canInteract = false;
-
+    private AudioSource _audioSource;
 
     private void Awake()
     {
@@ -36,7 +36,6 @@ public class TaleStoneTrigger : MonoBehaviour
             _canInteract = true;
             collision.TryGetComponent<PlayerController>(out _player);
         }
-        
     }
 
     [System.Obsolete]
@@ -51,6 +50,7 @@ public class TaleStoneTrigger : MonoBehaviour
             _player.Rb.linearVelocity = Vector2.zero;
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             _canInteract = false;
+            PlaySound();
             TaleStoneManager.Instance.StartTale(
             _taleStoneData,
             _camCenterTransform,
@@ -59,6 +59,7 @@ public class TaleStoneTrigger : MonoBehaviour
                 OnTaleStoneDialogueCompleted?.Invoke();
                 if(_type == TaleStoneType.SkillUnlock)
                 {
+                    AudioManager.Instance.PlaySFX(SoundName.Reward);
                     _canInteract = false;
                 }
                 else
@@ -72,8 +73,18 @@ public class TaleStoneTrigger : MonoBehaviour
 
     private void OnTriggerExit2D()
     {
+        AudioManager.Instance.FadeOutAndStop(_audioSource);
         _interactMark.SetActive(false);
         _canInteract = false;
+    }
+
+    private void PlaySound()
+    {
+        GameObject tempGO = new GameObject("TempAudio"); // create the temp object
+        tempGO.transform.position = this.transform.position; 
+        _audioSource = tempGO.AddComponent<AudioSource>();
+
+        AudioManager.Instance.Play3DSound(SoundName.TaleStone, _audioSource);
     }
 
     public enum TaleStoneType

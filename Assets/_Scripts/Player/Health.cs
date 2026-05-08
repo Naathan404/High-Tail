@@ -59,7 +59,7 @@ public partial class PlayerController
             Data.respawnDuration
         );
         yield return null;
-        
+        AudioManager.Instance.PlaySFX(SoundName.Player_Respawn);
     }
 
     public void ApplyEnergy(int amount)

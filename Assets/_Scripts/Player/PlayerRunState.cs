@@ -3,6 +3,8 @@ using UnityEngine;
 public class PlayerRunState : PlayerState
 {
     private float _maxSpeed;
+    private float _stepDelay = 0.25f;
+    private float _stepTimer;
     public PlayerRunState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -19,22 +21,29 @@ public class PlayerRunState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        Debug.Log(_stepDelay);
+        _stepTimer -= Time.deltaTime;
+        if (_stepTimer <= 0)
+        {
+            _stepTimer = _stepDelay;
+            AudioManager.Instance.PlaySFX(SoundName.Player_RunGrass);
+        }
 
         _player.CheckFlip(_player.MoveX);
 
-        
-        if(Mathf.Abs(_player.MoveX) < 0.01f && Mathf.Abs(_player.Rb.linearVelocity.x) < 0.1f)
+
+        if (Mathf.Abs(_player.MoveX) < 0.01f && Mathf.Abs(_player.Rb.linearVelocity.x) < 0.1f)
         {
             _stateMachine.ChangeState(_player.IdleState);
             return;
         }
 
-        if(_player.CanJump())
+        if (_player.CanJump())
         {
             _stateMachine.ChangeState(_player.JumpState);
         }
         // sau khi kiểm tra mấy cái kia, thì kiểm tra có chạm đất không, không thì chuyển về Rơi
-        else if(!_player.IsOnGround() && _player.Rb.linearVelocity.y < 0)
+        else if (!_player.IsOnGround() && _player.Rb.linearVelocity.y < 0)
         {
             _stateMachine.ChangeState(_player.FallState);
             return;
@@ -44,22 +53,22 @@ public class PlayerRunState : PlayerState
     public override void HandleInput()
     {
         base.HandleInput();
-        if(_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
+        if (_player.DashPressed && _player.CanDash && _player.Data.DashUnlocked)
         {
             _stateMachine.ChangeState(_player.DashState);
             return;
         }
-        if(_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
+        if (_player.Data.WallJumpUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.JumpPressed)
         {
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
+        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
         {
             _stateMachine.ChangeState(_player.WallSlideState);
             return;
-        }        
-    }    
+        }
+    }
 
     public override void PhysicsUpdate()
     {

@@ -1,8 +1,12 @@
+using Unity.Hierarchy;
 using UnityEngine;
 
 public class PlayerWallSlideState : PlayerState
 {
     private float _originalGrivityScale;
+    private float _slideDelay = 0.2f;
+    private float _slideTimer;
+
     public PlayerWallSlideState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
     }
@@ -11,6 +15,7 @@ public class PlayerWallSlideState : PlayerState
     {
         base.Enter();
         Debug.Log("Đã vào wall slide state");
+        AudioManager.Instance.PlaySFX(SoundName.Player_SlideDownGrass, true); // loop
 
         _player.CanDash = true;
         _originalGrivityScale = _player.Rb.gravityScale;
@@ -89,6 +94,7 @@ public class PlayerWallSlideState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        AudioManager.Instance.StopSFX();
         _player.Rb.gravityScale = _originalGrivityScale;
         _player.Visual.SlideDustParticle.Stop();
     }
