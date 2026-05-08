@@ -44,6 +44,7 @@ public class BouncyMushroom : MonoBehaviour
 
     private void DoBounce(PlayerController player)
     {
+        AudioManager.Instance.PlaySFX(SoundName.Player_JumpMushroom);
         _visual.transform.DOKill();
 
         _visual.transform.DOScale(_squishScale, _squishDuration / 2f).OnComplete(() =>

@@ -8,7 +8,7 @@ public class PlayerDeathState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        
+        AudioManager.Instance.PlaySFX(SoundName.Player_Death);
         _player.Rb.linearVelocity = Vector2.zero;
         _player.Rb.simulated = false;
 
