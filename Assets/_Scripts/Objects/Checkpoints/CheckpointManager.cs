@@ -26,8 +26,10 @@ public class CheckpointManager : Singleton<CheckpointManager>
 
     public void SetSpawnPoint(Transform spawnPoint, bool isFacingRight)
     {
+        if(spawnPoint == CurrentSpawnPoint) return;
         CurrentSpawnPoint = spawnPoint;
         _isFacingRight = isFacingRight;
+        UIManager.Instance.PlayCheckpointIcon();
     }
 
     public void RespawnPlayer(PlayerController player)
