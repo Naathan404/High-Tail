@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2041091888312830745}
   m_Layer: 0
   m_Name: BounceMushroom
-  m_TagString: Untagged
+  m_TagString: Mushroom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -46,8 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15ccc0e5125315740b34319866bcbaaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BounceMushroom
-  _normalBounceForce: 35
+  _normalBounceForce: 30
   _pogoBounceForce: 45
+  _isShortMushroom: 0
   _visual: {fileID: 1192550817917551149}
   _squishDuration: 0.2
   _squishScale: {x: 1.4, y: 0.6, z: 1}
