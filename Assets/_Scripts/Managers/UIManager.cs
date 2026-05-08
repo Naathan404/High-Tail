@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -10,6 +11,11 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private TextMeshProUGUI _skillUnlockedText;
     [SerializeField] private TextMeshProUGUI _howToUseText;
     [SerializeField] private CanvasGroup _panelCanvasGroup; 
+    
+
+    [Header("Icons")]
+    [SerializeField] private Image _checkpointIcon;
+    [SerializeField] private float _fadeDuration = 0.5f;
     
 
     [Header("Animation Settings")]
@@ -30,6 +36,7 @@ public class UIManager : Singleton<UIManager>
         }
 
         _deathCountText.text = _deathCount.ToString();
+        _checkpointIcon.gameObject.SetActive(false);
     }
 
     public void ShowSkillUnlocked(Text skillName, Text skillDes)
@@ -84,5 +91,17 @@ public class UIManager : Singleton<UIManager>
     {
         _deathCount++;
         _deathCountText.text = _deathCount.ToString();
+    }
+
+    public void PlayCheckpointIcon()
+    {
+        _checkpointIcon.DOKill();
+        _checkpointIcon.gameObject.SetActive(true);
+        _checkpointIcon.DOFade(1f, _fadeDuration).SetEase(Ease.InOutCubic).OnComplete(() =>
+        {
+            _checkpointIcon.DOFade(0f, _fadeDuration).SetEase(Ease.InOutCubic);
+            _checkpointIcon.gameObject.SetActive(false);
+            
+        });
     }
 }
