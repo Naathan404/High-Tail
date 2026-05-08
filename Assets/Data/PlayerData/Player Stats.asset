@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   WallJumpUnlocked: 1
   WallSlideUnlocked: 1
-  DashUnlocked: 0
+  DashUnlocked: 1
   AirGlideUnlocked: 1
   PogoUnlocked: 0
   GlowUnlocked: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
   airGlideGravityScale: 0.4
   maxGlideSpeed: 4
   wallSlideGravityScale: 0.5
-  pogoForce: 20
+  pogoForce: 25.5
   climbForce: 5
   swingForce: 80
   impulseForce: 20
@@ -47,7 +47,7 @@ MonoBehaviour:
   coyoteTime: 0.15
   respawnDuration: 1
   maxSpeedX: 100
-  maxSpeedY: 30
+  maxSpeedY: 20
   maxHP: 5
   maxEnergy: 100
   energyCostJump: 4

@@ -16,12 +16,18 @@ public class SimpleDoor : MonoBehaviour, ILightPulseReactive
     private Vector2 _originalPos;
     private bool _isOpened = false;
     
-   
-
 
     private void Start()
     {
         _originalPos = this.transform.position;
+
+        DeathScreenManager.OnDeathScreenTriggered += ResetDoor;
+    }
+    
+
+    private void OnDestroy()
+    {
+        DeathScreenManager.OnDeathScreenTriggered -= ResetDoor;        
     }
     public void ReactToLightPulse()
     {
@@ -49,5 +55,17 @@ public class SimpleDoor : MonoBehaviour, ILightPulseReactive
     {
         transform.DOMove(_targetPos, _openDuration).SetEase(Ease.OutBounce);
         CameraShakeManager.Instance.ShakeCustom(_shakeStrenght);
+    }
+
+    private void ResetDoor()
+    {
+        transform.DOKill();
+        transform.position = _originalPos;
+        foreach(var obj in _objectsToFalse)
+        {
+            obj.SetActive(true);
+        }
+
+        _isOpened = false;
     }
 }
