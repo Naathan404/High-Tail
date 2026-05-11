@@ -430,4 +430,81 @@ public class SaveManager : Singleton<SaveManager>
         MenuManager.Instance.ShowTitleNotification(message);
     }
     #endregion
+
+    #region Return to Home
+    public void ReturnToMainMenu()
+    {
+        if (_isLoading) return;
+        StartCoroutine(ReturnToMainMenuRoutine());
+    }
+
+    private IEnumerator ReturnToMainMenuRoutine()
+    {
+        _isLoading = true;
+
+        // 1. Kéo rèm đen
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.gameObject.SetActive(true);
+            _transitionCanvasGroup.blocksRaycasts = true;
+            _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
+        }
+
+        // ==========================================
+        // MÀN HÌNH ĐANG ĐEN
+        // ==========================================
+
+        // 2. Xóa trạng thái đang chơi (Cực kỳ quan trọng để CanResumeGame() trả về False)
+        MainData.activeSlotID = "";
+
+        // 3. Ẩn ngay Player và Gameplay HUD
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.UpdateGameplayVisibility();
+        }
+
+        // 4. Xóa scene Màn chơi hiện tại, Load lại Background Scene
+        if (!string.IsNullOrEmpty(_currentLoadedScene) && _currentLoadedScene != _menuBackgroundScene)
+        {
+            Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
+            if (oldScene.isLoaded)
+            {
+                yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
+            }
+
+            AsyncOperation loadOp = SceneManager.LoadSceneAsync(_menuBackgroundScene, LoadSceneMode.Additive);
+            while (!loadOp.isDone) yield return null;
+
+            Scene targetScene = SceneManager.GetSceneByName(_menuBackgroundScene);
+            if (targetScene.isLoaded) SceneManager.SetActiveScene(targetScene);
+
+            _currentLoadedScene = _menuBackgroundScene;
+        }
+
+        // 5. Cập nhật UI thành Menu "Trắng" khởi đầu (Do CanResume đã thành false)
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenPauseMenu(instant: true);
+        }
+
+        yield return null;
+
+        // ==========================================
+        // SÁNG MÀN HÌNH LÊN
+        // ==========================================
+
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
+
+            _transitionCanvasGroup.blocksRaycasts = false;
+            _transitionCanvasGroup.gameObject.SetActive(false);
+        }
+
+        _isLoading = false;
+    }
+    #endregion
+
 }

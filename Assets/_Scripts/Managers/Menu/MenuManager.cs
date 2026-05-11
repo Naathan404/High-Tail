@@ -90,15 +90,15 @@ public class MenuManager : Singleton<MenuManager>
         //_pauseButton.onClick.AddListener(() => OpenPauseMenu());
         _backButton.onClick.AddListener(() => OnBackClicked());
 
-        _playButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.SavedGame));
+        _playButton.onClick.AddListener(() => OnPlayOrContinueClicked());
         _settingButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Settings));
         _creditButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Credit));
 
-        _exitButton.onClick.AddListener(OnExitClicked);
+        _exitButton.onClick.AddListener(() => OnExitOrHomeClicked());
     }
 
     #region Gameplay Elements Visibility
-    private void UpdateGameplayVisibility()
+    public void UpdateGameplayVisibility()
     {
         // Chỉ hiện Player và Canvas nếu đã có màn chơi được chọn
         bool isPlaying = CanResumeGame();
@@ -111,6 +111,41 @@ public class MenuManager : Singleton<MenuManager>
         if (_mainCanvas != null)
         {
             _mainCanvas.SetActive(isPlaying);
+        }
+    }
+
+    private void UpdateSidePanelButtons()
+    {
+        bool isInGame = CanResumeGame();
+
+        // 1. Đổi Text của nút Play thành "Continue" hoặc "Play"
+        TextMeshProUGUI playText = _playButton.GetComponentInChildren<TextMeshProUGUI>();
+        if (playText != null)
+        {
+            playText.text = isInGame ? "Continue" : "Play";
+        }
+
+        // 2. Bật/Tắt nút Credit (Vào game thì ẩn đi)
+        _creditButton.gameObject.SetActive(!isInGame);
+
+        // 3. Đổi Text của nút Exit thành "Home" hoặc ngược lại
+        TextMeshProUGUI exitText = _exitButton.GetComponentInChildren<TextMeshProUGUI>();
+        if (exitText != null)
+        {
+            exitText.text = isInGame ? "Home" : "Exit";
+        }
+
+        // 4. Làm mới danh sách điều hướng Phím (bỏ qua các nút đang bị ẩn)
+        _sidePanelButtons.Clear();
+        if (_playButton.gameObject.activeSelf) _sidePanelButtons.Add(_playButton);
+        if (_settingButton.gameObject.activeSelf) _sidePanelButtons.Add(_settingButton);
+        if (_creditButton.gameObject.activeSelf) _sidePanelButtons.Add(_creditButton);
+        if (_exitButton.gameObject.activeSelf) _sidePanelButtons.Add(_exitButton);
+
+        // 5. Chống lỗi out-of-index khi ấn phím Up/Down
+        if (_currentButtonIndex >= _sidePanelButtons.Count)
+        {
+            _currentButtonIndex = 0;
         }
     }
     #endregion
@@ -236,6 +271,7 @@ public class MenuManager : Singleton<MenuManager>
 
         if (open)
         {
+            UpdateSidePanelButtons();
             UpdateSelectionUI();
         }
     }
@@ -329,10 +365,39 @@ public class MenuManager : Singleton<MenuManager>
         }
     }
 
-    private void OnExitClicked()
+    private void OnPlayOrContinueClicked()
     {
-        Application.Quit();
+        if (CanResumeGame())
+        {
+            // ĐÃ VÀO GAME: Nút đóng vai trò là Continue
+            // -> Đóng luôn Menu, nhả Pause, quay lại chơi tiếp (y chang nhấn ESC)
+            ClosePauseMenu();
+        }
+        else
+        {
+            // CHƯA VÀO GAME (Ở Main Menu): Nút đóng vai trò là Play
+            // -> Mở bảng chọn Save Slot
+            OpenSubPanel(SubPanelType.SavedGame);
+        }
     }
+
+    private void OnExitOrHomeClicked()
+    {
+        if (CanResumeGame())
+        {
+            // Đang chơi game -> Nút có chức năng Home (Quay về Menu gốc)
+            if (SaveManager.Instance != null)
+            {
+                SaveManager.Instance.ReturnToMainMenu();
+            }
+        }
+        else
+        {
+            // Chưa chơi game -> Nút có chức năng Exit (Thoát App)
+            Application.Quit();
+        }
+    }
+
     #endregion
 
     #region TopLeft Button
