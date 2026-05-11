@@ -48,12 +48,14 @@ public class PlayerPogoState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        _player.Visual.Anim.Play("playerRoll");
+        _player.Visual.Anim.Play("pPogo");
         
         _player.Rb.linearVelocity = Vector2.zero; 
         _player.Rb.gravityScale = 0f; 
         
         _player.Rb.linearVelocity = new Vector2(0f, -_player.Data.maxSpeedY * 1.5f);
+
+        _player.Visual.PogoDustParticle.Play();
     }
 
     public override void LogicUpdate()
@@ -64,14 +66,19 @@ public class PlayerPogoState : PlayerState
         if (_player.IsPogoHit())
         {
             _player.ExecutePogoBounce();
-            _stateMachine.ChangeState(_player.JumpState);
+            _stateMachine.ChangeState(_player.BounceState);
+            CameraShakeManager.Instance.ShakeForLanding(); 
+            _player.Visual.LandingDustParticle.gameObject.SetActive(true);
+            _player.Visual.LandingDustParticle.Play();   
         }
         else if (_player.IsOnGround())
         {
             _stateMachine.ChangeState(_player.IdleState);
-            CameraShakeManager.Instance.ShakeForLanding(); // Rung màn hình vì dậm hụt
-            _player.Visual.LandingDustParticle.Play();     // Bốc bụi mù mịt
+            CameraShakeManager.Instance.ShakeForLanding(); 
+            _player.Visual.LandingDustParticle.gameObject.SetActive(true);
+            _player.Visual.LandingDustParticle.Play();     
         }
+
     }
 
     public override void PhysicsUpdate()

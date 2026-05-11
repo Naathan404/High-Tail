@@ -1,41 +1,31 @@
 using System.Collections;
 using UnityEngine;
 
-public class NPC : MonoBehaviour, IInteractable
+public class NPC : MonoBehaviour
 {
     public string NPCID { get; private set; }
     public DialogueData[] dialogueData;
     public GameObject interactIcon;
     public int dialogueIndex = 0;
 
-    void Start()
+    PlayerController player;
+    private void Start()
     {
-        if (interactIcon != null)
-        {
-            interactIcon.SetActive(false);
-        }
-        if (string.IsNullOrEmpty(NPCID))
-        {
-            NPCID = GlobalHelper.GenerateUniqueID(gameObject);
-        }
-    }
-    public bool CanInteract()
-    {
-        return dialogueIndex < dialogueData.Length;
+        player = FindAnyObjectByType<PlayerController>();
     }
 
-    public void Interact()
+    private void FixedUpdate()
     {
-        // if (dialogueData == null || PauseGameManager.IsGamePaused || !CanInteract())
-        // {
-        //     return;
-        // }
-        // DialogueManager.Instance.StartDialogue(dialogueData[dialogueIndex++]);
-        // interactIcon.SetActive(CanInteract());
-    }
-
-    public void OnInteract(bool on = true)
-    {
-        interactIcon.SetActive(on);
+        if (player != null)
+        {
+            if(player.transform.position.x < transform.position.x)
+            {
+                this.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                this.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
     }
 }

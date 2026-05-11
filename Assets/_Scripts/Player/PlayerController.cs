@@ -94,6 +94,9 @@ public partial class PlayerController : MonoBehaviour
     [Header("Swing Platform")]
     public SwingPlatform CurrentSwingPlatform { get; private set; }
 
+    [Header("Landing Settings")]
+    public float landingAnimDuration = 0.2f;
+
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
 
@@ -403,34 +406,19 @@ public partial class PlayerController : MonoBehaviour
         return Physics2D.OverlapBox(_wallCheck.position, _wallCheckSize, 0, _wallLayerMask);
     }
 
-    // public bool IsPogoHit()
-    // {
-    //     Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
-    //     if (hit && Data.PogoUnlocked)
-    //     {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-    // Trong PlayerController.cs, sửa lại hàm này:
     public bool IsPogoHit()
     {
-        // Trả về thẳng Collider va chạm
         Collider2D hit = Physics2D.OverlapCircle(_pogoCheckpoint.position, _pogoRayLength, _pogoLayerMask);
         
         if (hit != null && Data.PogoUnlocked)
         {
-            if (hit.CompareTag("Mushroom"))
+            // Data.pogoForce = Data.jumpForce * 1.2f;
+            if (hit.TryGetComponent<BreakablePogoPlatform>(out BreakablePogoPlatform breakablePlatform))
             {
-                Data.pogoForce = Data.jumpForce * 1.5f; // Nảy cao
+                breakablePlatform.Break();
             }
-            else if (hit.CompareTag("Enemy"))
-            {
-                Data.pogoForce = Data.jumpForce; // Nảy bình thường
-            }
-            GameManager.Instance.DoTimeFreeze(0.05f, 0f); 
 
+            GameManager.Instance.DoTimeFreeze(0.05f, 0f); 
             return true;
         }
         return false;
@@ -523,6 +511,33 @@ public partial class PlayerController : MonoBehaviour
     }
 
     #endregion
+
+
+    public void TriggerHardLanding()
+    {
+        StartCoroutine(HardLandingRoutine());
+    }
+
+    private System.Collections.IEnumerator HardLandingRoutine()
+    {
+        CanMove = false;
+
+        yield return new WaitForEndOfFrame();
+        if(_stateMachine.CurrentState == DeathState) yield break;
+
+        Visual.Anim.Play("pLanding");
+        CameraShakeManager.Instance.ShakeForLanding();
+        Visual.LandingDustParticle.gameObject.SetActive(true);
+        Visual.LandingDustParticle.Play();
+        // Visual.ApplySquashStretch(new Vector3(1.5f, 0.6f, 1f));
+        yield return new WaitForSeconds(landingAnimDuration);
+        CanMove = true;
+        
+        if (Mathf.Abs(InputManager.Instance.Inputs.Movement.Move.ReadValue<Vector2>().x) > 0.1f)
+            Visual.Anim.Play("pRun");
+        else
+            Visual.Anim.Play("pIdle");
+    }
 
 
     // Vẽ gizmos ra scene
