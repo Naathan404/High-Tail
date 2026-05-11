@@ -22,6 +22,7 @@ public class SaveManager : Singleton<SaveManager>
 
     [Header("New Game Setting")]
     [SerializeField] private string _startSceneName;
+    [SerializeField] private string _menuBackgroundScene; // Màn hình cảnh vật lúc ở Menu
     [SerializeField] private Vector3 _startPosition;
 
     [Header("Animation Settings")]
@@ -144,25 +145,37 @@ public class SaveManager : Singleton<SaveManager>
     {
         if (_currentSaveSlotCount >= MaxSaveSlots)
         {
+            ShowOnMenuNotification("Maximum save slots reached!");
             return;
         }
+
+        // 1. Tạo ID riêng để dùng chung cho mọi thiết lập phía dưới
+        string newSlotID = IDGenerator.GenerateUniqueID("slot");
+
         SaveSlot newSlot = new SaveSlot
         {
-            saveID = IDGenerator.GenerateUniqueID("slot"),
+            saveID = newSlotID,
             saveName = string.IsNullOrEmpty(saveName) ? $"Save {_currentSaveSlotCount + 1}" : saveName,
             firstSaveTimestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             lastSaveTimestamp = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             lastShrineID = "",
-            sceneName = _startSceneName,
+            sceneName = _startSceneName, // Màn chơi đầu tiên sẽ được load
             unlockedSkills = new SkillSaveData()
         };
 
         MainData.allSlots.Add(newSlot);
         _currentSaveSlotCount++;
-        MainData.activeSlotID = "";
+
+        // 2. Gán activeSlotID thành cái save vừa tạo (KHÔNG để rỗng "" nữa)
+        MainData.activeSlotID = newSlotID;
         SaveToDisk();
 
-        _saveMenuUI.RefreshSaveSlotContainer();
+        // 3. Cập nhật lại UI Slot
+        if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
+        if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
+
+        // 4. TỰ ĐỘNG GỌI HÀM LOAD SCENE ĐỂ BẮT ĐẦU CHƠI NGAY LẬP TỨC
+        LoadGameFromSlot(newSlotID);
     }
     #endregion
 
@@ -189,43 +202,67 @@ public class SaveManager : Singleton<SaveManager>
     {
         _isLoading = true;
 
+        // --- 1. HIỆU ỨNG CHUYỂN SCENE TỐI DẦN ---
         if (_transitionCanvasGroup != null)
         {
+            _transitionCanvasGroup.gameObject.SetActive(true);
             _transitionCanvasGroup.blocksRaycasts = true;
-            yield return _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true).WaitForCompletion();
+            _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
         }
 
-        Scene targetScene = SceneManager.GetSceneByName(node.sceneName);
-
-        if (!targetScene.isLoaded)
+        if (MenuManager.Instance != null)
         {
-            if (!string.IsNullOrEmpty(_currentLoadedScene))
+            MenuManager.Instance.ClosePauseMenu();
+        }
+
+        // --- 2. BẢO VỆ CORE SCENE VÀ XỬ LÝ SCENE MÔI TRƯỜNG ---
+
+        // Nếu là lần đầu tiên load -> Scene cũ đang hiển thị chính là Start Scene (màn hình nền)
+        if (string.IsNullOrEmpty(_currentLoadedScene))
+        {
+            _currentLoadedScene = _menuBackgroundScene;
+        }
+
+        // Chỉ Unload và Load nếu màn hình đích KHÁC với màn hình hiện tại
+        if (_currentLoadedScene != node.sceneName)
+        {
+            // Xóa Scene môi trường cũ (Tuyệt đối không đụng vào Core Scene)
+            Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
+            if (oldScene.isLoaded)
             {
-                Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
-                if (oldScene.isLoaded)
-                {
-                    yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
-                }
+                yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
             }
 
+            // Load Additive Scene môi trường mới
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(node.sceneName, LoadSceneMode.Additive);
             while (!loadOp.isDone) yield return null;
-
-            targetScene = SceneManager.GetSceneByName(node.sceneName);
         }
 
-        SceneManager.SetActiveScene(targetScene);
+        // --- 3. ĐẶT ACTIVE SCENE VÀ PHỤC HỒI ---
+
+        // Quan trọng: Đặt Scene môi trường mới làm Active Scene 
+        // (để khi sinh ra quái vật/đạn, chúng sẽ nằm trong scene này thay vì kẹt ở Core Scene)
+        Scene targetScene = SceneManager.GetSceneByName(node.sceneName);
+        if (targetScene.isLoaded)
+        {
+            SceneManager.SetActiveScene(targetScene);
+        }
+
         _currentLoadedScene = node.sceneName;
 
         RestoreGameState(node);
 
+        // --- 4. HIỆU ỨNG SÁNG DẦN LÊN ---
         if (_transitionCanvasGroup != null)
         {
-            yield return _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true).WaitForCompletion();
+            _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
+
             _transitionCanvasGroup.blocksRaycasts = false;
+            _transitionCanvasGroup.gameObject.SetActive(false);
         }
 
-        MenuManager.Instance?.ClosePauseMenu();
         _isLoading = false;
     }
     private void RestoreGameState(SaveSlot node)

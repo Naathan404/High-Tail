@@ -43,6 +43,10 @@ public class MenuManager : Singleton<MenuManager>
     private string _currentDefaultTitle = "Pause Menu";
     private string _titleTweenId = "MenuTitleTween";
 
+    [Header("Gameplay Elements")]
+    [SerializeField] private GameObject _playerObject;
+    [SerializeField] private GameObject _mainCanvas;
+
     public override void Awake()
     {
         base.Awake();
@@ -59,6 +63,7 @@ public class MenuManager : Singleton<MenuManager>
     {
         InitializeUI();
         SetupButtonListeners();
+        UpdateGameplayVisibility();
         OpenPauseMenu(instant: true);
     }
 
@@ -91,6 +96,24 @@ public class MenuManager : Singleton<MenuManager>
 
         _exitButton.onClick.AddListener(OnExitClicked);
     }
+
+    #region Gameplay Elements Visibility
+    private void UpdateGameplayVisibility()
+    {
+        // Chỉ hiện Player và Canvas nếu đã có màn chơi được chọn
+        bool isPlaying = CanResumeGame();
+
+        if (_playerObject != null)
+        {
+            _playerObject.SetActive(isPlaying);
+        }
+
+        if (_mainCanvas != null)
+        {
+            _mainCanvas.SetActive(isPlaying);
+        }
+    }
+    #endregion
 
     void Update()
     {
@@ -144,7 +167,10 @@ public class MenuManager : Singleton<MenuManager>
     #region Open menu
     public void OpenPauseMenu(bool instant = false)
     {
-        PauseGameManager.SetPause(true);
+        if (CanResumeGame())
+        {
+            PauseGameManager.SetPause(true);
+        }
         CloseAllSubPanels();
         ShowTitleBar(false);
 
@@ -174,6 +200,8 @@ public class MenuManager : Singleton<MenuManager>
         if (_isSidePanelOpen) OpenSideMenu(false);
 
         UpdateTopLeftButtonState();
+
+        UpdateGameplayVisibility();
     }
 
     private bool CanResumeGame()
@@ -205,7 +233,10 @@ public class MenuManager : Singleton<MenuManager>
 
     public void OpenSubPanel(SubPanelType type)
     {
-        PauseGameManager.SetPause(true);
+        if (CanResumeGame())
+        {
+            PauseGameManager.SetPause(true);
+        }
 
         if (_isSidePanelOpen) OpenSideMenu(false);
 
