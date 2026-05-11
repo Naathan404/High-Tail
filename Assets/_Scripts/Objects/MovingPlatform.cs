@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using DG.Tweening;
 using UnityEngine;
 
 
@@ -49,6 +50,35 @@ public class MovingPlatform : MonoBehaviour
             _currentTarget = (_currentTarget == _startTransform) ? _endTransform : _startTransform;
         }
     }
+
+    // private void MovePlatform(Vector2 newPos)
+    // {
+    //     transform.DOMove(_endTransform.position, move
+    // }
+
+    // private void OnCollisionEnter2D(Collision2D collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+    //         if(player != null)
+    //         {
+    //             player.transform.SetParent(this.transform);    
+    //         }
+    //     } 
+    // }
+
+    // private void OnCollisionExit2D(Collision2D collision)
+    // {
+    //     if (collision.gameObject.CompareTag("Player"))
+    //     {
+    //         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+    //         if(player != null)
+    //         {
+    //             player.ReturnToCoreScene();    
+    //         }
+    //     } 
+    // }
 
     private void OnDrawGizmos()
     {
