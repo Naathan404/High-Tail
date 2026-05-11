@@ -389,19 +389,43 @@ public class SaveManager : Singleton<SaveManager>
         if (MainData == null || MainData.allSlots == null) return;
         if (nodeID == MainData.activeSlotID)
         {
-            ShowOnMenuNotification("Cannot delete current saved file!");
+            ShowOnMenuNotification("Cannot delete current playing file!");
             return;
         }
 
         SaveSlot nodeToDelete = MainData.allSlots.Find(n => n.saveID == nodeID);
         if (nodeToDelete != null)
         {
-            MainData.allSlots.Remove(nodeToDelete);
-            _currentSaveSlotCount--;
-            SaveToDisk();
-            ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
-            _saveMenuUI.RefreshSaveSlotContainer();
+            // Tìm SaveMenuUI nếu lỡ bị null
+            if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
+
+            if (_saveMenuUI != null)
+            {
+                // Gọi Panel Confirm từ SaveMenuUI
+                _saveMenuUI.ShowDeleteConfirmPopup(
+                    $"Are you sure you want to delete\n'{nodeToDelete.saveName}'?",
+                    () => ExecuteDelete(nodeToDelete) // Action truyền vào để thực thi khi bấm Yes
+                );
+            }
+            else
+            {
+                // Backup an toàn: Lỡ UI lỗi không tìm thấy thì xóa thẳng luôn
+                ExecuteDelete(nodeToDelete);
+            }
         }
+    }
+
+    // Hàm thực thi việc xóa thực sự
+    private void ExecuteDelete(SaveSlot nodeToDelete)
+    {
+        MainData.allSlots.Remove(nodeToDelete);
+        _currentSaveSlotCount--;
+        SaveToDisk();
+
+        ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
+
+        if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
+        if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
     }
     #endregion
     #endregion
