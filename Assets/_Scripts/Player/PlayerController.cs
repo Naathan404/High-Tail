@@ -266,7 +266,7 @@ public partial class PlayerController : MonoBehaviour
         if (Mathf.Abs(MoveX) > 0.01f)
         {
             // Neu o tren mat bang thi tang toc cham hon
-            accelerationRate = IsSlipGround ? Data.acceleration * 0.4f : Data.acceleration;
+            accelerationRate = IsSlipGround ? Data.acceleration * 0.3f : Data.acceleration;
         }
         else
         {
@@ -383,6 +383,7 @@ public partial class PlayerController : MonoBehaviour
         );
 
         IsStickyGround = hitResin.collider != null ? true : false;
+        if(hitResin) CanDash = false; else CanDash = true;
         IsSlipGround = hitIce.collider != null ? true : false;
         if (IsSlipGround) WasOnSlipGround = true;
         else if (hit || hitResin) WasOnSlipGround = false;
