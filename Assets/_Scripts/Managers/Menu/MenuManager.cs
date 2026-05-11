@@ -27,6 +27,7 @@ public class MenuManager : Singleton<MenuManager>
     private List<Button> _sidePanelButtons = new List<Button>();
     [SerializeField] private int _currentButtonIndex = 0;
     private bool _isSidePanelOpen = false;
+    private bool _isSubPanelOpen = false;
 
     // Biến lưu trữ nút cuối cùng được chọn để quay lại đúng vị trí
     private GameObject _lastSelectedButton; 
@@ -58,7 +59,7 @@ public class MenuManager : Singleton<MenuManager>
     {
         InitializeUI();
         SetupButtonListeners();
-        OpenPauseMenu();
+        OpenPauseMenu(instant: true);
     }
 
     private void InitializeUI()
@@ -80,8 +81,9 @@ public class MenuManager : Singleton<MenuManager>
 
     private void SetupButtonListeners()
     {
-        _pauseButton.onClick.AddListener(OpenPauseMenu);
-        _backButton.onClick.AddListener(OnBackClicked);
+        // Bọc OpenPauseMenu trong () => để xử lý lỗi tham số
+        _pauseButton.onClick.AddListener(() => OpenPauseMenu());
+        _backButton.onClick.AddListener(() => OnBackClicked());
 
         _playButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.SavedGame));
         _settingButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Settings));
@@ -95,7 +97,7 @@ public class MenuManager : Singleton<MenuManager>
         // 1. Phím ESC xử lý Đóng/Mở
         if (InputManager.Instance.Inputs.UI.Menu.WasPressedThisFrame())
         {
-            if (_isSidePanelOpen || _settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf)
+            if (_isSidePanelOpen || _isSubPanelOpen)
             {
                 OnBackClicked();
             }
@@ -121,25 +123,17 @@ public class MenuManager : Singleton<MenuManager>
         if (Keyboard.current == null) return;
 
         // 3. ĐIỀU HƯỚNG THỦ CÔNG: Chỉ kích hoạt khi đang ở Menu chính
-        if (_isSidePanelOpen && !(_settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf))
+        if (_isSidePanelOpen && !_isSubPanelOpen) // Đã sửa gọn lại
         {
-            // Đồng bộ Index phòng trường hợp người chơi click chuột xen ngang
             SyncIndexWithPointer();
 
-            if (Keyboard.current.upArrowKey.wasPressedThisFrame)
-            {
-                SelectPrevious();
-            }
-            else if (Keyboard.current.downArrowKey.wasPressedThisFrame)
-            {
-                SelectNext();
-            }
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame) SelectPrevious();
+            else if (Keyboard.current.downArrowKey.wasPressedThisFrame) SelectNext();
 
             if (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.spaceKey.wasPressedThisFrame)
             {
                 if (_currentButtonIndex != -1)
                 {
-                    // Ghi nhớ lại nút vừa bấm trước khi mở SubPanel
                     _lastSelectedButton = _sidePanelButtons[_currentButtonIndex].gameObject;
                     _sidePanelButtons[_currentButtonIndex].onClick.Invoke();
                 }
@@ -148,18 +142,18 @@ public class MenuManager : Singleton<MenuManager>
     }
 
     #region Open menu
-    public void OpenPauseMenu() 
+    public void OpenPauseMenu(bool instant = false)
     {
-        PauseGameManager.SetPause(true); 
-        SwitchTopLeftButton(isMenuOpen: true);
-        CloseAllSubPanels(); 
+        PauseGameManager.SetPause(true);
+        CloseAllSubPanels();
         ShowTitleBar(false);
 
-        // MỞ TỪ GAME: Luôn ép chọn nút đầu tiên (Saved Game)
         _currentButtonIndex = 0;
         _lastSelectedButton = _sidePanelButtons[0].gameObject;
 
         OpenSideMenu(open: true);
+
+        UpdateTopLeftButtonState(instant); // Truyền cờ instant xuống
     }
 
     public void ClosePauseMenu() 
@@ -176,9 +170,10 @@ public class MenuManager : Singleton<MenuManager>
         ShowTitleBar(false);
 
         PauseGameManager.SetPause(false); 
-        SwitchTopLeftButton(isMenuOpen: false);
 
         if (_isSidePanelOpen) OpenSideMenu(false);
+
+        UpdateTopLeftButtonState();
     }
 
     private bool CanResumeGame()
@@ -208,13 +203,15 @@ public class MenuManager : Singleton<MenuManager>
         SavedGame
     }
 
-    public void OpenSubPanel(SubPanelType type) 
+    public void OpenSubPanel(SubPanelType type)
     {
-        PauseGameManager.SetPause(true); 
-        SwitchTopLeftButton(isMenuOpen: true);
+        PauseGameManager.SetPause(true);
 
-        if (_isSidePanelOpen) OpenSideMenu(false); 
-        CloseAllSubPanels(); 
+        if (_isSidePanelOpen) OpenSideMenu(false);
+
+        CloseAllSubPanels();
+        _isSubPanelOpen = true; // Thêm dòng này SAU KHI CloseAllSubPanels
+
         ShowTitleBar(true);
 
         switch (type)
@@ -232,6 +229,8 @@ public class MenuManager : Singleton<MenuManager>
                 SetPanelTitle("Saved Games");
                 break;
         }
+
+        UpdateTopLeftButtonState();
     }
 
     private void OpenPanel(GameObject panel, bool open)
@@ -243,8 +242,10 @@ public class MenuManager : Singleton<MenuManager>
         UIHelper.AnimateFade(panel, open);
     }
 
-    private void CloseAllSubPanels() 
+    private void CloseAllSubPanels()
     {
+        _isSubPanelOpen = false;
+
         if (_settingsPanel.activeSelf) OpenPanel(_settingsPanel, false);
         if (_creditPanel.activeSelf) OpenPanel(_creditPanel, false);
         if (_savedGamePanel.activeSelf) OpenPanel(_savedGamePanel, false);
@@ -255,16 +256,26 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnBackClicked()
     {
-        // QUAY LẠI TỪ SUB-PANEL: Mở Menu chính và nó sẽ tự focus vào _lastSelectedButton
-        if (_settingsPanel.activeSelf || _creditPanel.activeSelf || _savedGamePanel.activeSelf)
+        // 1. Đang ở Sub-panel -> Tắt Sub-panel, lùi về Side Navigation
+        if (_isSubPanelOpen) // Đã sửa gọn lại
         {
             CloseAllSubPanels();
             ShowTitleBar(false);
-            OpenSideMenu(true); 
+            OpenSideMenu(true);
+
+            UpdateTopLeftButtonState();
         }
+        // 2. Đang ở Side Navigation -> Muốn thoát Menu về Game
         else if (_isSidePanelOpen)
         {
-            ClosePauseMenu();
+            if (!CanResumeGame())
+            {
+                ShowTitleNotification("Please select or create a game to play!");
+            }
+            else
+            {
+                ClosePauseMenu();
+            }
         }
     }
 
@@ -275,50 +286,92 @@ public class MenuManager : Singleton<MenuManager>
     #endregion
 
     #region TopLeft Button
-    private void SwitchTopLeftButton(bool isMenuOpen)
+    private void UpdateTopLeftButtonState(bool instant = false)
     {
-        if (isMenuOpen)
+        // Sử dụng biến độc lập thay vì .activeSelf
+        bool isInSubPanel = _isSubPanelOpen;
+        bool canResume = CanResumeGame();
+        bool isMenuOpen = _isSidePanelOpen || isInSubPanel;
+
+        bool shouldShowPause = false;
+        bool shouldShowBack = false;
+
+        if (!isMenuOpen)
         {
-            AnimateButtonSwitch(_pauseButton, _backButton);
+            shouldShowPause = canResume;
         }
         else
         {
-            AnimateButtonSwitch(_backButton, _pauseButton);
+            if (isInSubPanel)
+            {
+                shouldShowBack = true;
+            }
+            else if (_isSidePanelOpen)
+            {
+                shouldShowBack = canResume;
+            }
+        }
+
+        // --- Thực thi Animation ---
+        if (shouldShowPause)
+        {
+            if (instant) ShowButtonInstantly(_pauseButton);
+            else ShowButtonAnimate(_pauseButton);
+        }
+        else
+        {
+            if (instant) ForceHideButton(_pauseButton);
+            else HideButtonAnimate(_pauseButton);
+        }
+
+        if (shouldShowBack)
+        {
+            if (instant) ShowButtonInstantly(_backButton);
+            else ShowButtonAnimate(_backButton);
+        }
+        else
+        {
+            if (instant) ForceHideButton(_backButton);
+            else HideButtonAnimate(_backButton);
         }
     }
 
-    private void AnimateButtonSwitch(Button btnToHide, Button btnToShow)
+    private void ForceHideButton(Button btn)
     {
-        if (btnToShow.gameObject.activeSelf && btnToShow.transform.localScale.x >= 0.95f)
-        {
-            btnToHide.gameObject.SetActive(false); 
-            return; 
-        }
+        btn.transform.DOKill();
+        btn.transform.localScale = Vector3.zero;
+        btn.gameObject.SetActive(false);
+    }
 
-        btnToHide.transform.DOKill();
-        btnToShow.transform.DOKill();
+    private void ShowButtonInstantly(Button btn)
+    {
+        btn.transform.DOKill();
+        btn.gameObject.SetActive(true);
+        btn.transform.localScale = Vector3.one;
+    }
 
-        if (btnToHide.gameObject.activeSelf)
-        {
-            btnToHide.transform.DOScale(Vector3.zero, _switchDuration)
-                .SetEase(Ease.InBack)
-                .SetUpdate(true)
-                .OnComplete(() =>
-                {
-                    btnToHide.gameObject.SetActive(false);
-                });
-        }
+    private void ShowButtonAnimate(Button btn)
+    {
+        if (btn.gameObject.activeSelf && btn.transform.localScale.x >= 0.95f) return;
 
-        btnToShow.gameObject.SetActive(true);
-        
-        if (btnToShow.transform.localScale.x < 0.1f)
-        {
-            btnToShow.transform.localScale = Vector3.zero;
-        }
+        btn.transform.DOKill();
+        btn.gameObject.SetActive(true);
+        if (btn.transform.localScale.x < 0.1f) btn.transform.localScale = Vector3.zero;
 
-        btnToShow.transform.DOScale(Vector3.one, _switchDuration + 0.1f)
+        btn.transform.DOScale(Vector3.one, _switchDuration)
             .SetEase(Ease.OutBack)
             .SetUpdate(true);
+    }
+
+    private void HideButtonAnimate(Button btn)
+    {
+        if (!btn.gameObject.activeSelf || btn.transform.localScale.x <= 0.05f) return;
+
+        btn.transform.DOKill();
+        btn.transform.DOScale(Vector3.zero, _switchDuration)
+            .SetEase(Ease.InBack)
+            .SetUpdate(true)
+            .OnComplete(() => btn.gameObject.SetActive(false));
     }
     #endregion
 
