@@ -227,7 +227,8 @@ public partial class PlayerController : MonoBehaviour
     {
         if (IsOnGround() && _activePlatform != null)
         {
-            Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
+            //Rb.position += new Vector2(_activePlatform.DeltaPos.x, 0);
+            Rb.position += _activePlatform.DeltaPos;
         }
         _stateMachine.CurrentState.PhysicsUpdate();
 
@@ -304,25 +305,36 @@ public partial class PlayerController : MonoBehaviour
 
     // public void HandleAirMovement()
     // {
-    //     if(Mathf.Abs(MoveX) < 0.1f) return;
-    //     // di chuyển ngang khi giữ nút di chuyển
-    //     float targetSpeed = MoveX * Data.maxMoveSpeed;
-    //     float accelerationRate = (Mathf.Abs(MoveX) > 0.1f) ? Data.acceleration : 0f;
-    //     float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+    //     if (Mathf.Abs(MoveX) < 0.1f) return;
 
+    //     float airMaxSpeed = Data.maxMoveSpeed * 1.4f;
+    //     if (WasOnSlipGround) airMaxSpeed = Data.maxMoveSpeed * 1.6f;
+    //     float targetSpeed = MoveX * airMaxSpeed;
+    //     float accelerationRate = Data.acceleration * 1.5f;
+
+    //     float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
     //     Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     // }
 
     public void HandleAirMovement()
     {
-        if (Mathf.Abs(MoveX) < 0.1f) return;
-
         float airMaxSpeed = Data.maxMoveSpeed * 1.4f;
         if (WasOnSlipGround) airMaxSpeed = Data.maxMoveSpeed * 1.6f;
-        float targetSpeed = MoveX * airMaxSpeed;
-        float accelerationRate = Data.acceleration * 1.5f;
 
+        float targetSpeed = MoveX * airMaxSpeed;
+
+        float accelerationRate;
+
+        if (Mathf.Abs(MoveX) > 0.1f)
+        {
+            accelerationRate = Data.acceleration * 1.5f; 
+        }
+        else
+        {
+            accelerationRate = Data.deceleration * 0.5f; 
+        }
         float newVelocityX = Mathf.MoveTowards(Rb.linearVelocity.x, targetSpeed, accelerationRate * Time.fixedDeltaTime);
+        
         Rb.linearVelocity = new Vector2(newVelocityX, Rb.linearVelocity.y);
     }
 
@@ -379,6 +391,7 @@ public partial class PlayerController : MonoBehaviour
         if (hit.collider != null)
         {
             // Kiểm tra xem mặt đất đang đạp lên là MovingPlatGPlatform>();
+            _activePlatform = hit.collider.GetComponent<MovingPlatform>();
             CurrentSwingPlatform = hit.collider.GetComponent<SwingPlatform>();
             return true;
         }
