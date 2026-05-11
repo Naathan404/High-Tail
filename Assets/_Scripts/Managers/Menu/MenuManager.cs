@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class MenuManager : Singleton<MenuManager>
 {
     [Header("Button")]
-    [SerializeField] private Button _pauseButton;
+    //[SerializeField] private Button _pauseButton;
     [SerializeField] private Button _backButton;
     [SerializeField] private float _switchDuration = 0.25f;
 
@@ -87,7 +87,7 @@ public class MenuManager : Singleton<MenuManager>
     private void SetupButtonListeners()
     {
         // Bọc OpenPauseMenu trong () => để xử lý lỗi tham số
-        _pauseButton.onClick.AddListener(() => OpenPauseMenu());
+        //_pauseButton.onClick.AddListener(() => OpenPauseMenu());
         _backButton.onClick.AddListener(() => OnBackClicked());
 
         _playButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.SavedGame));
@@ -201,7 +201,26 @@ public class MenuManager : Singleton<MenuManager>
 
         UpdateTopLeftButtonState();
 
-        UpdateGameplayVisibility();
+        //UpdateGameplayVisibility();
+    }
+
+    public void ShowGameplayElements()
+    {
+        if (_playerObject != null) _playerObject.SetActive(true);
+        if (_mainCanvas != null) _mainCanvas.SetActive(true);
+    }
+
+    // Hàm này chỉ giấu giao diện Menu đi lúc màn hình đen, tuyệt đối KHÔNG nhả Pause
+    public void HideMenuForTransition()
+    {
+        CloseAllSubPanels();
+        ShowTitleBar(false);
+        if (_isSidePanelOpen) OpenSideMenu(false);
+        UpdateTopLeftButtonState(instant: true);
+
+        // Ép ẩn luôn Player & Canvas trong lúc đang chuyển cảnh để chống giật lag UI
+        if (_playerObject != null) _playerObject.SetActive(false);
+        if (_mainCanvas != null) _mainCanvas.SetActive(false);
     }
 
     private bool CanResumeGame()
@@ -288,13 +307,13 @@ public class MenuManager : Singleton<MenuManager>
     private void OnBackClicked()
     {
         // 1. Đang ở Sub-panel -> Tắt Sub-panel, lùi về Side Navigation
-        if (_isSubPanelOpen) // Đã sửa gọn lại
+        if (_isSubPanelOpen)
         {
             CloseAllSubPanels();
             ShowTitleBar(false);
             OpenSideMenu(true);
 
-            UpdateTopLeftButtonState();
+            UpdateTopLeftButtonState(); // Sẽ tự động ẩn nút Back
         }
         // 2. Đang ở Side Navigation -> Muốn thoát Menu về Game
         else if (_isSidePanelOpen)
@@ -319,41 +338,8 @@ public class MenuManager : Singleton<MenuManager>
     #region TopLeft Button
     private void UpdateTopLeftButtonState(bool instant = false)
     {
-        // Sử dụng biến độc lập thay vì .activeSelf
-        bool isInSubPanel = _isSubPanelOpen;
-        bool canResume = CanResumeGame();
-        bool isMenuOpen = _isSidePanelOpen || isInSubPanel;
-
-        bool shouldShowPause = false;
-        bool shouldShowBack = false;
-
-        if (!isMenuOpen)
-        {
-            shouldShowPause = canResume;
-        }
-        else
-        {
-            if (isInSubPanel)
-            {
-                shouldShowBack = true;
-            }
-            else if (_isSidePanelOpen)
-            {
-                shouldShowBack = canResume;
-            }
-        }
-
-        // --- Thực thi Animation ---
-        if (shouldShowPause)
-        {
-            if (instant) ShowButtonInstantly(_pauseButton);
-            else ShowButtonAnimate(_pauseButton);
-        }
-        else
-        {
-            if (instant) ForceHideButton(_pauseButton);
-            else HideButtonAnimate(_pauseButton);
-        }
+        // Chỉ hiện nút Back nếu đang mở Settings, Credits, hoặc Play
+        bool shouldShowBack = _isSubPanelOpen;
 
         if (shouldShowBack)
         {

@@ -202,7 +202,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         _isLoading = true;
 
-        // --- 1. HIỆU ỨNG CHUYỂN SCENE TỐI DẦN ---
+        // --- 1. KÉO RÈM (MÀN HÌNH TỐI DẦN) ---
         if (_transitionCanvasGroup != null)
         {
             _transitionCanvasGroup.gameObject.SetActive(true);
@@ -211,49 +211,58 @@ public class SaveManager : Singleton<SaveManager>
             yield return new WaitForSecondsRealtime(_transitionDuration);
         }
 
+        // ==========================================
+        // TỪ ĐÂY TRỞ ĐI MÀN HÌNH ĐANG ĐEN HOÀN TOÀN
+        // ==========================================
+
+        // 2. Ẩn UI Menu đi (Vẫn giữ trạng thái Pause)
         if (MenuManager.Instance != null)
         {
-            MenuManager.Instance.ClosePauseMenu();
+            MenuManager.Instance.HideMenuForTransition();
         }
 
-        // --- 2. BẢO VỆ CORE SCENE VÀ XỬ LÝ SCENE MÔI TRƯỜNG ---
-
-        // Nếu là lần đầu tiên load -> Scene cũ đang hiển thị chính là Start Scene (màn hình nền)
+        // 3. Xóa Scene cũ và Load Scene mới
         if (string.IsNullOrEmpty(_currentLoadedScene))
         {
             _currentLoadedScene = _menuBackgroundScene;
         }
 
-        // Chỉ Unload và Load nếu màn hình đích KHÁC với màn hình hiện tại
         if (_currentLoadedScene != node.sceneName)
         {
-            // Xóa Scene môi trường cũ (Tuyệt đối không đụng vào Core Scene)
             Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
             if (oldScene.isLoaded)
             {
                 yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
             }
 
-            // Load Additive Scene môi trường mới
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(node.sceneName, LoadSceneMode.Additive);
             while (!loadOp.isDone) yield return null;
         }
 
-        // --- 3. ĐẶT ACTIVE SCENE VÀ PHỤC HỒI ---
-
-        // Quan trọng: Đặt Scene môi trường mới làm Active Scene 
-        // (để khi sinh ra quái vật/đạn, chúng sẽ nằm trong scene này thay vì kẹt ở Core Scene)
         Scene targetScene = SceneManager.GetSceneByName(node.sceneName);
         if (targetScene.isLoaded)
         {
             SceneManager.SetActiveScene(targetScene);
         }
-
         _currentLoadedScene = node.sceneName;
 
+        // 4. Phục hồi State (Gán vị trí nhân vật, lúc này Player vẫn đang bị ẩn)
         RestoreGameState(node);
 
-        // --- 4. HIỆU ỨNG SÁNG DẦN LÊN ---
+        // 5. Bật Player và HUD lên NGAY LÚC MÀN HÌNH CÒN ĐEN
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.ShowGameplayElements();
+        }
+
+        // Quan trọng: Đợi 1 frame để Unity cập nhật Transform và CharacterController chạm đất
+        yield return null;
+
+        // ==========================================
+        // BẮT ĐẦU KÉO RÈM LÊN (SÁNG MÀN HÌNH)
+        // ==========================================
+
+        // 6. Sáng dần lên (Lúc này Player đã đứng sẵn trên map)
         if (_transitionCanvasGroup != null)
         {
             _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true);
@@ -261,6 +270,12 @@ public class SaveManager : Singleton<SaveManager>
 
             _transitionCanvasGroup.blocksRaycasts = false;
             _transitionCanvasGroup.gameObject.SetActive(false);
+        }
+
+        // 7. Cuối cùng, nhả Pause và cho phép người chơi điều khiển
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.ClosePauseMenu();
         }
 
         _isLoading = false;
@@ -297,15 +312,16 @@ public class SaveManager : Singleton<SaveManager>
 
     private void RestorePlayerPosition(SaveSlot node)
     {
-        PlayerController player = UnityEngine.Object.FindAnyObjectByType<PlayerController>();
-        if (player == null) return;
+        if (_player == null) return;
 
-        var charController = player.GetComponent<CharacterController>();
+        // Khóa CharacterController để nó không tự rớt xuống do trọng lực
+        var charController = _player.GetComponent<CharacterController>();
         if (charController != null) charController.enabled = false;
 
+        // Set tọa độ
         if (string.IsNullOrEmpty(node.lastShrineID))
         {
-            player.transform.position = _startPosition;
+            _player.transform.position = _startPosition;
         }
         else
         {
@@ -323,16 +339,17 @@ public class SaveManager : Singleton<SaveManager>
 
             if (targetShrine != null)
             {
-                player.transform.position = targetShrine.transform.position;
+                _player.transform.position = targetShrine.transform.position;
             }
             else
             {
-                Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.lastShrineID}! Trở về mặc định.");
-                player.transform.position = _startPosition;
+                _player.transform.position = _startPosition;
             }
         }
 
-        if (charController != null) charController.enabled = true; // Bật lại sau khi dịch chuyển xong
+        // MỞ KHÓA CharacterController TRONG COROUTINE HOẶC SAU ĐÓ
+        // Bạn có thể mở khóa luôn ở đây, vì game đang Pause và Player đang bị SetActive(false), nó sẽ không rơi được.
+        if (charController != null) charController.enabled = true;
     }
     #endregion
 
