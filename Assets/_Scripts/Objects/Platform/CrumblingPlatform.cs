@@ -26,12 +26,16 @@ public class CrumblingPlatform : MonoBehaviour
     {
         if (_trigger != null)
             _trigger.OnStepIn += Break;
+
+        DeathScreenManager.OnDeathScreenTriggered += Reset;
     }
 
     private void OnDisable()
     {
         if (_trigger != null)
             _trigger.OnStepIn -= Break;
+
+        DeathScreenManager.OnDeathScreenTriggered -= Reset;
     }
 
     private void Break()
@@ -52,6 +56,14 @@ public class CrumblingPlatform : MonoBehaviour
         _collider.enabled = false;
         SetChildrenActive(false);
         StartCoroutine(ResetPlatform());
+    }
+
+    private void Reset()
+    {
+        _isSteppedOn = false;
+        _renderer.enabled = true;
+        _collider.enabled = true;
+        SetChildrenActive(true);
     }
 
     private IEnumerator ResetPlatform()
