@@ -4,8 +4,10 @@ using UnityEngine;
 public partial class PlayerController : MonoBehaviour
 {
     [Header("Skill Names")]
-    [SerializeField] private Text _wallJumpSlideName;
-    [SerializeField] private Text _wallJumpSlideDes;
+    [SerializeField] private Text _wallJumpName;
+    [SerializeField] private Text _wallJumpDes;
+    [SerializeField] private Text _wallSlideName;
+    [SerializeField] private Text _wallSlideDes;
     [SerializeField] private Text _dashName;
     [SerializeField] private Text _dashDes;
     [SerializeField] private Text _airGlideName;
@@ -19,11 +21,18 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private Text _astralPulseName;
     [SerializeField] private Text _astralPulseDes;
 
-    public void UnlockWallJumpWallSlide()
+    public void UnlockWallJump()
     {
-        Data.WallJumpUnlocked = Data.WallSlideUnlocked = true;
-        UIManager.Instance.ShowSkillUnlocked(_wallJumpSlideName, _wallJumpSlideDes);
+        Data.WallJumpUnlocked = true;
+        UIManager.Instance.ShowSkillUnlocked(_wallJumpName, _wallJumpDes);
     }
+
+    public void UnlockWallSlide()
+    {
+        Data.WallSlideUnlocked = true;
+        UIManager.Instance.ShowSkillUnlocked(_wallSlideName, _wallSlideDes);
+    }
+
     public void UnlockDash()
     {
         Data.DashUnlocked = true;

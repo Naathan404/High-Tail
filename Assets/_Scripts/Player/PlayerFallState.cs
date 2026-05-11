@@ -1,7 +1,6 @@
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using UnityEngine.UIElements;
+using System.Collections.Generic;
 
 public class PlayerFallState : PlayerState
 {
@@ -9,6 +8,7 @@ public class PlayerFallState : PlayerState
     private float _timer = 0f;
     public PlayerFallState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
+        
     }
 
     public override void Enter()
@@ -16,8 +16,13 @@ public class PlayerFallState : PlayerState
         base.Enter();
         Debug.Log("Vào fall state");
         _timer = 0f;
-        _player.Visual.Anim.Play("pFall");
         _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
+        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
+        {
+            _stateMachine.ChangeState(_player.WallSlideState);
+            return;
+        }
+        _player.Visual.Anim.Play("pFall");
     }
 
     public override void LogicUpdate()
@@ -26,11 +31,23 @@ public class PlayerFallState : PlayerState
         
         // timer timer timer
         _timer += Time.deltaTime;
-
         _player.CheckFlip(_player.MoveX);
         // Kiểm tra tiếp đất
         if (_player.IsOnGround())
         {
+            if (_timer >= _timeToMakeLandingEffect)
+            {
+                _player.TriggerHardLanding();
+                _timer = 0f;
+            }
+            else
+            {
+                _player.Visual.FallDustParticle.gameObject.SetActive(true);
+                _player.Visual.FallDustParticle.Play();
+                _timer = 0f;
+            }
+            
+
             if (Mathf.Abs(_player.MoveX) > 0.01f)
             {
                 _stateMachine.ChangeState(_player.RunState);
@@ -71,7 +88,7 @@ public class PlayerFallState : PlayerState
     {
         base.HandleInput();
 
-        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked)
+        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked && _player.Rb.linearVelocity.y <= 0f)
         {
             _stateMachine.ChangeState(_player.PogoState);
             return;
@@ -119,21 +136,21 @@ public class PlayerFallState : PlayerState
     public override void Exit()
     {
         base.Exit();
-        if(_timer >= _timeToMakeLandingEffect)
-        {
-            CameraShakeManager.Instance.ShakeForLanding();
-            _player.Visual.LandingDustParticle.gameObject.SetActive(true);
-            _player.Visual.LandingDustParticle.Play();
-            _timer = 0f;
-        }
-        else
-        {
-            _player.Visual.FallDustParticle.gameObject.SetActive(true);
-            _player.Visual.FallDustParticle.Play();
-            _timer = 0f;
-        }
-        _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+        // if(_timer >= _timeToMakeLandingEffect)
+        // {
+        //     _player.TriggerHardLanding();
+        //     _timer = 0f;
+        // }
+        // else
+        // {
+        //     _player.Visual.FallDustParticle.gameObject.SetActive(true);
+        //     _player.Visual.FallDustParticle.Play();
+        //     _player.Visual.ApplySquashStretch(new Vector3(1.3f, 0.8f, 1f));
+        //     _timer = 0f;
+        // }
+
         Vector2 tempVector = _player.Rb.linearVelocity;
         _player.Rb.linearVelocity = new Vector2(tempVector.x * 0.5f, tempVector.y);
     }
+
 }

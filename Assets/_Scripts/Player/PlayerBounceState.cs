@@ -16,10 +16,10 @@ public class PlayerBounceState : PlayerState
     {
         base.PhysicsUpdate();
         base.LogicUpdate();
-        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked) 
+        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked && _player.Rb.linearVelocity.y <= 0f)
         {
             _stateMachine.ChangeState(_player.PogoState);
-            return; 
+            return;
         }
         _player.CheckFlip(_player.MoveX);
         if(_player.Rb.linearVelocity.y < 0f)
