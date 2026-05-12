@@ -11,8 +11,11 @@ public class EndDialogueCallbackHelper : MonoBehaviour
     {
         switch(skill)
         {
-            case (int)Skill.WallJumpWallSlide:
-                _player.UnlockWallJumpWallSlide();
+            case (int)Skill.WallJump:
+                _player.UnlockWallJump();
+                break;
+            case(int)Skill.WallSlide:
+                _player.UnlockWallSlide();
                 break;
             case (int)Skill.Dash:
                 _player.UnlockDash();
@@ -40,12 +43,13 @@ public class EndDialogueCallbackHelper : MonoBehaviour
     [System.Serializable]
     public enum Skill
     {
-        WallJumpWallSlide, // 0
+        WallJump, // 0
         Dash,               // 1
         AirGlide,           // 2
         Glow,              // 3 
         Pogo,              // 4
         DoubleJump,          // 5
-        AstralLight         // 6
+        AstralLight,         // 6
+        WallSlide       // 7
     }
 }

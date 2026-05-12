@@ -99,9 +99,10 @@ public class UIManager : Singleton<UIManager>
         _checkpointIcon.gameObject.SetActive(true);
         _checkpointIcon.DOFade(1f, _fadeDuration).SetEase(Ease.InOutCubic).OnComplete(() =>
         {
-            _checkpointIcon.DOFade(0f, _fadeDuration).SetEase(Ease.InOutCubic);
-            _checkpointIcon.gameObject.SetActive(false);
-            
+            _checkpointIcon.DOFade(0f, _fadeDuration).SetEase(Ease.InOutCubic).OnComplete(() =>
+            {
+                _checkpointIcon.gameObject.SetActive(false);
+            });
         });
     }
 }

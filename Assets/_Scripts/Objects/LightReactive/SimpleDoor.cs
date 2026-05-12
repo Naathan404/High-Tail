@@ -13,6 +13,7 @@ public class SimpleDoor : MonoBehaviour, ILightPulseReactive
     [SerializeField] private float _shakeStrenght = 0.5f;
     [SerializeField] private float _waitTime = 1f;
     [SerializeField] private List<GameObject> _objectsToFalse = new List<GameObject>();
+    [SerializeField] private bool isHorizontal = false;
     private Vector2 _originalPos;
     private bool _isOpened = false;
     
@@ -33,6 +34,30 @@ public class SimpleDoor : MonoBehaviour, ILightPulseReactive
     {
         if(_isOpened) return;
         StartCoroutine(Open());
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player") && isHorizontal)
+        {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if(player != null)
+            {
+                player.transform.SetParent(this.transform);
+            }
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player") && isHorizontal)
+        {
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if(player != null)
+            {
+                player.ReturnToCoreScene();
+            }
+        }
     }
 
     private IEnumerator Open()
