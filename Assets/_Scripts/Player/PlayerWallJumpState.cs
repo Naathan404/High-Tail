@@ -9,6 +9,7 @@ public class PlayerWallJumpState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        AudioManager.Instance.PlaySFX(SoundName.Player_JumpGrass);
         float jumpDirection = _player.IsFacingRight() ? -1f : 1f;
         Vector2 jumpForce = new Vector2(jumpDirection * _player.Data.jumpWallForce.x, _player.Data.jumpWallForce.y);
 

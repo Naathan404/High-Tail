@@ -62,11 +62,14 @@ public class SimpleDoor : MonoBehaviour, ILightPulseReactive
 
     private IEnumerator Open()
     {
+        AudioManager.Instance.PlaySFX(SoundName.Door_Open);
         yield return new WaitForSeconds(_waitTime);
         transform.DOMove(_originalPos + _targetPos, _openDuration).SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                foreach(var obj in _objectsToFalse)
+                AudioManager.Instance.StopSFX();
+
+                foreach (var obj in _objectsToFalse)
                 {
                     obj.SetActive(false);
                 }

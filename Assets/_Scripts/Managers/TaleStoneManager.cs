@@ -66,7 +66,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
     private void DisplayCurrentLine()
     {
         StopAllCoroutines();
-
+        AudioManager.Instance.PlaySFX(SoundName.Text);
         _currTaleStoneText = _currTaleStoneData.DialogueLines[_currTaleStoneIndex].GetText();
         StartCoroutine(TypeLine());        
     }
@@ -84,9 +84,11 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
 
         _isTyping = false;
 
+        AudioManager.Instance.StopSFX();
         if (_currTaleStoneData.DialogueLines.Length > _currTaleStoneIndex && _currTaleStoneData.DialogueLines[_currTaleStoneIndex].AutoSkip)
         {
             yield return new WaitForSecondsRealtime(_currTaleStoneData.AutoProgressDelay);
+
             NextLine();
         }
     }
@@ -94,7 +96,8 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
     public void NextLine()
     {
         if (_currTaleStoneData == null) return;
-        
+
+        AudioManager.Instance.PlaySFX(SoundName.Text);
         if (_isTyping)
         {
             StopAllCoroutines();
@@ -118,6 +121,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
         IsTaleStoneActive = false;
         _taleStonePanel.SetActive(false); 
         ShowDialogue(false);
+        AudioManager.Instance.StopSFX();
 
         _lineText.text = "";
         _currTaleStoneIndex = 0;
