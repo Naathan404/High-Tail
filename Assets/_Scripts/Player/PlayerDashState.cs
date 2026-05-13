@@ -16,7 +16,6 @@ public class PlayerDashState : PlayerState
     {
         base.Enter();
         AudioManager.Instance.PlaySFX(SoundName.Player_Dash);
-        if (!_player.CanDash) return;
         Debug.Log("<color=yellow> ==> Dashing ==> </Color>");
         _originalGravity = _player.Rb.gravityScale;
         _player.Rb.gravityScale = 0f;

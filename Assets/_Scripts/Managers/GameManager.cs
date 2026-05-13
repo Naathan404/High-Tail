@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     /// <param name="duration"></param>
     public void DoTimeFreeze(float strength, float duration)
     {
+        
         if (PauseGameManager.IsGamePaused) return;
         
         Debug.Log("<color=red> ==> Begin time freeze ==> </Color>");
