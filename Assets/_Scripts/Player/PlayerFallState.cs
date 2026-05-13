@@ -48,6 +48,7 @@ public class PlayerFallState : PlayerState
             }
             
 
+            AudioManager.Instance.PlaySFX(SoundName.Player_LandGrass);
             if (Mathf.Abs(_player.MoveX) > 0.01f)
             {
                 _stateMachine.ChangeState(_player.RunState);
