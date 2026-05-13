@@ -22,6 +22,7 @@ public class SaveManager : Singleton<SaveManager>
 
     [Header("New Game Setting")]
     [SerializeField] private string _startSceneName;
+    [SerializeField] private string _menuBackgroundScene; // Màn hình cảnh vật lúc ở Menu
     [SerializeField] private Vector3 _startPosition;
 
     [Header("Animation Settings")]
@@ -144,25 +145,37 @@ public class SaveManager : Singleton<SaveManager>
     {
         if (_currentSaveSlotCount >= MaxSaveSlots)
         {
+            ShowOnMenuNotification("Maximum save slots reached!");
             return;
         }
+
+        // 1. Tạo ID riêng để dùng chung cho mọi thiết lập phía dưới
+        string newSlotID = IDGenerator.GenerateUniqueID("slot");
+
         SaveSlot newSlot = new SaveSlot
         {
-            saveID = IDGenerator.GenerateUniqueID("slot"),
+            saveID = newSlotID,
             saveName = string.IsNullOrEmpty(saveName) ? $"Save {_currentSaveSlotCount + 1}" : saveName,
             firstSaveTimestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             lastSaveTimestamp = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
             lastShrineID = "",
-            sceneName = _startSceneName,
+            sceneName = _startSceneName, // Màn chơi đầu tiên sẽ được load
             unlockedSkills = new SkillSaveData()
         };
 
         MainData.allSlots.Add(newSlot);
         _currentSaveSlotCount++;
-        MainData.activeSlotID = "";
+
+        // 2. Gán activeSlotID thành cái save vừa tạo (KHÔNG để rỗng "" nữa)
+        MainData.activeSlotID = newSlotID;
         SaveToDisk();
 
-        _saveMenuUI.RefreshSaveSlotContainer();
+        // 3. Cập nhật lại UI Slot
+        if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
+        if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
+
+        // 4. TỰ ĐỘNG GỌI HÀM LOAD SCENE ĐỂ BẮT ĐẦU CHƠI NGAY LẬP TỨC
+        LoadGameFromSlot(newSlotID);
     }
     #endregion
 
@@ -189,43 +202,82 @@ public class SaveManager : Singleton<SaveManager>
     {
         _isLoading = true;
 
+        // --- 1. KÉO RÈM (MÀN HÌNH TỐI DẦN) ---
         if (_transitionCanvasGroup != null)
         {
+            _transitionCanvasGroup.gameObject.SetActive(true);
             _transitionCanvasGroup.blocksRaycasts = true;
-            yield return _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true).WaitForCompletion();
+            _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
         }
 
-        Scene targetScene = SceneManager.GetSceneByName(node.sceneName);
+        // ==========================================
+        // TỪ ĐÂY TRỞ ĐI MÀN HÌNH ĐANG ĐEN HOÀN TOÀN
+        // ==========================================
 
-        if (!targetScene.isLoaded)
+        // 2. Ẩn UI Menu đi (Vẫn giữ trạng thái Pause)
+        if (MenuManager.Instance != null)
         {
-            if (!string.IsNullOrEmpty(_currentLoadedScene))
+            MenuManager.Instance.HideMenuForTransition();
+        }
+
+        // 3. Xóa Scene cũ và Load Scene mới
+        if (string.IsNullOrEmpty(_currentLoadedScene))
+        {
+            _currentLoadedScene = _menuBackgroundScene;
+        }
+
+        if (_currentLoadedScene != node.sceneName)
+        {
+            Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
+            if (oldScene.isLoaded)
             {
-                Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
-                if (oldScene.isLoaded)
-                {
-                    yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
-                }
+                yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
             }
 
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(node.sceneName, LoadSceneMode.Additive);
             while (!loadOp.isDone) yield return null;
-
-            targetScene = SceneManager.GetSceneByName(node.sceneName);
         }
 
-        SceneManager.SetActiveScene(targetScene);
+        Scene targetScene = SceneManager.GetSceneByName(node.sceneName);
+        if (targetScene.isLoaded)
+        {
+            SceneManager.SetActiveScene(targetScene);
+        }
         _currentLoadedScene = node.sceneName;
 
+        // 4. Phục hồi State (Gán vị trí nhân vật, lúc này Player vẫn đang bị ẩn)
         RestoreGameState(node);
 
-        if (_transitionCanvasGroup != null)
+        // 5. Bật Player và HUD lên NGAY LÚC MÀN HÌNH CÒN ĐEN
+        if (MenuManager.Instance != null)
         {
-            yield return _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true).WaitForCompletion();
-            _transitionCanvasGroup.blocksRaycasts = false;
+            MenuManager.Instance.ShowGameplayElements();
         }
 
-        MenuManager.Instance?.ClosePauseMenu();
+        // Quan trọng: Đợi 1 frame để Unity cập nhật Transform và CharacterController chạm đất
+        yield return null;
+
+        // ==========================================
+        // BẮT ĐẦU KÉO RÈM LÊN (SÁNG MÀN HÌNH)
+        // ==========================================
+
+        // 6. Sáng dần lên (Lúc này Player đã đứng sẵn trên map)
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
+
+            _transitionCanvasGroup.blocksRaycasts = false;
+            _transitionCanvasGroup.gameObject.SetActive(false);
+        }
+
+        // 7. Cuối cùng, nhả Pause và cho phép người chơi điều khiển
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.ClosePauseMenu();
+        }
+
         _isLoading = false;
     }
     private void RestoreGameState(SaveSlot node)
@@ -260,15 +312,16 @@ public class SaveManager : Singleton<SaveManager>
 
     private void RestorePlayerPosition(SaveSlot node)
     {
-        PlayerController player = UnityEngine.Object.FindAnyObjectByType<PlayerController>();
-        if (player == null) return;
+        if (_player == null) return;
 
-        var charController = player.GetComponent<CharacterController>();
+        // Khóa CharacterController để nó không tự rớt xuống do trọng lực
+        var charController = _player.GetComponent<CharacterController>();
         if (charController != null) charController.enabled = false;
 
+        // Set tọa độ
         if (string.IsNullOrEmpty(node.lastShrineID))
         {
-            player.transform.position = _startPosition;
+            _player.transform.position = _startPosition;
         }
         else
         {
@@ -286,16 +339,17 @@ public class SaveManager : Singleton<SaveManager>
 
             if (targetShrine != null)
             {
-                player.transform.position = targetShrine.transform.position;
+                _player.transform.position = targetShrine.transform.position;
             }
             else
             {
-                Debug.LogWarning($"[SaveSystem] Không tìm thấy Đền nào có ID: {node.lastShrineID}! Trở về mặc định.");
-                player.transform.position = _startPosition;
+                _player.transform.position = _startPosition;
             }
         }
 
-        if (charController != null) charController.enabled = true; // Bật lại sau khi dịch chuyển xong
+        // MỞ KHÓA CharacterController TRONG COROUTINE HOẶC SAU ĐÓ
+        // Bạn có thể mở khóa luôn ở đây, vì game đang Pause và Player đang bị SetActive(false), nó sẽ không rơi được.
+        if (charController != null) charController.enabled = true;
     }
     #endregion
 
@@ -335,19 +389,43 @@ public class SaveManager : Singleton<SaveManager>
         if (MainData == null || MainData.allSlots == null) return;
         if (nodeID == MainData.activeSlotID)
         {
-            ShowOnMenuNotification("Cannot delete current saved file!");
+            ShowOnMenuNotification("Cannot delete current playing file!");
             return;
         }
 
         SaveSlot nodeToDelete = MainData.allSlots.Find(n => n.saveID == nodeID);
         if (nodeToDelete != null)
         {
-            MainData.allSlots.Remove(nodeToDelete);
-            _currentSaveSlotCount--;
-            SaveToDisk();
-            ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
-            _saveMenuUI.RefreshSaveSlotContainer();
+            // Tìm SaveMenuUI nếu lỡ bị null
+            if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
+
+            if (_saveMenuUI != null)
+            {
+                // Gọi Panel Confirm từ SaveMenuUI
+                _saveMenuUI.ShowDeleteConfirmPopup(
+                    $"Are you sure you want to delete\n'{nodeToDelete.saveName}'?",
+                    () => ExecuteDelete(nodeToDelete) // Action truyền vào để thực thi khi bấm Yes
+                );
+            }
+            else
+            {
+                // Backup an toàn: Lỡ UI lỗi không tìm thấy thì xóa thẳng luôn
+                ExecuteDelete(nodeToDelete);
+            }
         }
+    }
+
+    // Hàm thực thi việc xóa thực sự
+    private void ExecuteDelete(SaveSlot nodeToDelete)
+    {
+        MainData.allSlots.Remove(nodeToDelete);
+        _currentSaveSlotCount--;
+        SaveToDisk();
+
+        ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
+
+        if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
+        if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
     }
     #endregion
     #endregion
@@ -376,4 +454,81 @@ public class SaveManager : Singleton<SaveManager>
         MenuManager.Instance.ShowTitleNotification(message);
     }
     #endregion
+
+    #region Return to Home
+    public void ReturnToMainMenu()
+    {
+        if (_isLoading) return;
+        StartCoroutine(ReturnToMainMenuRoutine());
+    }
+
+    private IEnumerator ReturnToMainMenuRoutine()
+    {
+        _isLoading = true;
+
+        // 1. Kéo rèm đen
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.gameObject.SetActive(true);
+            _transitionCanvasGroup.blocksRaycasts = true;
+            _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
+        }
+
+        // ==========================================
+        // MÀN HÌNH ĐANG ĐEN
+        // ==========================================
+
+        // 2. Xóa trạng thái đang chơi (Cực kỳ quan trọng để CanResumeGame() trả về False)
+        MainData.activeSlotID = "";
+
+        // 3. Ẩn ngay Player và Gameplay HUD
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.UpdateGameplayVisibility();
+        }
+
+        // 4. Xóa scene Màn chơi hiện tại, Load lại Background Scene
+        if (!string.IsNullOrEmpty(_currentLoadedScene) && _currentLoadedScene != _menuBackgroundScene)
+        {
+            Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
+            if (oldScene.isLoaded)
+            {
+                yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
+            }
+
+            AsyncOperation loadOp = SceneManager.LoadSceneAsync(_menuBackgroundScene, LoadSceneMode.Additive);
+            while (!loadOp.isDone) yield return null;
+
+            Scene targetScene = SceneManager.GetSceneByName(_menuBackgroundScene);
+            if (targetScene.isLoaded) SceneManager.SetActiveScene(targetScene);
+
+            _currentLoadedScene = _menuBackgroundScene;
+        }
+
+        // 5. Cập nhật UI thành Menu "Trắng" khởi đầu (Do CanResume đã thành false)
+        if (MenuManager.Instance != null)
+        {
+            MenuManager.Instance.OpenPauseMenu(instant: true);
+        }
+
+        yield return null;
+
+        // ==========================================
+        // SÁNG MÀN HÌNH LÊN
+        // ==========================================
+
+        if (_transitionCanvasGroup != null)
+        {
+            _transitionCanvasGroup.DOFade(0f, _transitionDuration).SetUpdate(true);
+            yield return new WaitForSecondsRealtime(_transitionDuration);
+
+            _transitionCanvasGroup.blocksRaycasts = false;
+            _transitionCanvasGroup.gameObject.SetActive(false);
+        }
+
+        _isLoading = false;
+    }
+    #endregion
+
 }
