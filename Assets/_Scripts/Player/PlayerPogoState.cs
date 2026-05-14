@@ -50,6 +50,7 @@ public class PlayerPogoState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        AudioManager.Instance.PlaySFX(SoundName.Player_Stomp);
         _player.Visual.Anim.Play("pPogo");
         
         _player.Rb.linearVelocity = Vector2.zero; 

@@ -97,6 +97,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
     {
         if (_currTaleStoneData == null) return;
 
+        AudioManager.Instance.StopSFX();
         AudioManager.Instance.PlaySFX(SoundName.Text);
         if (_isTyping)
         {
