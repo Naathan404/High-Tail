@@ -15,7 +15,6 @@ public class AstralGift : MonoBehaviour
     [SerializeField] private float _floatingOffsetY = 1f;
     [SerializeField] private Light2D _light;
     [SerializeField] private float _lightDuration = 1f;
-    [SerializeField] private Transform _iconPosition; 
 
     [Header("Cài đặt khác")]
     private bool _isCollected = false;
