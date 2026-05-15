@@ -83,6 +83,7 @@ public class SaveMenuUI : MonoBehaviour
         SetupButtonNavigation();
     }
 
+    #region New Game Logic
     private void HandleNewGameClicked()
     {
         int nextSlotIndex = SaveManager.Instance.MainData.allSlots.Count + 1;
@@ -115,6 +116,7 @@ public class SaveMenuUI : MonoBehaviour
         SaveManager.Instance.CreateNewGame(finalName);
         UIHelper.AnimateFade(_contentContainer.gameObject, true);
     }
+    #endregion
 
     #region Confirm Popup Logic
     public void ShowDeleteConfirmPopup(string message, Action onYes)

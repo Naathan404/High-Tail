@@ -1,40 +1,57 @@
 using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
-public class GeneralSetting : MonoBehaviour
+public class GeneralSetting : Singleton<GeneralSetting>
 {
-    public static GeneralSetting Instance;
     public Action<Language> OnLanguageChanged;
     public bool autoSave = true;
     public string MainCharacterName;
 
     public enum Language { Vietnamese, English };
 
-    private void Awake()
+    private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+            StartCoroutine(UpdateUnityLocalization(currentLanguage == Language.Vietnamese ? "vi" : "en"));
     }
 
     public Language currentLanguage = Language.Vietnamese;
 
-    public void ChangeLanguage()
+    public void ChangeLanguage(Language language)
     {
-        if (currentLanguage == Language.Vietnamese)
+        if (currentLanguage == language) return;
+
+        currentLanguage = language;
+        string targetLocaleCode = "";
+
+        if (language == Language.Vietnamese)
         {
-            currentLanguage = Language.English;
+            targetLocaleCode = "vi";
         }
         else
         {
-            currentLanguage = Language.Vietnamese;
+            targetLocaleCode = "en";
+        }
+
+        StartCoroutine(UpdateUnityLocalization(targetLocaleCode));
+    }
+
+    private IEnumerator UpdateUnityLocalization(string localeCode)
+    {
+        yield return LocalizationSettings.InitializationOperation;
+
+        var locale = LocalizationSettings.AvailableLocales.GetLocale(localeCode);
+
+        if (locale != null)
+        {
+            LocalizationSettings.SelectedLocale = locale;
+        }
+        else
+        {
+            Debug.LogError($"[Localization] Không tìm thấy ngôn ngữ có mã: {localeCode}");
         }
     }
 }

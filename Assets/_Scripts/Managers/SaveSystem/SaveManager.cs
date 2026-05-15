@@ -1,12 +1,13 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -33,6 +34,7 @@ public class SaveManager : Singleton<SaveManager>
     private RectTransform _savePanelRect;
 
     [Header("Save UI")]
+    [SerializeField] private SaveMenuUI _saveMenuUI;
     [SerializeField] private GameObject _saveGamePanel;
     private CanvasGroup _savePanelCanvasGroup;
     [SerializeField] private TextMeshProUGUI _notifyText;
@@ -43,8 +45,13 @@ public class SaveManager : Singleton<SaveManager>
     private bool _isLoading = false;
     private string _currentLoadedScene = "";
 
-    [Header("Menu")]
-    [SerializeField] private SaveMenuUI _saveMenuUI;
+    [Header("Localization")]
+    [SerializeField] private LocalizedString _errorDeletePlayingRef;
+    [SerializeField] private LocalizedString _confirmDeleteSaveRef;
+    [SerializeField] private LocalizedString _loadSuccessRef;
+    [SerializeField] private LocalizedString _loadFailRef;
+    [SerializeField] private LocalizedString _saveSuccessRef;
+    [SerializeField] private LocalizedString _deleteSuccessRef;
 
     public override void Awake()
     {
@@ -78,6 +85,7 @@ public class SaveManager : Singleton<SaveManager>
     }
 
     #region Save logic
+
     #region Load game
     private void LoadMainData()
     {
@@ -175,10 +183,10 @@ public class SaveManager : Singleton<SaveManager>
             StartCoroutine(LoadSceneRoutine(targetNode));
             MainData.activeSlotID = targetSlotID;
             SaveToDisk();
-            ShowOnGameNotification($"Changed to  {targetNode.saveName}");
+            ShowOnGameNotification(_loadSuccessRef.GetLocalizedString(targetNode.saveName));
             return true;
         }
-        ShowOnGameNotification("Load failed: Node not found!");
+        ShowOnGameNotification(_loadFailRef.GetLocalizedString());
         return false;
     }
 
@@ -363,7 +371,7 @@ public class SaveManager : Singleton<SaveManager>
 
         SaveToDisk();
         RestoreShrinesState(currentNode);
-        ShowOnGameNotification($"Saved successfully");
+        ShowOnGameNotification(_saveSuccessRef.GetLocalizedString());
     }
     #endregion
 
@@ -373,7 +381,7 @@ public class SaveManager : Singleton<SaveManager>
         if (MainData == null || MainData.allSlots == null) return;
         if (nodeID == MainData.activeSlotID)
         {
-            ShowOnMenuNotification("Cannot delete current playing file!");
+            ShowOnMenuNotification(_errorDeletePlayingRef.GetLocalizedString());
             return;
         }
 
@@ -386,9 +394,11 @@ public class SaveManager : Singleton<SaveManager>
             if (_saveMenuUI != null)
             {
                 // Gọi Panel Confirm từ SaveMenuUI
+                string confirmMessage = _confirmDeleteSaveRef.GetLocalizedString(nodeToDelete.saveName);
+
                 _saveMenuUI.ShowDeleteConfirmPopup(
-                    $"Are you sure you want to delete\n'{nodeToDelete.saveName}'?",
-                    () => ExecuteDelete(nodeToDelete) // Action truyền vào để thực thi khi bấm Yes
+                    confirmMessage,
+                    () => ExecuteDelete(nodeToDelete)
                 );
             }
             else
@@ -406,7 +416,7 @@ public class SaveManager : Singleton<SaveManager>
         _currentSaveSlotCount--;
         SaveToDisk();
 
-        ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
+        ShowOnMenuNotification(_deleteSuccessRef.GetLocalizedString(nodeToDelete.saveName));
 
         if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
         if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
