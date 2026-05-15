@@ -125,22 +125,6 @@ public class SaveManager : Singleton<SaveManager>
     #endregion
 
     #region New timeline
-    private IEnumerator RequireTimelineSelection()
-    {
-        yield return null;
-
-        Debug.Log("[SaveManager] Đang chờ người chơi chọn dòng thời gian...");
-
-        if (MenuManager.Instance != null)
-        {
-            MenuManager.Instance.OpenPauseMenu();
-        }
-        else
-        {
-            PauseGameManager.SetPause(true);
-        }
-    }
-
     public void CreateNewGame(string saveName = "")
     {
         if (_currentSaveSlotCount >= MaxSaveSlots)
@@ -488,23 +472,34 @@ public class SaveManager : Singleton<SaveManager>
             MenuManager.Instance.UpdateGameplayVisibility();
         }
 
-        // 4. Xóa scene Màn chơi hiện tại, Load lại Background Scene
-        if (!string.IsNullOrEmpty(_currentLoadedScene) && _currentLoadedScene != _menuBackgroundScene)
-        {
-            Scene oldScene = SceneManager.GetSceneByName(_currentLoadedScene);
-            if (oldScene.isLoaded)
-            {
-                yield return SceneManager.UnloadSceneAsync(_currentLoadedScene);
-            }
+        // 4. ĐÃ SỬA: Quét động để xóa tất cả các scene level đang bật (Bất kể Player đang ở phòng nào)
+        string persistentScene = gameObject.scene.name; // Tên scene chứa Manager này
 
+        // Vòng lặp quét ngược từ dưới lên để dọn dẹp các scene level đang mở
+        for (int i = SceneManager.sceneCount - 1; i >= 0; i--)
+        {
+            Scene scene = SceneManager.GetSceneAt(i);
+            // Nếu không phải Manager và không phải Menu -> Unload nó
+            if (scene.name != persistentScene && scene.name != _menuBackgroundScene && scene.isLoaded)
+            {
+                yield return SceneManager.UnloadSceneAsync(scene);
+            }
+        }
+
+        // Sau khi dọn sạch phòng chơi, Load Scene Menu (nếu nó chưa được load)
+        Scene menuScene = SceneManager.GetSceneByName(_menuBackgroundScene);
+        if (!menuScene.isLoaded)
+        {
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(_menuBackgroundScene, LoadSceneMode.Additive);
             while (!loadOp.isDone) yield return null;
-
-            Scene targetScene = SceneManager.GetSceneByName(_menuBackgroundScene);
-            if (targetScene.isLoaded) SceneManager.SetActiveScene(targetScene);
-
-            _currentLoadedScene = _menuBackgroundScene;
         }
+
+        // Đặt Scene Menu làm scene Active
+        Scene targetScene = SceneManager.GetSceneByName(_menuBackgroundScene);
+        if (targetScene.isLoaded) SceneManager.SetActiveScene(targetScene);
+
+        // Gán lại biến cho đồng bộ
+        _currentLoadedScene = _menuBackgroundScene;
 
         // 5. Cập nhật UI thành Menu "Trắng" khởi đầu (Do CanResume đã thành false)
         if (MenuManager.Instance != null)
