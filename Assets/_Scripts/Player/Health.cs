@@ -54,12 +54,12 @@ public partial class PlayerController
             () =>
             {
                 CheckpointManager.Instance.RespawnPlayer(this);
+                AudioManager.Instance.PlaySFX(SoundName.Player_Respawn);
                 _stateMachine.ChangeState(IdleState);
             },
             Data.respawnDuration
         );
         yield return null;
-        AudioManager.Instance.PlaySFX(SoundName.Player_Respawn);
     }
 
     public void ApplyEnergy(int amount)

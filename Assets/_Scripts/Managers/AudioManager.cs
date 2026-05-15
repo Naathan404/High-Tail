@@ -21,6 +21,7 @@ public enum SoundName
     Player_JumpGrass,
     Player_JumpRock,
     Player_JumpMushroom,
+    Player_Stomp,
     Player_LandGrass,
     Player_LandRock,
     Player_Dash,
@@ -35,8 +36,7 @@ public enum SoundName
     Platform_Crumbling,
     Platform_Falling,
     Door_Open,
-    Text,
-    SpawnPoint
+    Text
 }
 
 [System.Serializable]

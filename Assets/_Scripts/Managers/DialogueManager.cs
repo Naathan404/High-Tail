@@ -78,8 +78,9 @@ public class DialogueManager : Singleton<DialogueManager>
     private void DisplayCurrentLine()
     {
         StopAllCoroutines();
+        AudioManager.Instance.PlaySFX(SoundName.Text);
 
-        if(_curDialogueData.DialogueLines[_curDialogueIndex].IsYou)
+        if (_curDialogueData.DialogueLines[_curDialogueIndex].IsYou)
         {
             _yourImage.gameObject.SetActive(true);
             _yourNameText.gameObject.SetActive(true);
@@ -113,6 +114,8 @@ public class DialogueManager : Singleton<DialogueManager>
 
         _isTyping = false;
 
+        AudioManager.Instance.StopSFX();
+
         if (_curDialogueData.DialogueLines.Length > _curDialogueIndex && _curDialogueData.DialogueLines[_curDialogueIndex].autoSkip)
         {
             yield return new WaitForSecondsRealtime(_curDialogueData.AutoProgressDelay);
@@ -122,6 +125,8 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public void NextLine()
     {
+        AudioManager.Instance.StopSFX();
+        AudioManager.Instance.PlaySFX(SoundName.Text);
         if (_curDialogueData == null) return;
         
         if (_isTyping)
@@ -147,6 +152,8 @@ public class DialogueManager : Singleton<DialogueManager>
         IsDialogueActive = false;
         _dialoguePanel.SetActive(false); 
         ShowDialogue(false);
+
+        AudioManager.Instance.StopSFX();
 
         _lineText.text = "";
         _curDialogueIndex = 0;
