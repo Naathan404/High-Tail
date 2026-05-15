@@ -14,6 +14,10 @@ public class GeneralSetting : Singleton<GeneralSetting>
     public bool autoSave = true;
     public string MainCharacterName = "";
 
+    public float masterVolume = 1.0f;
+    public float bgmVolume = 1.0f;
+    public float sfxVolume = 1.0f;
+
     private void Start()
     {
         SyncFromSaveData();
@@ -31,13 +35,16 @@ public class GeneralSetting : Singleton<GeneralSetting>
         currentLanguage = (Language)settingsData.languageIndex;
         autoSave = settingsData.autoSave;
         MainCharacterName = settingsData.mainCharacterName;
+        masterVolume = settingsData.masterVolume;
+        bgmVolume = settingsData.bgmVolume;
+        sfxVolume = settingsData.sfxVolume;
 
         // Kích hoạt logic UI (Ngôn ngữ)
         string targetLocaleCode = (currentLanguage == Language.Vietnamese) ? "vi" : "en";
         StartCoroutine(UpdateUnityLocalization(targetLocaleCode));
     }
 
-    private void SaveSettings()
+    public void SaveSettings()
     {
         if (SaveManager.Instance == null || SaveManager.Instance.MainData == null) return;
 
@@ -47,6 +54,9 @@ public class GeneralSetting : Singleton<GeneralSetting>
         settingsData.languageIndex = (int)currentLanguage;
         settingsData.autoSave = autoSave;
         settingsData.mainCharacterName = MainCharacterName;
+        settingsData.masterVolume = masterVolume;
+        settingsData.bgmVolume = bgmVolume;
+        settingsData.sfxVolume = sfxVolume;
 
         SaveManager.Instance.SaveToDisk();
     }
@@ -80,6 +90,27 @@ public class GeneralSetting : Singleton<GeneralSetting>
 
         MainCharacterName = newName;
         SaveSettings();
+    }
+
+    public void ChangeMasterVolume(float volume)
+    {
+        if (Mathf.Approximately(masterVolume, volume)) return;
+
+        masterVolume = volume;
+    }
+
+    public void ChangeBGMVolume(float volume)
+    {
+        if (Mathf.Approximately(bgmVolume, volume)) return;
+
+        bgmVolume = volume;
+    }
+
+    public void ChangeSFXVolume(float volume)
+    {
+        if (Mathf.Approximately(sfxVolume, volume)) return;
+
+        sfxVolume = volume;
     }
     #endregion
 

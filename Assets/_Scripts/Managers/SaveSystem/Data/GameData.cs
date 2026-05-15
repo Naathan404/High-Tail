@@ -14,4 +14,8 @@ public class SettingsData
     public int languageIndex = 0; // 0: Vietnamese, 1: English
     public bool autoSave = true;
     public string mainCharacterName = "";
+
+    public float masterVolume = 1.0f;
+    public float bgmVolume = 1.0f;
+    public float sfxVolume = 1.0f;
 }
