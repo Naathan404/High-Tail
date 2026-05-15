@@ -2,6 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 using System;
+using UnityEngine.Rendering;
 
 public class FallingPlatform : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class FallingPlatform : MonoBehaviour
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _fallDuration = 2.5f;
     [SerializeField] private float _returnDuration = 2.5f;
+    [SerializeField] private ParticleSystem _fallingEffect; 
 
     private Vector2 _defaultPosition;
 
@@ -19,6 +21,11 @@ public class FallingPlatform : MonoBehaviour
         _defaultPosition = transform.position;
     }
 
+    private void Start()
+    {
+        if(_fallingEffect != null) _fallingEffect.Stop();
+        
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -27,6 +34,7 @@ public class FallingPlatform : MonoBehaviour
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if(player != null) player.transform.parent = this.transform;
             transform.DOMoveY(_targetPosition.position.y, _fallDuration, false);
+            if(_fallingEffect != null) _fallingEffect.Play();
         }
     }
 
@@ -37,6 +45,7 @@ public class FallingPlatform : MonoBehaviour
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if(player != null) player.ReturnToCoreScene();
             transform.DOMoveY(_defaultPosition.y, _returnDuration, false);
+            if(_fallingEffect != null) _fallingEffect.Stop();
         }
     }
 
