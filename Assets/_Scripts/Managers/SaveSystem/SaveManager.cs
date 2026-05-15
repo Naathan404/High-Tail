@@ -107,6 +107,8 @@ public class SaveManager : Singleton<SaveManager>
                             MainData.allSlots = new List<SaveSlot>();
                         if (!string.IsNullOrEmpty(MainData.activeSlotID))
                             MainData.activeSlotID = "";
+                        if (MainData.settings == null)
+                            MainData.settings = new SettingsData();
 
                         _currentSaveSlotCount = MainData.allSlots.Count;
                         loadedSuccessfully = true;
@@ -122,14 +124,11 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogWarning("Dữ liệu save không hợp lệ hoặc trống. Đang khởi tạo mới...");
             MainData = new GameData();
-            if (MainData.allSlots == null)
-                MainData.allSlots = new List<SaveSlot>();
+            if (MainData.allSlots == null) MainData.allSlots = new List<SaveSlot>();
+            if (MainData.settings == null) MainData.settings = new SettingsData();
         }
-        // if (_currentSaveSlotCount == 0)
-        // {
-        //     MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Play);
-        // }
     }
+
     #endregion
 
     #region New timeline
@@ -424,7 +423,7 @@ public class SaveManager : Singleton<SaveManager>
     #endregion
     #endregion
 
-    private void SaveToDisk()
+    public void SaveToDisk()
     {
         string json = JsonUtility.ToJson(MainData, true);
         File.WriteAllText(_savePath, json);

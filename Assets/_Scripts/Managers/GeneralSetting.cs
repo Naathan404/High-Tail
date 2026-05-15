@@ -1,43 +1,87 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
-using UnityEngine.UIElements;
 
 public class GeneralSetting : Singleton<GeneralSetting>
 {
     public Action<Language> OnLanguageChanged;
-    public bool autoSave = true;
-    public string MainCharacterName;
 
     public enum Language { Vietnamese, English };
 
+    [Header("Settings State")]
+    public Language currentLanguage = Language.Vietnamese;
+    public bool autoSave = true;
+    public string MainCharacterName = "";
+
     private void Start()
     {
-            StartCoroutine(UpdateUnityLocalization(currentLanguage == Language.Vietnamese ? "vi" : "en"));
+        SyncFromSaveData();
     }
 
-    public Language currentLanguage = Language.Vietnamese;
+    #region Data Sync Logic
+    public void SyncFromSaveData()
+    {
+        if (SaveManager.Instance == null || SaveManager.Instance.MainData == null) return;
 
+        var settingsData = SaveManager.Instance.MainData.settings;
+        if (settingsData == null) return;
+
+        // Đồng bộ TẤT CẢ các biến từ Data vào Setting
+        currentLanguage = (Language)settingsData.languageIndex;
+        autoSave = settingsData.autoSave;
+        MainCharacterName = settingsData.mainCharacterName;
+
+        // Kích hoạt logic UI (Ngôn ngữ)
+        string targetLocaleCode = (currentLanguage == Language.Vietnamese) ? "vi" : "en";
+        StartCoroutine(UpdateUnityLocalization(targetLocaleCode));
+    }
+
+    private void SaveSettings()
+    {
+        if (SaveManager.Instance == null || SaveManager.Instance.MainData == null) return;
+
+        var settingsData = SaveManager.Instance.MainData.settings;
+        if (settingsData == null) return;
+
+        settingsData.languageIndex = (int)currentLanguage;
+        settingsData.autoSave = autoSave;
+        settingsData.mainCharacterName = MainCharacterName;
+
+        SaveManager.Instance.SaveToDisk();
+    }
+    #endregion
+
+    #region PUBLIC API
     public void ChangeLanguage(Language language)
     {
         if (currentLanguage == language) return;
 
         currentLanguage = language;
-        string targetLocaleCode = "";
 
-        if (language == Language.Vietnamese)
-        {
-            targetLocaleCode = "vi";
-        }
-        else
-        {
-            targetLocaleCode = "en";
-        }
+        // Gọi hàm lưu tập trung
+        SaveSettings();
 
+        string targetLocaleCode = (language == Language.Vietnamese) ? "vi" : "en";
         StartCoroutine(UpdateUnityLocalization(targetLocaleCode));
     }
+
+    public void ChangeAutoSave(bool isOn)
+    {
+        if (autoSave == isOn) return;
+
+        autoSave = isOn;
+        SaveSettings(); 
+    }
+
+    public void ChangeMainCharacterName(string newName)
+    {
+        if (MainCharacterName == newName) return;
+
+        MainCharacterName = newName;
+        SaveSettings();
+    }
+    #endregion
 
     private IEnumerator UpdateUnityLocalization(string localeCode)
     {
@@ -48,6 +92,7 @@ public class GeneralSetting : Singleton<GeneralSetting>
         if (locale != null)
         {
             LocalizationSettings.SelectedLocale = locale;
+            OnLanguageChanged?.Invoke(currentLanguage);
         }
         else
         {
@@ -61,9 +106,10 @@ public struct Text
 {
     public string textVI;
     public string textEN;
+
     public string GetText()
     {
-        switch(GeneralSetting.Instance.currentLanguage)
+        switch (GeneralSetting.Instance.currentLanguage)
         {
             case GeneralSetting.Language.English:
                 return textEN;
@@ -74,12 +120,12 @@ public struct Text
 
     public int GetLength()
     {
-        switch(GeneralSetting.Instance.currentLanguage)
+        switch (GeneralSetting.Instance.currentLanguage)
         {
             case GeneralSetting.Language.English:
                 return textEN.Length;
             default:
                 return textVI.Length;
-        }        
+        }
     }
 }
