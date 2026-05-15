@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: PlayerSkill Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: PlayerSkill
+  m_TableCollectionNameGuidString: b9c5c6c8ef8a084408bddeb9f4012be7
+  m_Entries:
+  - m_Id: 195560423424
+    m_Key: name_walljump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 331829166080
+    m_Key: des_walljump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 527195652096
+    m_Key: name_wallslide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 663607001088
+    m_Key: des_wallslide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 746167681024
+    m_Key: name_dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 775271956480
+    m_Key: des_dash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 794670612480
+    m_Key: name_airglide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 847372042240
+    m_Key: des_airglide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 927592300544
+    m_Key: name_pogo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 967249444864
+    m_Key: des_pogo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 989965795328
+    m_Key: name_glow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1021070753792
+    m_Key: des_glow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1052985212928
+    m_Key: name_astralpulse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1209126567936
+    m_Key: des_astralpulse
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7137684596060324214
+  references:
+    version: 2
+    RefIds:
+    - rid: 7137684596060324214
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1778885172733

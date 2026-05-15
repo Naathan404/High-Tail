@@ -1,7 +1,8 @@
+using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
@@ -39,12 +40,12 @@ public class UIManager : Singleton<UIManager>
         _checkpointIcon.gameObject.SetActive(false);
     }
 
-    public void ShowSkillUnlocked(Text skillName, Text skillDes)
+    public void ShowSkillUnlocked(LocalizedString skillName, LocalizedString skillDes, params object[] desArgs)
     {
-        StartCoroutine(SkillUnlockRoutine(skillName, skillDes));
+        StartCoroutine(SkillUnlockRoutine(skillName, skillDes, desArgs));
     }
 
-    private IEnumerator SkillUnlockRoutine(Text skillName, Text skillDes)
+    private IEnumerator SkillUnlockRoutine(LocalizedString skillName, LocalizedString skillDes, object[] desArgs)
     {
         _skillUnlockedPanel.SetActive(true);
         _howToUseText.text = "";
@@ -57,6 +58,18 @@ public class UIManager : Singleton<UIManager>
         if (_panelCanvasGroup != null) 
             _panelCanvasGroup.alpha = 0f;
 
+        // Lấy chuỗi đã được dịch
+        string localizedName = skillName.GetLocalizedString();
+        string localizedDes = "";
+        if (desArgs != null && desArgs.Length > 0)
+        {
+            localizedDes = skillDes.GetLocalizedString(desArgs);
+        }
+        else
+        {
+            localizedDes = skillDes.GetLocalizedString();
+        }
+
         // anim hiện lên
         panelRect.DOScale(Vector3.one, _animationDuration).SetEase(Ease.OutBack).SetUpdate(true);
         if (_panelCanvasGroup != null)
@@ -64,14 +77,14 @@ public class UIManager : Singleton<UIManager>
         yield return new WaitForSecondsRealtime(_animationDuration);
 
         // anim gõ ghữ
-        _skillUnlockedText.text = skillName.GetText();
+        _skillUnlockedText.text = localizedName;
         _skillUnlockedText.maxVisibleCharacters = 0;
         DOTween.To(() => _skillUnlockedText.maxVisibleCharacters, 
                 x => _skillUnlockedText.maxVisibleCharacters = x, 
-                skillName.GetLength(), 
+                localizedName.Length, 
                 _typewriterDuration).SetUpdate(true);
 
-        _howToUseText.text = skillDes.GetText();
+        _howToUseText.text = localizedDes;
         _howToUseText.DOFade(1f, _howToUseFadeDuration);
         yield return new WaitForSecondsRealtime(_typewriterDuration);
 

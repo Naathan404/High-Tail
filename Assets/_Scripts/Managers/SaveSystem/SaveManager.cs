@@ -202,10 +202,6 @@ public class SaveManager : Singleton<SaveManager>
             yield return new WaitForSecondsRealtime(_transitionDuration);
         }
 
-        // ==========================================
-        // TỪ ĐÂY TRỞ ĐI MÀN HÌNH ĐANG ĐEN HOÀN TOÀN
-        // ==========================================
-
         // 2. Ẩn UI Menu đi (Vẫn giữ trạng thái Pause)
         if (MenuManager.Instance != null)
         {
@@ -248,10 +244,6 @@ public class SaveManager : Singleton<SaveManager>
 
         // Quan trọng: Đợi 1 frame để Unity cập nhật Transform và CharacterController chạm đất
         yield return null;
-
-        // ==========================================
-        // BẮT ĐẦU KÉO RÈM LÊN (SÁNG MÀN HÌNH)
-        // ==========================================
 
         // 6. Sáng dần lên (Lúc này Player đã đứng sẵn trên map)
         if (_transitionCanvasGroup != null)
