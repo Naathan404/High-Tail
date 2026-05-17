@@ -19,6 +19,13 @@ public class SaveMenuUI : MonoBehaviour
     [SerializeField] private TMP_InputField _nameInputField;
     [SerializeField] private Button _confirmNameButton;
 
+    [Header("Confirm Popup")]
+    [SerializeField] private GameObject _confirmPanel;
+    [SerializeField] private TextMeshProUGUI _confirmText;
+    [SerializeField] private Button _confirmYesButton;
+    [SerializeField] private Button _confirmNoButton;
+    private Action _onConfirmYesAction; // Lưu trữ hành động sẽ thực thi nếu chọn Yes
+
     [Header("Navigation")]
     [SerializeField] private List<Button> _navigableButtons = new List<Button>();
     [SerializeField] private int _currentIndex = 0;
@@ -30,6 +37,10 @@ public class SaveMenuUI : MonoBehaviour
         if (_nameSavePanel != null) 
         {
             _nameSavePanel.SetActive(false);
+        }
+        if (_confirmPanel != null)
+        {
+            _confirmPanel.SetActive(false);
         }
     }
 
@@ -104,6 +115,58 @@ public class SaveMenuUI : MonoBehaviour
         SaveManager.Instance.CreateNewGame(finalName);
         UIHelper.AnimateFade(_contentContainer.gameObject, true);
     }
+
+    #region Confirm Popup Logic
+    public void ShowDeleteConfirmPopup(string message, Action onYes)
+    {
+        if (_confirmPanel == null) return;
+
+        // Gán nội dung và hành động
+        if (_confirmText != null) _confirmText.text = message;
+        _onConfirmYesAction = onYes;
+
+        // Xóa sự kiện cũ và gắn sự kiện mới (Chống lỗi click 1 lần chạy 2 lần)
+        _confirmYesButton.onClick.RemoveAllListeners();
+        _confirmYesButton.onClick.AddListener(OnConfirmYesClicked);
+
+        _confirmNoButton.onClick.RemoveAllListeners();
+        _confirmNoButton.onClick.AddListener(OnConfirmNoClicked);
+
+        // Hiển thị Panel Confirm và Ẩn nhẹ cái Danh sách Save đi cho đỡ rối mắt
+        if (!_confirmPanel.TryGetComponent<CanvasGroup>(out CanvasGroup cg)) cg = _confirmPanel.AddComponent<CanvasGroup>();
+        UIHelper.AnimateFade(_confirmPanel, true);
+        UIHelper.AnimateFade(_contentContainer.gameObject, false);
+
+        // Ép Keyboard Focus vào nút No cho an toàn
+        _confirmNoButton.Select();
+    }
+
+    private void OnConfirmYesClicked()
+    {
+        CloseConfirmPopup();
+        _onConfirmYesAction?.Invoke(); // Thực thi hành động xóa do SaveManager truyền vào
+        _onConfirmYesAction = null;
+    }
+
+    private void OnConfirmNoClicked()
+    {
+        CloseConfirmPopup();
+        _onConfirmYesAction = null; // Hủy hành động
+    }
+
+    private void CloseConfirmPopup()
+    {
+        // Ẩn Panel Confirm, Hiện lại danh sách Save
+        UIHelper.AnimateFade(_confirmPanel, false);
+        UIHelper.AnimateFade(_contentContainer.gameObject, true);
+
+        // Trả lại Focus cho nút Slot đầu tiên
+        if (_navigableButtons.Count > 0)
+        {
+            _navigableButtons[0].Select();
+        }
+    }
+    #endregion
 
     #region Handle Keyboard Navigation
     private void SetupButtonNavigation()

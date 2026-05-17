@@ -60,6 +60,7 @@ public class FallingRockTrap : MonoBehaviour
                     .SetUpdate(UpdateType.Fixed)
                     .OnComplete(() => 
                     {
+                        AudioManager.Instance.PlaySFX(SoundName.FallingRock);
                         CameraShakeManager.Instance.ShakeCustom(_shakeForceMultiplier);
                         _landingParticle.gameObject.SetActive(true);
                         _landingParticle.Play();

@@ -25,6 +25,9 @@ public class ShockwaveController : MonoBehaviour
 
     public void CallShockWave(Transform center)
     {
+        // Sound FX
+        AudioManager.Instance.PlaySFX(SoundName.Player_ShockWave);
+
         // this.gameObject.SetActive(true);
         // Vector2 screenPos = Camera.main.WorldToViewportPoint(center.transform.position);
         // _material.SetVector("_ShockwaveSpawnPosition", screenPos);

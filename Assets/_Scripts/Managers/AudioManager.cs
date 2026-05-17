@@ -21,16 +21,22 @@ public enum SoundName
     Player_JumpGrass,
     Player_JumpRock,
     Player_JumpMushroom,
+    Player_Stomp,
     Player_LandGrass,
     Player_LandRock,
     Player_Dash,
-    Player_RainbowDash,
+    Player_ShockWave,
     Player_Death,
     Player_SlideDownGrass,
     Player_SlideDownRock,
     Player_Respawn,
     Reward,
-    TaleStone
+    TaleStone,
+    FallingRock,
+    Platform_Crumbling,
+    Platform_Falling,
+    Door_Open,
+    Text
 }
 
 [System.Serializable]
@@ -50,7 +56,6 @@ public class AudioManager : Singleton<AudioManager>
     [Header("Audio Sources")]
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
-    private int _sfxIndex = 0;
 
     [Header("Sounds")]
     [SerializeField] private Sound[] sounds;

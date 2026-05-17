@@ -383,7 +383,7 @@ public partial class PlayerController : MonoBehaviour
         );
 
         IsStickyGround = hitResin.collider != null ? true : false;
-        if(hitResin) CanDash = false; else CanDash = true;
+        if(hitResin) CanDash = false;
         IsSlipGround = hitIce.collider != null ? true : false;
         if (IsSlipGround) WasOnSlipGround = true;
         else if (hit || hitResin) WasOnSlipGround = false;
@@ -419,7 +419,7 @@ public partial class PlayerController : MonoBehaviour
                 breakablePlatform.Break();
             }
 
-            GameManager.Instance.DoTimeFreeze(0.05f, 0f); 
+            //GameManager.Instance.DoTimeFreeze(0.05f, 0f); 
             return true;
         }
         return false;
