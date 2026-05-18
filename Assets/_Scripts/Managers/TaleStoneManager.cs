@@ -8,6 +8,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
 {
     [Header("Tale Stone UI")]
     [SerializeField] private GameObject _taleStonePanel;
+    [SerializeField] private TMP_Text _titleText;
     [SerializeField] private TMP_Text _lineText;
     [SerializeField] private TMP_Text _numberText;
     [SerializeField] private float _numberTextFloatingDuration = 0.5f;
@@ -31,6 +32,14 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
 
     public void StartTale(TaleStoneData data, Transform npcTransform = null, Action onDialogueFinished = null)
     {
+        if(GeneralSetting.Instance.currentLanguage == GeneralSetting.Language.Vietnamese)
+        {
+            _titleText.text = "Thư thạch";
+        }
+        else
+        {
+            _titleText.text = "Tale Stone";
+        }
         _numberText.transform.DOMoveY(_originalNumberTextTransform.y + _numberTextFloatingOffset, _numberTextFloatingDuration)
             .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
         if (data == null)
