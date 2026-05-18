@@ -22,6 +22,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     private void Awake()
     {
         EnableShrine(); // Mặc định mở lúc khởi tạo, SaveManager sẽ quyết định đóng hay mở sau
+        _id = IDGenerator.GenerateUniqueID(gameObject);
 
         if (_visualIndicator != null) _visualIndicator.SetActive(false);
         if (saveInstruction != null)
@@ -36,41 +37,41 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
         CheckForPlayer();
     }
 
-    #region Auto Generate ID (Chống trùng lặp)
-#if UNITY_EDITOR
-    // 2. DÙNG ONVALIDATE ĐỂ CẬP NHẬT THEO THỜI GIAN THỰC KHI Ở TRONG EDITOR
-    private void OnValidate()
-    {
-        if (string.IsNullOrEmpty(_id))
-        {
-            GenerateUniqueID();
-        }
-        else
-        {
-            // Quét để kiểm tra xem có bị trùng ID do thao tác Duplicate (Ctrl + D) không
-            SaveGameShrine[] allShrines = FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-            foreach (var shrine in allShrines)
-            {
-                // Nếu tìm thấy một đền khác (không phải mình) mà ID y chang mình -> Bị trùng!
-                if (shrine != this && shrine.ID == this._id)
-                {
-                    Debug.Log($"[Auto-Fix] Đã phát hiện trùng ID tại {gameObject.name}. Đang tạo ID mới...");
-                    GenerateUniqueID();
-                    break;
-                }
-            }
-        }
-    }
+//    #region Auto Generate ID
+//#if UNITY_EDITOR
+//    // 2. DÙNG ONVALIDATE ĐỂ CẬP NHẬT THEO THỜI GIAN THỰC KHI Ở TRONG EDITOR
+//    private void OnValidate()
+//    {
+//        if (string.IsNullOrEmpty(_id))
+//        {
+//            GenerateUniqueID();
+//        }
+//        else
+//        {
+//            // Quét để kiểm tra xem có bị trùng ID do thao tác Duplicate (Ctrl + D) không
+//            SaveGameShrine[] allShrines = FindObjectsByType<SaveGameShrine>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+//            foreach (var shrine in allShrines)
+//            {
+//                // Nếu tìm thấy một đền khác (không phải mình) mà ID y chang mình -> Bị trùng!
+//                if (shrine != this && shrine.ID == this._id)
+//                {
+//                    Debug.Log($"[Auto-Fix] Đã phát hiện trùng ID tại {gameObject.name}. Đang tạo ID mới...");
+//                    GenerateUniqueID();
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
-    // Gắn thêm nút này để bạn có thể Click chuột phải vào component và tự tạo lại ID nếu thích
-    [ContextMenu("Force Generate New ID")]
-    private void GenerateUniqueID()
-    {
-        _id = $"Shrine_{System.Guid.NewGuid().ToString().Substring(0, 8)}";
-        UnityEditor.EditorUtility.SetDirty(this); // Đánh dấu để Unity lưu lại thay đổi
-    }
-#endif
-    #endregion
+//    // Gắn thêm nút này để bạn có thể Click chuột phải vào component và tự tạo lại ID nếu thích
+//    [ContextMenu("Force Generate New ID")]
+//    private void GenerateUniqueID()
+//    {
+//        _id = $"Shrine_{System.Guid.NewGuid().ToString().Substring(0, 8)}";
+//        UnityEditor.EditorUtility.SetDirty(this); // Đánh dấu để Unity lưu lại thay đổi
+//    }
+//#endif
+//    #endregion
 
     #region IInteractable
     public bool CanInteract() => _canInteract;
