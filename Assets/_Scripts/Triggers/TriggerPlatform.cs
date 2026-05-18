@@ -108,7 +108,10 @@ public class TriggerPlatform : MonoBehaviour
         }
 
         // Xử lý SetParent
-        bool shouldStick = hitTop || (_triggerType == TriggerType.Side && _sideMode == SideAttachMode.Stick && hitSide);
+        bool isSideStick = hitSide && _sideMode == SideAttachMode.Stick &&
+                   (_triggerType == TriggerType.Side || _triggerType == TriggerType.Both);
+
+        bool shouldStick = hitTop || isSideStick;
         
         if (shouldStick)
         {
@@ -136,16 +139,16 @@ public class TriggerPlatform : MonoBehaviour
         HandleCollision(collision);
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+private void OnCollisionExit2D(Collision2D collision)
+{
+    if (!collision.gameObject.CompareTag("Player")) return;
+    if (collision.transform.parent != transform) return;
+
+    bool isWallSliding = _player != null && 
+                         _player.StateMachine.CurrentState == _player.WallSlideState;
+    if (!isWallSliding)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // _isMoving = false;
-            // DeltaPos = Vector2.zero;
-            if (collision.transform.parent == transform)
-            {
-                collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
-            }
-        }
+        collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
     }
+}
 }
