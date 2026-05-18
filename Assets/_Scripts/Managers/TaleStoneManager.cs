@@ -43,12 +43,12 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
 
         _currTaleStoneData = data;
         _currTaleStoneIndex = 0;
-        
-        InputManager.Instance.DisableControl(); 
+
+        InputManager.Instance.DisableControl();
 
         if (npcTransform != null && CameraManager.Instance != null)
         {
-            CameraManager.Instance.ZoomIntoDialogue(npcTransform, () => 
+            CameraManager.Instance.ZoomIntoDialogue(npcTransform, () =>
             {
                 IsTaleStoneActive = true;
                 DisplayCurrentLine();
@@ -60,7 +60,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
             IsTaleStoneActive = true;
             DisplayCurrentLine();
             ShowDialogue(true);
-        }        
+        }
     }
 
     private void DisplayCurrentLine()
@@ -68,7 +68,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
         StopAllCoroutines();
         AudioManager.Instance.PlaySFX(SoundName.Text);
         _currTaleStoneText = _currTaleStoneData.DialogueLines[_currTaleStoneIndex].GetText();
-        StartCoroutine(TypeLine());        
+        StartCoroutine(TypeLine());
     }
 
     private IEnumerator TypeLine()
@@ -82,9 +82,10 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
             yield return new WaitForSecondsRealtime(_currTaleStoneData.TypingSpeed);
         }
 
+        //Done natural (not skip)
         _isTyping = false;
-
         AudioManager.Instance.StopSFX();
+
         if (_currTaleStoneData.DialogueLines.Length > _currTaleStoneIndex && _currTaleStoneData.DialogueLines[_currTaleStoneIndex].AutoSkip)
         {
             yield return new WaitForSecondsRealtime(_currTaleStoneData.AutoProgressDelay);
@@ -97,19 +98,19 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
     {
         if (_currTaleStoneData == null) return;
 
-        AudioManager.Instance.StopSFX();
         AudioManager.Instance.PlaySFX(SoundName.Text);
-        if (_isTyping)
+        if (_isTyping) // Skip and show full text immediately
         {
             StopAllCoroutines();
             _lineText.text = _currTaleStoneText;
             _isTyping = false;
+            AudioManager.Instance.StopSFX();
         }
-        else if (++_currTaleStoneIndex < _currTaleStoneData.DialogueLines.Length)    
+        else if (++_currTaleStoneIndex < _currTaleStoneData.DialogueLines.Length) // Display next line
         {
             DisplayCurrentLine();
         }
-        else
+        else // End
         {
             EndDialogue(false);
         }
@@ -120,7 +121,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
     {
         StopAllCoroutines();
         IsTaleStoneActive = false;
-        _taleStonePanel.SetActive(false); 
+        _taleStonePanel.SetActive(false);
         ShowDialogue(false);
         AudioManager.Instance.StopSFX();
 
@@ -131,7 +132,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
 
         if (!instant && CameraManager.Instance != null)
         {
-            CameraManager.Instance.ResetDialogueCamera(() => 
+            CameraManager.Instance.ResetDialogueCamera(() =>
             {
                 InputManager.Instance.EnableControl();
                 _onTaleStoneFinishedCallback?.Invoke();
@@ -140,7 +141,7 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
         }
         else
         {
-            if(InputManager.Instance != null)
+            if (InputManager.Instance != null)
             {
                 InputManager.Instance.EnableControl();
             }
