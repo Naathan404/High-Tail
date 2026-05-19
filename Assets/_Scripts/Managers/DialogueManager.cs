@@ -113,8 +113,8 @@ public class DialogueManager : Singleton<DialogueManager>
         }
 
         _isTyping = false;
-
         AudioManager.Instance.StopSFX();
+
 
         if (_curDialogueData.DialogueLines.Length > _curDialogueIndex && _curDialogueData.DialogueLines[_curDialogueIndex].autoSkip)
         {
@@ -125,7 +125,6 @@ public class DialogueManager : Singleton<DialogueManager>
 
     public void NextLine()
     {
-        AudioManager.Instance.StopSFX();
         AudioManager.Instance.PlaySFX(SoundName.Text);
         if (_curDialogueData == null) return;
         
@@ -134,6 +133,7 @@ public class DialogueManager : Singleton<DialogueManager>
             StopAllCoroutines();
             _lineText.text = _curDialogueText;
             _isTyping = false;
+            AudioManager.Instance.StopSFX();
         }
         else if (++_curDialogueIndex < _curDialogueData.DialogueLines.Length)    
         {
