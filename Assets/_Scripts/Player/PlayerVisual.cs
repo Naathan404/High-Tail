@@ -15,6 +15,7 @@ public class PlayerVisual : MonoBehaviour
     [Header("Particles")]
     public ParticleSystem RunDustParticle;
     public ParticleSystem DashDustParticle;
+    public ParticleSystem BeginDashDustParticle;
     public ParticleSystem SlideDustParticle;
     public ParticleSystem JumpDustParticle;
     public ParticleSystem FallDustParticle;

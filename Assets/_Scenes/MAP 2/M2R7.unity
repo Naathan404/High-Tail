@@ -360,8 +360,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.17577212, y: -0.11577225}
+  m_Radius: 0.82118016
 --- !u!114 &137138492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,8 +729,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.15161735, y: -0.11695361}
+  m_Radius: 0.7969965
 --- !u!114 &148015465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1302,6 +1302,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FloatingPlatform2_1
       objectReference: {fileID: 0}
+    - target: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3995006622793747420, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
       value: 2
@@ -1353,13 +1357,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1610000551}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 210132192}
   m_SourcePrefab: {fileID: 100100000, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
 --- !u!4 &210132190 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
   m_PrefabInstance: {fileID: 210132189}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &210132191 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+  m_PrefabInstance: {fileID: 210132189}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &210132192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210132191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d318d26392b9a8b47a8b4d880f3a63a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spike
+  _damage: 1
+  _knockback: 20
 --- !u!1 &221302770
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,8 +2141,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.026577845, y: -0.32650912}
+  m_Radius: 0.8752474
 --- !u!114 &363826130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2200,7 +2226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 386408546}
   - component: {fileID: 386408547}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2343,8 +2369,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.0265778, y: -0.26532844}
+  m_Radius: 0.8994236
 --- !u!114 &423754167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2487,8 +2513,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.02657781, y: -0.36562175}
+  m_Radius: 0.91436017
 --- !u!114 &430016025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2700,8 +2726,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.026577758, y: -0.42822155}
+  m_Radius: 0.97696
 --- !u!114 &523324612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2988,8 +3014,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.04071971, y: -0.41221955}
+  m_Radius: 0.9613036
 --- !u!114 &638617529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3157,7 +3183,7 @@ GameObject:
   m_Component:
   - component: {fileID: 812500511}
   - component: {fileID: 812500512}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mossy - TileSet_25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3473,7 +3499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 861049434}
   - component: {fileID: 861049435}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3557,7 +3583,7 @@ GameObject:
   m_Component:
   - component: {fileID: 872950217}
   - component: {fileID: 872950218}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3700,8 +3726,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.026577758, y: -0.0057071405}
+  m_Radius: 0.7891695
 --- !u!114 &891365634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3844,8 +3870,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.13598777, y: -0.11771808}
+  m_Radius: 0.78134835
 --- !u!114 &893551638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4538,7 +4564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1113908563}
   - component: {fileID: 1113908564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4681,8 +4707,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.02657781, y: -0.10742108}
+  m_Radius: 0.93783295
 --- !u!114 &1157077811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21216,7 +21242,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1240229558}
   - component: {fileID: 1240229559}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21443,8 +21469,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: -0.15124711, y: -0.12306914}
+  m_Radius: 0.84963244
 --- !u!114 &1270517796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22033,7 +22059,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1499807044}
   - component: {fileID: 1499807045}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26525,6 +26551,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FloatingPlatform2
       objectReference: {fileID: 0}
+    - target: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3995006622793747420, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
       value: 2
@@ -26576,13 +26606,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2119109454}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1524660882}
   m_SourcePrefab: {fileID: 100100000, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
 --- !u!4 &1524660880 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
   m_PrefabInstance: {fileID: 1524660879}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1524660881 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+  m_PrefabInstance: {fileID: 1524660879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1524660882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524660881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d318d26392b9a8b47a8b4d880f3a63a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spike
+  _damage: 1
+  _knockback: 20
 --- !u!1 &1557831092
 GameObject:
   m_ObjectHideFlags: 0
@@ -26593,7 +26645,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1557831093}
   - component: {fileID: 1557831094}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26761,7 +26813,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1610000551}
   - component: {fileID: 1610000552}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mossy - TileSet_24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26852,7 +26904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1612490460}
   - component: {fileID: 1612490461}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28024,7 +28076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1845080924}
   - component: {fileID: 1845080925}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28108,7 +28160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1848380785}
   - component: {fileID: 1848380786}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28192,7 +28244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1937285960}
   - component: {fileID: 1937285961}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28276,7 +28328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1969511744}
   - component: {fileID: 1969511745}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light 2D_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28418,6 +28470,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FloatingPlatform2_2
       objectReference: {fileID: 0}
+    - target: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 3995006622793747420, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
       value: 2
@@ -28469,13 +28525,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1993556805}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1978276666}
   m_SourcePrefab: {fileID: 100100000, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
 --- !u!4 &1978276664 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
   m_PrefabInstance: {fileID: 1978276663}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1978276665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+  m_PrefabInstance: {fileID: 1978276663}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1978276666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978276665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d318d26392b9a8b47a8b4d880f3a63a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spike
+  _damage: 1
+  _knockback: 20
 --- !u!1 &1980002419
 GameObject:
   m_ObjectHideFlags: 0
@@ -28755,7 +28833,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1993556805}
   - component: {fileID: 1993556806}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mossy - TileSet_24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29364,8 +29442,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.026577793, y: -0.12306909}
-  m_Radius: 0.67180747
+  m_Offset: {x: 0.02657781, y: -0.33432454}
+  m_Radius: 0.88306296
 --- !u!114 &2082052618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29684,7 +29762,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2119109454}
   - component: {fileID: 2119109455}
-  m_Layer: 0
+  - component: {fileID: 2119109456}
+  m_Layer: 8
   m_Name: Mossy - TileSet_24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29765,6 +29844,20 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &2119109456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119109453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d318d26392b9a8b47a8b4d880f3a63a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spike
+  _damage: 1
+  _knockback: 20
 --- !u!1001 &1473076066684467007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29817,6 +29910,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FloatingPlatform2
       objectReference: {fileID: 0}
+    - target: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7230310597860527795, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -29840,13 +29937,35 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
       insertIndex: -1
       addedObject: {fileID: 363826128}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1473076066684467010}
   m_SourcePrefab: {fileID: 100100000, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
 --- !u!4 &1473076066684467008 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2623499092114826171, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
   m_PrefabInstance: {fileID: 1473076066684467007}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1473076066684467009 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3881531234682261878, guid: e0d903c4741323c448ab1bb120866b72, type: 3}
+  m_PrefabInstance: {fileID: 1473076066684467007}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1473076066684467010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473076066684467009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d318d26392b9a8b47a8b4d880f3a63a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Spike
+  _damage: 1
+  _knockback: 20
 --- !u!1001 &8237255809304768072
 PrefabInstance:
   m_ObjectHideFlags: 0

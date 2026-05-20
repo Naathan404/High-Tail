@@ -17,10 +17,13 @@ public class PlayerFallState : PlayerState
         Debug.Log("Vào fall state");
         _timer = 0f;
         _player.Rb.gravityScale = _player.Data.gravityScale * _player.Data.fallMultiplier;
-        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
+        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall)
         {
-            _stateMachine.ChangeState(_player.WallSlideState);
-            return;
+            if((_player.IsFacingRight() && _player.MoveX > 0.1f) || (!_player.IsFacingRight() && _player.MoveX < -0.1f))
+            {
+                _stateMachine.ChangeState(_player.WallSlideState);
+                return;
+            }
         }
         _player.Visual.Anim.Play("pFall");
     }
@@ -60,18 +63,6 @@ public class PlayerFallState : PlayerState
             }
         }
 
-        // // Kiểm tra bám tường
-        // if (_player.IsTouchingWall() && _player.canWallSlide && _player.InputX != 0) {
-        //     _stateMachine.ChangeState(_player.WallSlideState);
-        //     return;
-        // }
-
-        // Kiểm tra Player_Dash trên không
-        // if (_player.DashPressed && _player.CanDash && _player.CurrentEnergy >= 20) {
-        //     _stateMachine.ChangeState(_player.DashState);
-        //     return;
-        // }
-
         // set jump buffer
         if (_player.JumpPressed)
         {
@@ -106,10 +97,13 @@ public class PlayerFallState : PlayerState
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
+        if (_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall)
         {
-            _stateMachine.ChangeState(_player.WallSlideState);
-            return;
+            if((_player.IsFacingRight() && _player.MoveX > 0.1f) || (!_player.IsFacingRight() && _player.MoveX < -0.1f))
+            {
+                _stateMachine.ChangeState(_player.WallSlideState);
+                return;
+            }
         }
         if (_player.Data.AirGlideUnlocked && !_player.IsTouchingWall() && !_player.IsOnGround() && _player.GlideHeld)
         {
