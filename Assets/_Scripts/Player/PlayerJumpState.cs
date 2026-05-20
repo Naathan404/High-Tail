@@ -60,10 +60,13 @@ public class PlayerJumpState : PlayerState
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld && !_player.IsSlipWall)
+        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall)
         {
-            _stateMachine.ChangeState(_player.WallSlideState);
-            return;
+            if((_player.IsFacingRight() && _player.MoveX > 0.1f) || (!_player.IsFacingRight() && _player.MoveX < -0.1f))
+            {
+                _stateMachine.ChangeState(_player.WallSlideState);
+                return;
+            }
         }               
     }    
 
