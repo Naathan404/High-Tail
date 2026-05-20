@@ -24,6 +24,7 @@ public class PlayerUpperJumpState : PlayerState
         _player.Rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
         _player.Visual.Anim.Play("pJump");
+        _player.Visual.WallJumpDustParticle.Play();
         _player.Visual.JumpDustParticle.Play();
     }
 
