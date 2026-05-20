@@ -13,8 +13,6 @@ public class PlayerVisual : MonoBehaviour
     [SerializeField] private float squashStretchDuration;
 
     [Header("Particles")]
-    public EffectPooler JumpDustPool;
-    public EffectPooler FallDustPool;
     public ParticleSystem RunDustParticle;
     public ParticleSystem DashDustParticle;
     public ParticleSystem SlideDustParticle;
@@ -22,6 +20,9 @@ public class PlayerVisual : MonoBehaviour
     public ParticleSystem FallDustParticle;
     public ParticleSystem LandingDustParticle;
     public ParticleSystem PogoDustParticle;
+    public ParticleSystem WallJumpDustParticle;
+
+    public ParticleSystem DeathParticle;
 
     [Header("Lighting")]
     [SerializeField] private Light2D _spotLight;

@@ -14,8 +14,8 @@ public class PlayerDeathState : PlayerState
 
         //CameraShaker.Instance.OneTimeShake(Vector2.right, 0.2f);
         
-        
-        _player.Visual.Anim.Play("playerDie");
+        _player.Visual.DeathParticle.Play();
+        _player.Visual.Anim.Play("pNone");
     }
 
     public override void LogicUpdate()

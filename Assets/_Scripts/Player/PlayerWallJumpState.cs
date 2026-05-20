@@ -19,6 +19,7 @@ public class PlayerWallJumpState : PlayerState
         _player.CheckFlip(jumpDirection);
         _player.Visual.ApplySquashStretch(new Vector3(0.7f, 1.3f, 1f));
         _player.Visual.Anim.Play("pJump");
+        _player.Visual.WallJumpDustParticle.Play();
         _player.Visual.JumpDustParticle.Play();
     }
 
