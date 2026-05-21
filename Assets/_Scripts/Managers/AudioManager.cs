@@ -39,6 +39,7 @@ public enum SoundName
     Text,
     HardLanding,
     Player_Pogo_Mushroom,
+    BiomeNotifier,
 }
 
 [System.Serializable]
