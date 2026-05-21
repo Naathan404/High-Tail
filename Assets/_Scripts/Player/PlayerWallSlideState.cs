@@ -4,8 +4,6 @@ using UnityEngine;
 public class PlayerWallSlideState : PlayerState
 {
     private float _originalGrivityScale;
-    private float _slideDelay = 0.2f;
-    private float _slideTimer;
 
     public PlayerWallSlideState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine)
     {
@@ -37,7 +35,7 @@ public class PlayerWallSlideState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if(!_player.GrabHeld)
+        if(Mathf.Abs(_player.MoveX) < 0.1f)
         {
             _stateMachine.ChangeState(_player.FallState);
             return;
@@ -54,6 +52,7 @@ public class PlayerWallSlideState : PlayerState
             _stateMachine.ChangeState(_player.FallState);
             return;
         }
+
 
         float currentVelX = 0f;
         if(_player.transform.parent != null)
@@ -80,7 +79,7 @@ public class PlayerWallSlideState : PlayerState
             bool isHoldingTowardsWall = (isFacingRight && _player.MoveX > 0.1f) || (!isFacingRight && _player.MoveX < -0.1f);
             bool isNoHorizontalInput = Mathf.Abs(_player.MoveX) <= 0.1f;
 
-            if (isHoldingUp && (isHoldingTowardsWall || isNoHorizontalInput))
+            if (_player.JumpPressed && (_player.MoveX > 0.1f && _player.IsFacingRight() || (_player.MoveX < -0.1f && !_player.IsFacingRight())))
             {
                 _stateMachine.ChangeState(_player.UpperJumpState);
             }

@@ -34,6 +34,7 @@ public class PlayerDashState : PlayerState
 
         _player.Visual.Anim.Play("pDash");
         _player.Visual.DashDustParticle.Play();
+        _player.Visual.BeginDashDustParticle.Play();
         //CameraShaker.Instance.OneTimeShake(Vector2.right, 0.5f);
         CameraShakeManager.Instance.ShakeForDash();
     }
@@ -45,9 +46,13 @@ public class PlayerDashState : PlayerState
         {
             _stateMachine.ChangeState(_player.WallJumpState);
         }
-        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.GrabHeld)
+        if(_player.Data.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && !_player.IsSlipWall)
         {
-            _stateMachine.ChangeState(_player.WallSlideState);
+            if((_player.IsFacingRight() && _player.MoveX > 0.1f) || (!_player.IsFacingRight() && _player.MoveX < -0.1f))
+            {
+                _stateMachine.ChangeState(_player.WallSlideState);
+                return;
+            }
         }                       
     }
 
