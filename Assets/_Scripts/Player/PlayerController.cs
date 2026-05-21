@@ -97,6 +97,12 @@ public partial class PlayerController : MonoBehaviour
     [Header("Landing Settings")]
     public float landingAnimDuration = 0.2f;
 
+    [Header("Glide Settings")]
+    public bool CanSlide = false;
+    private float _canSlideTimer = 0f;
+
+
+
     private PlayerControls Inputs => InputManager.Instance.Inputs;
     #endregion
 
@@ -138,6 +144,8 @@ public partial class PlayerController : MonoBehaviour
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
         _originalScale = this.transform.localScale;
         InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
+
+        _canSlideTimer = Data.wallSlideBufferTime;
     }
 
     private void OnEnable()
@@ -164,6 +172,7 @@ public partial class PlayerController : MonoBehaviour
             MoveY = 0;
             return;
         }
+
 
         if (InputManager.Instance.Inputs.Movement.Light.WasPressedThisFrame() && Data.AstralPulseUnlocked)
         {
@@ -203,9 +212,22 @@ public partial class PlayerController : MonoBehaviour
 
         // Check điều kiện nhảy
         if (_isGround)
+        {
             _coyoteCounter = Data.coyoteTime;
+            _canSlideTimer = Data.wallSlideBufferTime;
+            CanSlide = false;
+        }
         else
+        {
             _coyoteCounter -= Time.deltaTime;
+            _canSlideTimer -= Time.deltaTime;
+        }
+        if(_canSlideTimer <= 0)
+        {
+            CanSlide = true;
+            _canSlideTimer = Data.wallSlideBufferTime;
+        }
+
         if (JumpPressed)
             _jumpBufferCounter = Data.jumpBufferTime;
         else
