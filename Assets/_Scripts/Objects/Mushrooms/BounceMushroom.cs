@@ -12,6 +12,7 @@ public class BouncyMushroom : MonoBehaviour
     [SerializeField] private Transform _visual;
     [SerializeField] private float _squishDuration = 0.2f;
     [SerializeField] private Vector3 _squishScale = new Vector3(1.4f, 0.6f, 1f);
+    [SerializeField] private ParticleSystem _bounceParticle;
     private Vector3 _originalScale;
 
     private void Start()
@@ -31,12 +32,14 @@ public class BouncyMushroom : MonoBehaviour
             if(_isShortMushroom)
             {
                 DoBounce(player);
+                if(_bounceParticle) _bounceParticle.Play();
             }
             else
             {
                 if (isHitFromAbove && isFalling)
                 {
                     DoBounce(player);
+                    if(_bounceParticle) _bounceParticle.Play();
                 }
             }
         }
