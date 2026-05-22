@@ -86,6 +86,7 @@ public class PlayerData : ScriptableObject
 
     [Header("Wall Slide")]
     public float wallSlideGravityScale = 0.5f;
+    public float wallSlideBufferTime = 0.1f;
 
     [Header("Pogo")]
     public float pogoForce = 20;

@@ -19,6 +19,8 @@ public class TriggerPlatform : MonoBehaviour
     private bool _hasReachedTarget = false;
     private Rigidbody2D _rb;
     private PlayerController _player;
+    
+    private Rigidbody2D _passengerRb; 
     public Vector3 DeltaPos;
 
     private void Awake()
@@ -51,7 +53,6 @@ public class TriggerPlatform : MonoBehaviour
             {
                 _hasReachedTarget = true;
                 _isMoving = false;
-                // Bục tới đích thì dừng lại bằng MovePosition nên không cần ép velocity về 0 nữa
             }
         }
         else if(!_isMoving)
@@ -63,11 +64,15 @@ public class TriggerPlatform : MonoBehaviour
 
     private void MoveTowards(Vector2 target, float speed)
     {
-        // THAY ĐỔI LỚN: Dùng MovePosition thay cho linearVelocity
-        // Điều này giúp bục "cõng" Sóc Kite (làm con) cực kỳ mượt mà không bị rung giật
         Vector2 newPos = Vector2.MoveTowards(_rb.position, target, speed * Time.fixedDeltaTime);
         DeltaPos = newPos - _rb.position;
         _rb.MovePosition(newPos);
+
+
+        if (_passengerRb != null)
+        {
+            _passengerRb.position += (Vector2)DeltaPos;
+        }
     }
 
     public void ResetPlatform()
@@ -107,7 +112,6 @@ public class TriggerPlatform : MonoBehaviour
             _isMoving = true;
         }
 
-        // Xử lý SetParent
         bool isSideStick = hitSide && _sideMode == SideAttachMode.Stick &&
                    (_triggerType == TriggerType.Side || _triggerType == TriggerType.Both);
 
@@ -115,16 +119,14 @@ public class TriggerPlatform : MonoBehaviour
         
         if (shouldStick)
         {
-            if (collision.transform.parent != transform)
-            {
-                collision.transform.SetParent(transform, true);
-            }
+            _passengerRb = collision.collider.attachedRigidbody;
         }
         else
         {
-            if (collision.transform.parent == transform)
+            if (_passengerRb == collision.collider.attachedRigidbody)
             {
                 _player.ReturnToCoreScene(); 
+                _passengerRb = null;
             }
         }
     }
@@ -139,16 +141,19 @@ public class TriggerPlatform : MonoBehaviour
         HandleCollision(collision);
     }
 
-private void OnCollisionExit2D(Collision2D collision)
-{
-    if (!collision.gameObject.CompareTag("Player")) return;
-    if (collision.transform.parent != transform) return;
-
-    bool isWallSliding = _player != null && 
-                         _player.StateMachine.CurrentState == _player.WallSlideState;
-    if (!isWallSliding)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        bool isWallSliding = _player != null && 
+                             _player.StateMachine.CurrentState == _player.WallSlideState;
+                             
+        // Nếu không trượt tường và trước đó đang bám bục này
+        if (!isWallSliding && _passengerRb == collision.collider.attachedRigidbody)
+        {
+            collision.gameObject.GetComponent<PlayerController>()?.ReturnToCoreScene();
+        }
+        
+        _passengerRb = null;
     }
-}
 }
