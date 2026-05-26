@@ -56,6 +56,7 @@ public class AstralPulseSkill : MonoBehaviour
     {
         if (isCooldown)
         {
+            Debug.Log("ajfajfh");
             AudioManager.Instance.PlaySFX(SoundName.OutOfEnergy);
             return;
         }
