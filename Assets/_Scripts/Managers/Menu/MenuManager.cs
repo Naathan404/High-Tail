@@ -177,12 +177,30 @@ public class MenuManager : Singleton<MenuManager>
         if (_isSubPanelOpen)
         {
             if (_settingsPanel.activeSelf)
-                SetPanelTitle(_settingsStringRef.GetLocalizedString());
+                SetPanelTitleAsync(_settingsStringRef);
             else if (_creditPanel.activeSelf)
-                SetPanelTitle(_creditStringRef.GetLocalizedString());
+                SetPanelTitleAsync(_creditStringRef);
             else if (_savedGamePanel.activeSelf)
-                SetPanelTitle(_selectSavedGameNotificationRef.GetLocalizedString());
+                SetPanelTitleAsync(_selectSavedGameNotificationRef);
         }
+    }
+    #endregion
+
+    #region Async Localization Helpers
+    private void SetPanelTitleAsync(LocalizedString stringRef)
+    {
+        stringRef.GetLocalizedStringAsync().Completed += (handle) =>
+        {
+            SetPanelTitle(handle.Result);
+        };
+    }
+
+    private void ShowTitleNotificationAsync(LocalizedString stringRef)
+    {
+        stringRef.GetLocalizedStringAsync().Completed += (handle) =>
+        {
+            ShowTitleNotification(handle.Result);
+        };
     }
     #endregion
 
@@ -211,7 +229,8 @@ public class MenuManager : Singleton<MenuManager>
         TextMeshProUGUI playText = _playButton.GetComponentInChildren<TextMeshProUGUI>();
         if (playText != null)
         {
-            playText.text = isInGame ? _continueStringRef.GetLocalizedString() : _playStringRef.GetLocalizedString();
+            var playString = isInGame ? _continueStringRef : _playStringRef;
+            playString.GetLocalizedStringAsync().Completed += (handle) => { playText.text = handle.Result; };
         }
 
         // 2. Bật/Tắt nút Credit (Vào game thì ẩn đi)
@@ -221,7 +240,8 @@ public class MenuManager : Singleton<MenuManager>
         TextMeshProUGUI exitText = _exitButton.GetComponentInChildren<TextMeshProUGUI>();
         if (exitText != null)
         {
-            exitText.text = isInGame ? _homeStringRef.GetLocalizedString() : _exitStringRef.GetLocalizedString();
+            var exitString = isInGame ? _homeStringRef : _exitStringRef;
+            exitString.GetLocalizedStringAsync().Completed += (handle) => { exitText.text = handle.Result; };
         }
 
         // 4. Làm mới danh sách điều hướng Phím (bỏ qua các nút đang bị ẩn)
@@ -257,26 +277,24 @@ public class MenuManager : Singleton<MenuManager>
         UpdateTopLeftButtonState(instant); // Truyền cờ instant xuống
     }
 
-    public void ClosePauseMenu() 
+    public void ClosePauseMenu()
     {
         if (!CanResumeGame())
         {
             OpenSubPanel(SubPanelType.SavedGame);
-            ShowTitleNotification(_selectSavedGameNotificationRef.GetLocalizedString());
+            ShowTitleNotificationAsync(_selectSavedGameNotificationRef); // Đã sửa thành Async
             return;
         }
 
-        CloseAllSubPanels(); 
+        CloseAllSubPanels();
         EventSystem.current.SetSelectedGameObject(null);
         ShowTitleBar(false);
 
-        PauseGameManager.SetPause(false); 
+        PauseGameManager.SetPause(false);
 
         if (_isSidePanelOpen) OpenSideMenu(false);
 
         UpdateTopLeftButtonState();
-
-        //UpdateGameplayVisibility();
     }
 
     public void ShowGameplayElements()
@@ -336,7 +354,7 @@ public class MenuManager : Singleton<MenuManager>
         if (_isSidePanelOpen) OpenSideMenu(false);
 
         CloseAllSubPanels();
-        _isSubPanelOpen = true; // Thêm dòng này SAU KHI CloseAllSubPanels
+        _isSubPanelOpen = true;
 
         ShowTitleBar(true);
 
@@ -344,15 +362,15 @@ public class MenuManager : Singleton<MenuManager>
         {
             case SubPanelType.Settings:
                 OpenPanel(_settingsPanel, true);
-                SetPanelTitle(_settingsStringRef.GetLocalizedString());
+                SetPanelTitleAsync(_settingsStringRef);
                 break;
             case SubPanelType.Credit:
                 OpenPanel(_creditPanel, true);
-                SetPanelTitle(_creditStringRef.GetLocalizedString());
+                SetPanelTitleAsync(_creditStringRef);
                 break;
             case SubPanelType.SavedGame:
                 OpenPanel(_savedGamePanel, true);
-                SetPanelTitle(_selectSavedGameNotificationRef.GetLocalizedString());
+                SetPanelTitleAsync(_selectSavedGameNotificationRef);
                 break;
         }
 
@@ -389,14 +407,14 @@ public class MenuManager : Singleton<MenuManager>
             ShowTitleBar(false);
             OpenSideMenu(true);
 
-            UpdateTopLeftButtonState(); // Sẽ tự động ẩn nút Back
+            UpdateTopLeftButtonState();
         }
         // 2. Đang ở Side Navigation -> Muốn thoát Menu về Game
         else if (_isSidePanelOpen)
         {
             if (!CanResumeGame())
             {
-                ShowTitleNotification(_selectSavedGameNotificationRef.GetLocalizedString());
+                ShowTitleNotificationAsync(_selectSavedGameNotificationRef); // Đã sửa thành Async
             }
             else
             {
