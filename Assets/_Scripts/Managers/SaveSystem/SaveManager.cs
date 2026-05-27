@@ -53,6 +53,9 @@ public class SaveManager : Singleton<SaveManager>
     [SerializeField] private LocalizedString _saveSuccessRef;
     [SerializeField] private LocalizedString _deleteSuccessRef;
 
+    [Header("Playtime Tracking")]
+    private float _sessionStartTime;
+
     public override void Awake()
     {
         base.Awake();
@@ -77,6 +80,11 @@ public class SaveManager : Singleton<SaveManager>
         {
             _player = FindAnyObjectByType<PlayerController>();
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        UpdateAndSavePlaytime();
     }
 
     public SaveSlot GetActiveSlot()
@@ -262,6 +270,7 @@ public class SaveManager : Singleton<SaveManager>
         }
 
         _isLoading = false;
+        _sessionStartTime = Time.time;
     }
     private void RestoreGameState(SaveSlot node)
     {
@@ -352,6 +361,8 @@ public class SaveManager : Singleton<SaveManager>
             return;
         }
 
+        UpdateAndSavePlaytime();
+
         currentNode.lastSaveTimestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
         currentNode.lastShrineID = activeShrine.ID;
         currentNode.sceneName = SceneManager.GetActiveScene().name;
@@ -363,6 +374,22 @@ public class SaveManager : Singleton<SaveManager>
         SaveToDisk();
         RestoreShrinesState(currentNode);
         ShowOnGameNotification(_saveSuccessRef.GetLocalizedString());
+    }
+
+    public void UpdateAndSavePlaytime()
+    {
+        if (MainData == null || string.IsNullOrEmpty(MainData.activeSlotID)) return;
+
+        SaveSlot currentNode = MainData.allSlots.Find(n => n.saveID == MainData.activeSlotID);
+        if (currentNode != null)
+        {
+            float timePlayedThisSession = Time.time - _sessionStartTime;
+            currentNode.totalPlayTimeSeconds += timePlayedThisSession;
+
+            _sessionStartTime = Time.time;
+
+            SaveToDisk();
+        }
     }
     #endregion
 
@@ -413,6 +440,7 @@ public class SaveManager : Singleton<SaveManager>
         if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
     }
     #endregion
+
     #endregion
 
     public void SaveToDisk()
@@ -463,7 +491,7 @@ public class SaveManager : Singleton<SaveManager>
         // ==========================================
         // MÀN HÌNH ĐANG ĐEN
         // ==========================================
-
+        UpdateAndSavePlaytime();
         // 2. Xóa trạng thái đang chơi (Cực kỳ quan trọng để CanResumeGame() trả về False)
         MainData.activeSlotID = "";
 

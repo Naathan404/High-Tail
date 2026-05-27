@@ -7,6 +7,7 @@ public class SaveSlot
     public string saveName;
     public string firstSaveTimestamp;
     public string lastSaveTimestamp;
+    public float totalPlayTimeSeconds;
     public string lastShrineID;   
     public string sceneName;        
     public SkillSaveData unlockedSkills;
