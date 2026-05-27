@@ -15,7 +15,7 @@ MonoBehaviour:
   WallJumpUnlocked: 0
   WallSlideUnlocked: 0
   DashUnlocked: 1
-  AirGlideUnlocked: 0
+  AirGlideUnlocked: 1
   PogoUnlocked: 0
   GlowUnlocked: 0
   DoubleJumpUnlocked: 0
@@ -38,6 +38,7 @@ MonoBehaviour:
   airGlideGravityScale: 0.4
   maxGlideSpeed: 4
   wallSlideGravityScale: 0.5
+  wallSlideBufferTime: 0.1
   pogoForce: 30
   climbForce: 5
   swingForce: 80

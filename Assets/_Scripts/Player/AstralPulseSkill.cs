@@ -6,17 +6,17 @@ using System;
 public class AstralPulseSkill : MonoBehaviour
 {
     [Header("Skill Settings")]
-    public float pulseRadius = 10f; 
-    public float pulseSpeed = 20f;  
+    public float pulseRadius = 10f;
+    public float pulseSpeed = 20f;
     public float cooldownTime = 3f;
     private bool isCooldown = false;
-    
+
     public LayerMask interactableLayer;
 
     [Header("Zero-Asset VFX")]
     [Tooltip("Kéo GameObject chứa LineRenderer vào đây")]
     public LineRenderer ringRenderer;
-    [ColorUsage(true, true)] 
+    [ColorUsage(true, true)]
     public Color pulseColor = Color.cyan;
     public float ringThickness = 0.2f;
 
@@ -28,16 +28,29 @@ public class AstralPulseSkill : MonoBehaviour
         {
             SetupCircle();
         }
+        //SkillUI.Instance.skillDuration = cooldownTime; // Lỗi
+    }
+
+    private void Start()
+    {
+        if (SkillUI.Instance != null)
+        {
+            SkillUI.Instance.skillDuration = cooldownTime;
+        }
+        else
+        {
+            Debug.LogWarning("SkillUI Instance bị null trong Start!");
+        }
     }
 
     private void SetupCircle()
     {
-        int segments = 100; 
+        int segments = 100;
         ringRenderer.positionCount = segments + 1;
         ringRenderer.useWorldSpace = false;
         ringRenderer.startWidth = ringThickness;
         ringRenderer.endWidth = ringThickness;
-        
+
         // Công thức vẽ đường tròn bán kính 1
         float angle = 0f;
         for (int i = 0; i < (segments + 1); i++)
@@ -47,15 +60,23 @@ public class AstralPulseSkill : MonoBehaviour
             ringRenderer.SetPosition(i, new Vector3(x, y, 0));
             angle += (360f / segments);
         }
-        
-        ringRenderer.gameObject.SetActive(false); 
+
+        ringRenderer.gameObject.SetActive(false);
     }
 
     public void CastPulse()
     {
-        if (isCooldown) return;
+        if (isCooldown)
+        {
+            Debug.Log("ajfajfh");
+            AudioManager.Instance.PlaySFX(SoundName.OutOfEnergy);
+            return;
+        }
+
         StartCoroutine(CooldownRoutine());
 
+        AudioManager.Instance.PlaySFX(SoundName.Player_ShockWave);
+        SkillUI.Instance.ShowIcon();
         PlayLineVFX();
 
         // Logic tìm và kích hoạt nấm (Giữ nguyên)
@@ -83,38 +104,38 @@ public class AstralPulseSkill : MonoBehaviour
         OnPulsed?.Invoke(transform);
         GameManager.Instance.DoTimeFreeze(0.05f, 0.1f);
         CameraShakeManager.Instance.ShakeCustom(0.1f);
-        
+
         Sequence vfxSeq = DOTween.Sequence();
 
-        
+
         vfxSeq.Join(ringRenderer.transform.DOScale(Vector3.one * pulseRadius, duration)
             .SetEase(Ease.OutExpo));
 
-        vfxSeq.Join(DOVirtual.Float(ringThickness, 0f, duration, w => 
+        vfxSeq.Join(DOVirtual.Float(ringThickness, 0f, duration, w =>
         {
             ringRenderer.startWidth = w;
             ringRenderer.endWidth = w;
         }).SetEase(Ease.OutQuad));
 
-        vfxSeq.Join(DOVirtual.Float(0f, 1f, duration, t => 
+        vfxSeq.Join(DOVirtual.Float(0f, 1f, duration, t =>
         {
             Color currentColor;
-            if (t < 0.15f) 
+            if (t < 0.15f)
             {
                 currentColor = Color.Lerp(Color.white, pulseColor, t / 0.15f);
-            } 
-            else 
+            }
+            else
             {
                 Color transparentColor = new Color(pulseColor.r, pulseColor.g, pulseColor.b, 0f);
                 currentColor = Color.Lerp(pulseColor, transparentColor, (t - 0.15f) / 0.85f);
             }
             ringRenderer.startColor = currentColor;
             ringRenderer.endColor = currentColor;
-            
+
         }).SetEase(Ease.Linear));
 
         // Xong thì tắt đi
-        vfxSeq.OnComplete(() => 
+        vfxSeq.OnComplete(() =>
         {
             ringRenderer.gameObject.SetActive(false);
         });
@@ -123,7 +144,7 @@ public class AstralPulseSkill : MonoBehaviour
     private IEnumerator TriggerReactionWithDelay(ILightPulseReactive obj, float delay)
     {
         yield return new WaitForSeconds(delay);
-        obj.ReactToLightPulse(); 
+        obj.ReactToLightPulse();
     }
 
     private IEnumerator CooldownRoutine()

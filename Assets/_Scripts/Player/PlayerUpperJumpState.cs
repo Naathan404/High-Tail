@@ -22,8 +22,12 @@ public class PlayerUpperJumpState : PlayerState
         // _player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x, _player.Data.jumpForce);
         //_player.Rb.linearVelocity = new Vector2(_player.Rb.linearVelocity.x * boost, 0);
         _player.Rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        _player.Rb.AddForce((_player.IsFacingRight() ? Vector2.left : Vector2.right) * _player.Data.jumpWallForce.x * 0.8f, ForceMode2D.Impulse);
+
+         _player.Visual.Anim.Play("pJump");
 
         _player.Visual.Anim.Play("pJump");
+        _player.Visual.WallJumpDustParticle.Play();
         _player.Visual.JumpDustParticle.Play();
     }
 
@@ -60,11 +64,6 @@ public class PlayerUpperJumpState : PlayerState
             _stateMachine.ChangeState(_player.WallJumpState);
             return;
         }
-        // if(_player.WallSlideUnlocked && _player.IsTouchingWall() && !_player.IsOnGround() && _player.SlideGlideHeld && !_player.IsSlipWall)
-        // {
-        //     _stateMachine.ChangeState(_player.WallSlideState);
-        //     return;
-        // }               
     }    
 
     public override void PhysicsUpdate()

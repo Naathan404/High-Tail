@@ -12,6 +12,8 @@ public class PushMushroom : MonoBehaviour, IPushable
     
     [SerializeField] private bool _isFacingRight = true;
     [SerializeField] private bool _isShortMushroom = true;
+
+    [SerializeField] private ParticleSystem _bounceParticle;
     
     public Vector2 PushForce => new Vector2(_pushX * IsRight, _pushY); 
     
@@ -42,12 +44,14 @@ public class PushMushroom : MonoBehaviour, IPushable
             if(_isShortMushroom)
             {
                 DoPush(player);
+                if(_bounceParticle != null) _bounceParticle.Play();
             }
             else
             {
                 if(isHitFromAbove && isFalling)
                 {
                     DoPush(player);
+                    if(_bounceParticle != null) _bounceParticle.Play();
                 }
             }
         }

@@ -36,7 +36,11 @@ public enum SoundName
     Platform_Crumbling,
     Platform_Falling,
     Door_Open,
-    Text
+    Text,
+    HardLanding,
+    Player_Pogo_Mushroom,
+    BiomeNotifier,
+    OutOfEnergy,
 }
 
 [System.Serializable]
