@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GeneralSetting : Singleton<GeneralSetting>
 {
@@ -92,25 +93,30 @@ public class GeneralSetting : Singleton<GeneralSetting>
         SaveSettings();
     }
 
-    public void ChangeMasterVolume(float volume)
+    public void ChangeMasterVolume(float value)
     {
-        if (Mathf.Approximately(masterVolume, volume)) return;
-
-        masterVolume = volume;
+        masterVolume = value;
+        NotifyAudioManager();
     }
 
-    public void ChangeBGMVolume(float volume)
+    public void ChangeBGMVolume(float value)
     {
-        if (Mathf.Approximately(bgmVolume, volume)) return;
-
-        bgmVolume = volume;
+        bgmVolume = value;
+        NotifyAudioManager();
     }
 
-    public void ChangeSFXVolume(float volume)
+    public void ChangeSFXVolume(float value)
     {
-        if (Mathf.Approximately(sfxVolume, volume)) return;
+        sfxVolume = value;
+        NotifyAudioManager();
+    }
 
-        sfxVolume = volume;
+    private void NotifyAudioManager()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.UpdateVolumes(masterVolume, bgmVolume, sfxVolume);
+        }
     }
     #endregion
 
