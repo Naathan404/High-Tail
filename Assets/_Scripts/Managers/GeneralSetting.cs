@@ -1,40 +1,139 @@
 using System;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.Localization.Settings;
+using static UnityEngine.Rendering.DebugUI;
 
-public class GeneralSetting : MonoBehaviour
+public class GeneralSetting : Singleton<GeneralSetting>
 {
-    public static GeneralSetting Instance;
     public Action<Language> OnLanguageChanged;
-    public bool autoSave = true;
-    public string MainCharacterName;
 
     public enum Language { Vietnamese, English };
 
-    private void Awake()
+    [Header("Settings State")]
+    public Language currentLanguage = Language.Vietnamese;
+    public bool autoSave = true;
+    public string MainCharacterName = "";
+
+    public float masterVolume = 1.0f;
+    public float bgmVolume = 1.0f;
+    public float sfxVolume = 1.0f;
+
+    private void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        SyncFromSaveData();
     }
 
-    public Language currentLanguage = Language.Vietnamese;
-
-    public void ChangeLanguage()
+    #region Data Sync Logic
+    public void SyncFromSaveData()
     {
-        if (currentLanguage == Language.Vietnamese)
+        if (SaveManager.Instance == null || SaveManager.Instance.MainData == null) return;
+
+        var settingsData = SaveManager.Instance.MainData.settings;
+        if (settingsData == null) return;
+
+        // Đồng bộ TẤT CẢ các biến từ Data vào Setting
+        currentLanguage = (Language)settingsData.languageIndex;
+        autoSave = settingsData.autoSave;
+        MainCharacterName = settingsData.mainCharacterName;
+        masterVolume = settingsData.masterVolume;
+        bgmVolume = settingsData.bgmVolume;
+        sfxVolume = settingsData.sfxVolume;
+
+        // Kích hoạt logic UI (Ngôn ngữ)
+        string targetLocaleCode = (currentLanguage == Language.Vietnamese) ? "vi" : "en";
+        StartCoroutine(UpdateUnityLocalization(targetLocaleCode));
+    }
+
+    public void SaveSettings()
+    {
+        if (SaveManager.Instance == null || SaveManager.Instance.MainData == null) return;
+
+        var settingsData = SaveManager.Instance.MainData.settings;
+        if (settingsData == null) return;
+
+        settingsData.languageIndex = (int)currentLanguage;
+        settingsData.autoSave = autoSave;
+        settingsData.mainCharacterName = MainCharacterName;
+        settingsData.masterVolume = masterVolume;
+        settingsData.bgmVolume = bgmVolume;
+        settingsData.sfxVolume = sfxVolume;
+
+        SaveManager.Instance.SaveToDisk();
+    }
+    #endregion
+
+    #region PUBLIC API
+    public void ChangeLanguage(Language language)
+    {
+        if (currentLanguage == language) return;
+
+        currentLanguage = language;
+
+        // Gọi hàm lưu tập trung
+        SaveSettings();
+
+        string targetLocaleCode = (language == Language.Vietnamese) ? "vi" : "en";
+        StartCoroutine(UpdateUnityLocalization(targetLocaleCode));
+    }
+
+    public void ChangeAutoSave(bool isOn)
+    {
+        if (autoSave == isOn) return;
+
+        autoSave = isOn;
+        SaveSettings(); 
+    }
+
+    public void ChangeMainCharacterName(string newName)
+    {
+        if (MainCharacterName == newName) return;
+
+        MainCharacterName = newName;
+        SaveSettings();
+    }
+
+    public void ChangeMasterVolume(float value)
+    {
+        masterVolume = value;
+        NotifyAudioManager();
+    }
+
+    public void ChangeBGMVolume(float value)
+    {
+        bgmVolume = value;
+        NotifyAudioManager();
+    }
+
+    public void ChangeSFXVolume(float value)
+    {
+        sfxVolume = value;
+        NotifyAudioManager();
+    }
+
+    private void NotifyAudioManager()
+    {
+        if (AudioManager.Instance != null)
         {
-            currentLanguage = Language.English;
+            AudioManager.Instance.UpdateVolumes(masterVolume, bgmVolume, sfxVolume);
+        }
+    }
+    #endregion
+
+    private IEnumerator UpdateUnityLocalization(string localeCode)
+    {
+        yield return LocalizationSettings.InitializationOperation;
+
+        var locale = LocalizationSettings.AvailableLocales.GetLocale(localeCode);
+
+        if (locale != null)
+        {
+            LocalizationSettings.SelectedLocale = locale;
+            OnLanguageChanged?.Invoke(currentLanguage);
         }
         else
         {
-            currentLanguage = Language.Vietnamese;
+            Debug.LogError($"[Localization] Không tìm thấy ngôn ngữ có mã: {localeCode}");
         }
     }
 }
@@ -44,9 +143,10 @@ public struct Text
 {
     public string textVI;
     public string textEN;
+
     public string GetText()
     {
-        switch(GeneralSetting.Instance.currentLanguage)
+        switch (GeneralSetting.Instance.currentLanguage)
         {
             case GeneralSetting.Language.English:
                 return textEN;
@@ -57,12 +157,12 @@ public struct Text
 
     public int GetLength()
     {
-        switch(GeneralSetting.Instance.currentLanguage)
+        switch (GeneralSetting.Instance.currentLanguage)
         {
             case GeneralSetting.Language.English:
                 return textEN.Length;
             default:
                 return textVI.Length;
-        }        
+        }
     }
 }
