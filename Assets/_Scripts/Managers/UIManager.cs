@@ -9,6 +9,8 @@ public class UIManager : Singleton<UIManager>
 {
     [Header("Skill Unlock Setting")]
     [SerializeField] private GameObject _skillUnlockedPanel;
+    [SerializeField] private Sprite[] _skillIcons;
+    [SerializeField] private Image _skillImage;
     [SerializeField] private TextMeshProUGUI _skillUnlockedText;
     [SerializeField] private TextMeshProUGUI _howToUseText;
     [SerializeField] private CanvasGroup _panelCanvasGroup; 
@@ -38,6 +40,11 @@ public class UIManager : Singleton<UIManager>
 
         _deathCountText.text = _deathCount.ToString();
         _checkpointIcon.gameObject.SetActive(false);
+    }
+
+    public void SetSkillIcon(int num)
+    {
+        _skillImage.sprite = _skillIcons[num];
     }
 
     public void ShowSkillUnlocked(LocalizedString skillName, LocalizedString skillDes, params object[] desArgs)

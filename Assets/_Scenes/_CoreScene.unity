@@ -698,7 +698,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.2509804}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4589,6 +4589,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   _skillUnlockedPanel: {fileID: 1704269457}
+  _skillIcons:
+  - {fileID: -210493799, guid: 328167ce34335e8419b2746f800296af, type: 3}
+  - {fileID: -843282181942177331, guid: 328167ce34335e8419b2746f800296af, type: 3}
+  - {fileID: 2330212056410602828, guid: 328167ce34335e8419b2746f800296af, type: 3}
+  - {fileID: -4939286676751099399, guid: 328167ce34335e8419b2746f800296af, type: 3}
+  - {fileID: 5986273202660949729, guid: 328167ce34335e8419b2746f800296af, type: 3}
+  - {fileID: 8132615959163788477, guid: 328167ce34335e8419b2746f800296af, type: 3}
+  _skillImage: {fileID: 234173481}
   _skillUnlockedText: {fileID: 210625958}
   _howToUseText: {fileID: 1171800861}
   _panelCanvasGroup: {fileID: 1704269458}
@@ -5340,7 +5348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1096675918
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8756,7 +8764,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!225 &1704269458
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8805,7 +8813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7764706}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
