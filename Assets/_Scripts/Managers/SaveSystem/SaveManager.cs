@@ -1,12 +1,13 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -33,6 +34,7 @@ public class SaveManager : Singleton<SaveManager>
     private RectTransform _savePanelRect;
 
     [Header("Save UI")]
+    [SerializeField] private SaveMenuUI _saveMenuUI;
     [SerializeField] private GameObject _saveGamePanel;
     private CanvasGroup _savePanelCanvasGroup;
     [SerializeField] private TextMeshProUGUI _notifyText;
@@ -43,8 +45,16 @@ public class SaveManager : Singleton<SaveManager>
     private bool _isLoading = false;
     private string _currentLoadedScene = "";
 
-    [Header("Menu")]
-    [SerializeField] private SaveMenuUI _saveMenuUI;
+    [Header("Localization")]
+    [SerializeField] private LocalizedString _errorDeletePlayingRef;
+    [SerializeField] private LocalizedString _confirmDeleteSaveRef;
+    [SerializeField] private LocalizedString _loadSuccessRef;
+    [SerializeField] private LocalizedString _loadFailRef;
+    [SerializeField] private LocalizedString _saveSuccessRef;
+    [SerializeField] private LocalizedString _deleteSuccessRef;
+
+    [Header("Playtime Tracking")]
+    private float _sessionStartTime;
 
     public override void Awake()
     {
@@ -72,12 +82,18 @@ public class SaveManager : Singleton<SaveManager>
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        UpdateAndSavePlaytime();
+    }
+
     public SaveSlot GetActiveSlot()
     {
         return MainData.allSlots.Find(s => s.saveID == MainData.activeSlotID);
     }
 
     #region Save logic
+
     #region Load game
     private void LoadMainData()
     {
@@ -99,6 +115,8 @@ public class SaveManager : Singleton<SaveManager>
                             MainData.allSlots = new List<SaveSlot>();
                         if (!string.IsNullOrEmpty(MainData.activeSlotID))
                             MainData.activeSlotID = "";
+                        if (MainData.settings == null)
+                            MainData.settings = new SettingsData();
 
                         _currentSaveSlotCount = MainData.allSlots.Count;
                         loadedSuccessfully = true;
@@ -114,14 +132,11 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogWarning("Dữ liệu save không hợp lệ hoặc trống. Đang khởi tạo mới...");
             MainData = new GameData();
-            if (MainData.allSlots == null)
-                MainData.allSlots = new List<SaveSlot>();
+            if (MainData.allSlots == null) MainData.allSlots = new List<SaveSlot>();
+            if (MainData.settings == null) MainData.settings = new SettingsData();
         }
-        // if (_currentSaveSlotCount == 0)
-        // {
-        //     MenuManager.Instance.OpenSubPanel(MenuManager.PanelType.Play);
-        // }
     }
+
     #endregion
 
     #region New timeline
@@ -175,10 +190,10 @@ public class SaveManager : Singleton<SaveManager>
             StartCoroutine(LoadSceneRoutine(targetNode));
             MainData.activeSlotID = targetSlotID;
             SaveToDisk();
-            ShowOnGameNotification($"Changed to  {targetNode.saveName}");
+            ShowOnGameNotification(_loadSuccessRef.GetLocalizedString(targetNode.saveName));
             return true;
         }
-        ShowOnGameNotification("Load failed: Node not found!");
+        ShowOnGameNotification(_loadFailRef.GetLocalizedString());
         return false;
     }
 
@@ -194,10 +209,6 @@ public class SaveManager : Singleton<SaveManager>
             _transitionCanvasGroup.DOFade(1f, _transitionDuration).SetUpdate(true);
             yield return new WaitForSecondsRealtime(_transitionDuration);
         }
-
-        // ==========================================
-        // TỪ ĐÂY TRỞ ĐI MÀN HÌNH ĐANG ĐEN HOÀN TOÀN
-        // ==========================================
 
         // 2. Ẩn UI Menu đi (Vẫn giữ trạng thái Pause)
         if (MenuManager.Instance != null)
@@ -242,10 +253,6 @@ public class SaveManager : Singleton<SaveManager>
         // Quan trọng: Đợi 1 frame để Unity cập nhật Transform và CharacterController chạm đất
         yield return null;
 
-        // ==========================================
-        // BẮT ĐẦU KÉO RÈM LÊN (SÁNG MÀN HÌNH)
-        // ==========================================
-
         // 6. Sáng dần lên (Lúc này Player đã đứng sẵn trên map)
         if (_transitionCanvasGroup != null)
         {
@@ -263,6 +270,7 @@ public class SaveManager : Singleton<SaveManager>
         }
 
         _isLoading = false;
+        _sessionStartTime = Time.time;
     }
     private void RestoreGameState(SaveSlot node)
     {
@@ -353,6 +361,8 @@ public class SaveManager : Singleton<SaveManager>
             return;
         }
 
+        UpdateAndSavePlaytime();
+
         currentNode.lastSaveTimestamp = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
         currentNode.lastShrineID = activeShrine.ID;
         currentNode.sceneName = SceneManager.GetActiveScene().name;
@@ -363,7 +373,23 @@ public class SaveManager : Singleton<SaveManager>
 
         SaveToDisk();
         RestoreShrinesState(currentNode);
-        ShowOnGameNotification($"Saved successfully");
+        ShowOnGameNotification(_saveSuccessRef.GetLocalizedString());
+    }
+
+    public void UpdateAndSavePlaytime()
+    {
+        if (MainData == null || string.IsNullOrEmpty(MainData.activeSlotID)) return;
+
+        SaveSlot currentNode = MainData.allSlots.Find(n => n.saveID == MainData.activeSlotID);
+        if (currentNode != null)
+        {
+            float timePlayedThisSession = Time.time - _sessionStartTime;
+            currentNode.totalPlayTimeSeconds += timePlayedThisSession;
+
+            _sessionStartTime = Time.time;
+
+            SaveToDisk();
+        }
     }
     #endregion
 
@@ -373,7 +399,7 @@ public class SaveManager : Singleton<SaveManager>
         if (MainData == null || MainData.allSlots == null) return;
         if (nodeID == MainData.activeSlotID)
         {
-            ShowOnMenuNotification("Cannot delete current playing file!");
+            ShowOnMenuNotification(_errorDeletePlayingRef.GetLocalizedString());
             return;
         }
 
@@ -386,9 +412,11 @@ public class SaveManager : Singleton<SaveManager>
             if (_saveMenuUI != null)
             {
                 // Gọi Panel Confirm từ SaveMenuUI
+                string confirmMessage = _confirmDeleteSaveRef.GetLocalizedString(nodeToDelete.saveName);
+
                 _saveMenuUI.ShowDeleteConfirmPopup(
-                    $"Are you sure you want to delete\n'{nodeToDelete.saveName}'?",
-                    () => ExecuteDelete(nodeToDelete) // Action truyền vào để thực thi khi bấm Yes
+                    confirmMessage,
+                    () => ExecuteDelete(nodeToDelete)
                 );
             }
             else
@@ -406,15 +434,16 @@ public class SaveManager : Singleton<SaveManager>
         _currentSaveSlotCount--;
         SaveToDisk();
 
-        ShowOnMenuNotification($"Deleted: {nodeToDelete.saveName}");
+        ShowOnMenuNotification(_deleteSuccessRef.GetLocalizedString(nodeToDelete.saveName));
 
         if (_saveMenuUI == null) _saveMenuUI = FindAnyObjectByType<SaveMenuUI>();
         if (_saveMenuUI != null) _saveMenuUI.RefreshSaveSlotContainer();
     }
     #endregion
+
     #endregion
 
-    private void SaveToDisk()
+    public void SaveToDisk()
     {
         string json = JsonUtility.ToJson(MainData, true);
         File.WriteAllText(_savePath, json);
@@ -462,7 +491,7 @@ public class SaveManager : Singleton<SaveManager>
         // ==========================================
         // MÀN HÌNH ĐANG ĐEN
         // ==========================================
-
+        UpdateAndSavePlaytime();
         // 2. Xóa trạng thái đang chơi (Cực kỳ quan trọng để CanResumeGame() trả về False)
         MainData.activeSlotID = "";
 

@@ -67,8 +67,12 @@ public class AudioManager : Singleton<AudioManager>
     [Header("Other Settings")]
     [SerializeField] private float musicFadeDuration = 0.5f;
 
+    [Header("Volumn")]
+    private float _currentMusicBaseVolume = 1f;
+
     private void Start()
     {
+        SyncVolumeWithSettings();
         PlayMusic(SoundName.Music1);
     }
 
@@ -78,9 +82,13 @@ public class AudioManager : Singleton<AudioManager>
         Sound sound = System.Array.Find(sounds, s => s.name == name);
         if (sound != null)
         {
+            _currentMusicBaseVolume = sound.volume;
+            float master = GeneralSetting.Instance != null ? GeneralSetting.Instance.masterVolume : 1f;
+            float bgm = GeneralSetting.Instance != null ? GeneralSetting.Instance.bgmVolume : 1f;
+
             musicSource.loop = true;
             musicSource.clip = sound.clips[0];
-            musicSource.volume = sound.volume;
+            musicSource.volume = _currentMusicBaseVolume * master * bgm;
             musicSource.pitch = sound.pitch;
             musicSource.Play();
         }
@@ -90,14 +98,19 @@ public class AudioManager : Singleton<AudioManager>
     {
         if (name == SoundName.None) return;
         Sound sound = System.Array.Find(sounds, s => s.name == name);
-        int index = Random.Range(0, sound.clips.Length);
 
-        // Random pitch
-        float pitch = sound.pitch + Random.Range(-sound.randomPitchVariation, sound.randomPitchVariation);
         if (sound != null)
         {
+            int index = Random.Range(0, sound.clips.Length);
+            float pitch = sound.pitch + Random.Range(-sound.randomPitchVariation, sound.randomPitchVariation);
+
             sfxSource.pitch = pitch;
             sfxSource.loop = isLoop;
+
+            float master = GeneralSetting.Instance != null ? GeneralSetting.Instance.masterVolume : 1f;
+            float sfx = GeneralSetting.Instance != null ? GeneralSetting.Instance.sfxVolume : 1f;
+            sfxSource.volume = master * sfx;
+
             sfxSource.PlayOneShot(sound.clips[index], sound.volume);
         }
     }
@@ -115,18 +128,52 @@ public class AudioManager : Singleton<AudioManager>
     public void Play3DSound(SoundName name, AudioSource targetSource)
     {
         Sound sound = System.Array.Find(sounds, s => s.name == name);
-        if (sound == null) return;
+        if (sound == null || targetSource == null) return;
 
-        int index  = Random.Range(0, sound.clips.Length);
+        int index = Random.Range(0, sound.clips.Length);
         float pitch = sound.pitch + Random.Range(-sound.randomPitchVariation, sound.randomPitchVariation);
+
+        float master = GeneralSetting.Instance != null ? GeneralSetting.Instance.masterVolume : 1f;
+        float sfx = GeneralSetting.Instance != null ? GeneralSetting.Instance.sfxVolume : 1f;
 
         targetSource.pitch = pitch;
         targetSource.loop = true;
+        targetSource.volume = master * sfx;
+
         targetSource.PlayOneShot(sound.clips[index], sound.volume);
     }
 
     public void FadeOutAndStop(AudioSource source)
     {
         source.DOFade(0, musicFadeDuration).OnComplete(() => source.Stop());
-    }    
+    }
+
+    #region Volume Control
+    public void UpdateVolumes(float masterVol, float bgmVol, float sfxVol)
+    {
+        if (musicSource != null)
+        {
+            musicSource.volume = _currentMusicBaseVolume * masterVol * bgmVol;
+        }
+
+        if (sfxSource != null)
+        {
+            sfxSource.volume = masterVol * sfxVol;
+        }
+
+        // Phát âm thanh thay đổi volumn để người chơi cảm nhận được sự thay đổi
+    }
+
+    public void SyncVolumeWithSettings()
+    {
+        if (GeneralSetting.Instance != null)
+        {
+            UpdateVolumes(
+                GeneralSetting.Instance.masterVolume,
+                GeneralSetting.Instance.bgmVolume,
+                GeneralSetting.Instance.sfxVolume
+            );
+        }
+    }
+    #endregion
 }

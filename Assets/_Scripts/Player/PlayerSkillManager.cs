@@ -1,30 +1,31 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public partial class PlayerController : MonoBehaviour
 {
     [Header("Skill Names")]
-    [SerializeField] private Text _wallJumpName;
-    [SerializeField] private Text _wallJumpDes;
-    [SerializeField] private Text _wallSlideName;
-    [SerializeField] private Text _wallSlideDes;
-    [SerializeField] private Text _dashName;
-    [SerializeField] private Text _dashDes;
-    [SerializeField] private Text _airGlideName;
-    [SerializeField] private Text _airGlideDes;
-    [SerializeField] private Text _pogoName;
-    [SerializeField] private Text _pogoDes;
-    [SerializeField] private Text _glowName;
-    [SerializeField] private Text _glowDes;
-    [SerializeField] private Text _doubleJumpName;
-    [SerializeField] private Text _doubleJumpDes;
-    [SerializeField] private Text _astralPulseName;
-    [SerializeField] private Text _astralPulseDes;
+    [SerializeField] private LocalizedString _wallJumpName;
+    [SerializeField] private LocalizedString _wallJumpDes;
+    [SerializeField] private LocalizedString _wallSlideName;
+    [SerializeField] private LocalizedString _wallSlideDes;
+    [SerializeField] private LocalizedString _dashName;
+    [SerializeField] private LocalizedString _dashDes;
+    [SerializeField] private LocalizedString _airGlideName;
+    [SerializeField] private LocalizedString _airGlideDes;
+    [SerializeField] private LocalizedString _pogoName;
+    [SerializeField] private LocalizedString _pogoDes;
+    [SerializeField] private LocalizedString _glowName;
+    [SerializeField] private LocalizedString _glowDes;
+    [SerializeField] private LocalizedString _doubleJumpName;
+    [SerializeField] private LocalizedString _doubleJumpDes;
+    [SerializeField] private LocalizedString _astralPulseName;
+    [SerializeField] private LocalizedString _astralPulseDes;
 
     public void UnlockWallJump()
     {
         Data.WallJumpUnlocked = true;
-        UIManager.Instance.ShowSkillUnlocked(_wallJumpName, _wallJumpDes);
+        UIManager.Instance.ShowSkillUnlocked(_wallJumpName, _wallJumpDes, "SPACE");
     }
 
     public void UnlockWallSlide()
@@ -36,12 +37,12 @@ public partial class PlayerController : MonoBehaviour
     public void UnlockDash()
     {
         Data.DashUnlocked = true;
-        UIManager.Instance.ShowSkillUnlocked(_dashName, _dashDes);
+        UIManager.Instance.ShowSkillUnlocked(_dashName, _dashDes, "X");
     }
     public void UnlockAirGlide()
     {
         Data.AirGlideUnlocked = true;
-        UIManager.Instance.ShowSkillUnlocked(_airGlideName, _airGlideDes);
+        UIManager.Instance.ShowSkillUnlocked(_airGlideName, _airGlideDes, "SHIFT");
     }
     public void UnlockPogo()
     {

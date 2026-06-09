@@ -28,7 +28,19 @@ public class AstralPulseSkill : MonoBehaviour
         {
             SetupCircle();
         }
-        SkillUI.Instance.skillDuration = cooldownTime;
+        //SkillUI.Instance.skillDuration = cooldownTime; // Lỗi
+    }
+
+    private void Start()
+    {
+        if (SkillUI.Instance != null)
+        {
+            SkillUI.Instance.skillDuration = cooldownTime;
+        }
+        else
+        {
+            Debug.LogWarning("SkillUI Instance bị null trong Start!");
+        }
     }
 
     private void SetupCircle()
