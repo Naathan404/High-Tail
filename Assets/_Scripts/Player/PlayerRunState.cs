@@ -40,7 +40,8 @@ public class PlayerRunState : PlayerState
 
         if (_player.CanJump())
         {
-            _stateMachine.ChangeState(_player.JumpState);
+            //_stateMachine.ChangeState(_player.JumpState);
+            _stateMachine.ChangeState(_player.JumpSquatState);
         }
         // sau khi kiểm tra mấy cái kia, thì kiểm tra có chạm đất không, không thì chuyển về Rơi
         else if (!_player.IsOnGround() && _player.Rb.linearVelocity.y < 0)

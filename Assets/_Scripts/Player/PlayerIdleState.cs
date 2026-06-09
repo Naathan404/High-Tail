@@ -29,7 +29,8 @@ public class PlayerIdleState : PlayerState
 
         if(_player.CanJump())
         {
-            _stateMachine.ChangeState(_player.JumpState);
+            //_stateMachine.ChangeState(_player.JumpState);
+            _stateMachine.ChangeState(_player.JumpSquatState);
             return;
         }
 

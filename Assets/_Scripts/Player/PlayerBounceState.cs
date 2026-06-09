@@ -9,13 +9,15 @@ public class PlayerBounceState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        _player.Visual.Anim.Play("pJump");
+        //_player.Visual.Anim.Play("pJump");
+        _player.Visual.Anim.Play("InAirBlendTree");
     }
 
     public override void LogicUpdate()
     {
-        base.PhysicsUpdate();
         base.LogicUpdate();
+        _player.Visual.Anim.SetFloat("yVelocity", _player.Rb.linearVelocity.y);
+
         if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked && _player.Rb.linearVelocity.y <= 0f)
         {
             _stateMachine.ChangeState(_player.PogoState);

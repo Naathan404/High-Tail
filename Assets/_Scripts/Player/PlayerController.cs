@@ -19,6 +19,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
+    public PlayerJumpSquatState JumpSquatState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerFallState FallState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
@@ -132,6 +133,7 @@ public partial class PlayerController : MonoBehaviour
         VineClimbState = new PlayerVineClimbState(this, _stateMachine);
         VineSwingState = new PlayerVineSwingState(this, _stateMachine);
         BounceState = new PlayerBounceState(this, _stateMachine);
+        JumpSquatState = new PlayerJumpSquatState(this, _stateMachine);
 
         _coreScene = gameObject.scene;
     }
