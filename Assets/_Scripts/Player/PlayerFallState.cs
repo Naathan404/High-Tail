@@ -25,13 +25,14 @@ public class PlayerFallState : PlayerState
                 return;
             }
         }
-        _player.Visual.Anim.Play("pFall");
+        //_player.Visual.Anim.Play("pFall");
+        _player.Visual.Anim.Play("InAirBlendTree");
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        
+        _player.Visual.Anim.SetFloat("yVelocity", _player.Rb.linearVelocity.y);
         // timer timer timer
         _timer += Time.deltaTime;
         _player.CheckFlip(_player.MoveX);

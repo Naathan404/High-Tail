@@ -18,7 +18,8 @@ public class PlayerWallJumpState : PlayerState
 
         _player.CheckFlip(jumpDirection);
         _player.Visual.ApplySquashStretch(new Vector3(0.7f, 1.3f, 1f));
-        _player.Visual.Anim.Play("pJump");
+        // _player.Visual.Anim.Play("pJump");
+        _player.Visual.Anim.Play("InAirBlendTree");
         _player.Visual.WallJumpDustParticle.Play();
         _player.Visual.JumpDustParticle.Play();
     }
@@ -26,6 +27,8 @@ public class PlayerWallJumpState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        _player.Visual.Anim.SetFloat("yVelocity", _player.Rb.linearVelocity.y);
+
         if(_player.Rb.linearVelocity.y < 0f)
         {
             _stateMachine.ChangeState(_player.FallState);
