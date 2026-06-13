@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6be890c8a758f3488227c7687955d0c, type: 3}
+  m_Name: M1R10
+  m_EditorClassIdentifier: Assembly-CSharp::TaleStoneData
+  DialogueLines:
+  - textVI: "H\u1EA1t B\u1ED5n Nguy\xEAn...?!! T\u1EA1i sao? T\u1EA1i sao ng\u01B0\u01A1i
+      l\u1EA1i t\u1EEB ch\u1ED1i ta?!"
+    textEN: The Origin Seed...?!! Why? Why have you rejected me?!
+    AutoSkip: 0
+  - textVI: "Hahaha... \u0111\u01B0\u1EE3c l\u1EAFm."
+    textEN: Hahahaha... excellent.
+    AutoSkip: 0
+  - textVI: "N\u1EBFu \u0111\xE3 kh\xF4ng ch\u1EA5p nh\u1EADn ta... v\u1EADy th\xEC
+      ng\u01B0\u01A1i c\u0169ng kh\xF4ng c\u1EA7n ph\u1EA3i t\u1ED3n t\u1EA1i n\u1EEFa!"
+    textEN: If you will not accept me, then you have no right to exist!
+    AutoSkip: 0
+  AutoProgressDelay: 1.5
+  TypingSpeed: 0.05
+  IsActivated: 1
