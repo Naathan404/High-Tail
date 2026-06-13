@@ -56,7 +56,7 @@ public class PlayerPogoState : PlayerState
         _player.Rb.linearVelocity = Vector2.zero; 
         _player.Rb.gravityScale = 0f; 
         
-        _player.Rb.linearVelocity = new Vector2(0f, -_player.Data.maxSpeedY * 1.4f);
+        _player.Rb.linearVelocity = new Vector2(0f, -_player.Data.maxSpeedY * 0.8f);
 
         _player.Visual.PogoDustParticle.Play();
     }
@@ -110,6 +110,7 @@ public class PlayerPogoState : PlayerState
     public override void Exit()
     {
         base.Exit();
+        _player.Visual.PogoDustParticle.Stop();
         _player.Rb.gravityScale = _player.BaseGravity;
     }
 }
