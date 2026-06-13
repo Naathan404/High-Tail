@@ -72,8 +72,8 @@ public class PlayerData : ScriptableObject
     public float fallMultiplier = 8;
 
     [Header("Dash")]
-    public float dashForce = 50;
-    public float dashDuration = 0.15f;
+    public float dashForce = 37.5f;
+    public float dashDuration = 0.2f;
 
     [Header("Bounce/Push")]
     public float bounceHorizontalForce = 10;
