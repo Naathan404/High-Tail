@@ -44,6 +44,7 @@ public partial class PlayerController : MonoBehaviour
     public bool DashPressed { get; private set; }
     public bool GlideHeld { get; private set; }
     public bool GrabHeld { get; private set; }
+    public bool PogoPressed { get; private set; }
 
     [Header("Player Variables")]
     [SerializeField] private float _jumpBufferCounter;
@@ -197,6 +198,7 @@ public partial class PlayerController : MonoBehaviour
         DashPressed = Inputs.Movement.Dash.WasPressedThisFrame();    // dash
         GlideHeld = Inputs.Movement.Glide.IsPressed();     // giữ nút để air glide
         GrabHeld = Inputs.Movement.Grab.IsPressed();        // bám vào tường hoặc dây leo
+        PogoPressed = Inputs.Movement.Pogo.WasPressedThisFrame();   // pogo
 
         if (IsBlocked)
         {

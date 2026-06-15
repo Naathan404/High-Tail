@@ -81,7 +81,7 @@ public class PlayerFallState : PlayerState
     {
         base.HandleInput();
 
-        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked && _player.Rb.linearVelocity.y <= 0f)
+        if (/*_player.MoveY < -0.5f*/ _player.PogoPressed && !_player.IsOnGround() && _player.Data.PogoUnlocked /*&& _player.Rb.linearVelocity.y <= 0f*/)
         {
             _stateMachine.ChangeState(_player.PogoState);
             return;
