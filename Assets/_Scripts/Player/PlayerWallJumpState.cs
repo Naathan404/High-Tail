@@ -29,6 +29,12 @@ public class PlayerWallJumpState : PlayerState
         base.LogicUpdate();
         _player.Visual.Anim.SetFloat("yVelocity", _player.Rb.linearVelocity.y);
 
+        if (/*_player.MoveY < -0.5f*/ _player.PogoPressed && !_player.IsOnGround() && _player.Data.PogoUnlocked /*&& _player.Rb.linearVelocity.y <= 0f*/)
+        {
+            _stateMachine.ChangeState(_player.PogoState);
+            return;
+        }
+
         if(_player.Rb.linearVelocity.y < 0f)
         {
             _stateMachine.ChangeState(_player.FallState);
