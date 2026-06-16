@@ -27,8 +27,8 @@ public class PlayerJumpState : PlayerState
         float horizontalSpeed = _player.Rb.linearVelocity.x * boost;
         _player.Rb.linearVelocity = new Vector2(horizontalSpeed, jumpForce);
 
-        //_player.Visual.Anim.Play("pJump");
-        _player.Visual.Anim.Play("InAirBlendTree");
+        _player.Visual.Anim.Play("pJump");
+        //_player.Visual.Anim.Play("InAirBlendTree");
         _player.Visual.JumpDustParticle.Play();
     }
 

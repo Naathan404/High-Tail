@@ -14,6 +14,8 @@ public class PlayerAirGlideState : PlayerState
         _originalGravityScale = _player.Rb.gravityScale;
         _player.Rb.gravityScale = _player.Data.airGlideGravityScale;
         _player.Rb.linearVelocity = Vector2.zero;
+        _player.Visual.Anim.Play("pGlide");
+
 
     }
 
