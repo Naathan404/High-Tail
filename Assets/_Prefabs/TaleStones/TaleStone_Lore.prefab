@@ -161,7 +161,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 1, g: 0.8719676, b: 0.972601, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -304,6 +304,12 @@ MonoBehaviour:
   OnTaleStoneDialogueCompleted:
     m_PersistentCalls:
       m_Calls: []
+  _decorations: []
+  _animator: {fileID: 0}
+  _elevateYOffset: 1.5
+  _elevateDuration: 2.5
+  _stoneFloatOffset: 0.2
+  _stoneFloatDuration: 1.8
 --- !u!61 &5889099931172892331
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -404,6 +410,12 @@ MonoBehaviour:
   OnTaleStoneDialogueCompleted:
     m_PersistentCalls:
       m_Calls: []
+  _decorations: []
+  _animator: {fileID: 0}
+  _elevateYOffset: 1.5
+  _elevateDuration: 2.5
+  _stoneFloatOffset: 0.2
+  _stoneFloatDuration: 1.8
 --- !u!61 &5836036930633224798
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -19,7 +19,7 @@ public class CameraManager : Singleton<CameraManager>
     // [SerializeField] private float _zoomLerpSpeed = 3f;
 
     [Header("Dialogue Zoom Settings")]
-    [SerializeField] private float _dialogueZoomFOV = 40f; 
+    [SerializeField] private float _dialogueZoomFOV = 45f; 
     [SerializeField] private float _dialogueTransitionTime = 0.8f; 
     [SerializeField] private float _dialogueYOffset = 0.5f; 
     [SerializeField] private float _dialogueScreenY = 0.35f; 
@@ -58,6 +58,7 @@ public class CameraManager : Singleton<CameraManager>
         AstralGift.OnCollected += _shockWave.CallShockWave;
         AstralPulseSkill.OnPulsed += _shockWave.CallShockWave;
         SaveGameShrine.OnGameSaved += _shockWave.CallShockWave;
+        TaleStoneTrigger.OnTaleStoneActivated += _shockWave.CallShockWave;
     }
 
     private void OnDisable()
@@ -65,6 +66,7 @@ public class CameraManager : Singleton<CameraManager>
         AstralGift.OnCollected -= _shockWave.CallShockWave;
         AstralPulseSkill.OnPulsed -= _shockWave.CallShockWave;
         SaveGameShrine.OnGameSaved -= _shockWave.CallShockWave;
+        TaleStoneTrigger.OnTaleStoneActivated -= _shockWave.CallShockWave;
     }
 
     private void Start()

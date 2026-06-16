@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -21,9 +24,22 @@ public class TaleStoneTrigger : MonoBehaviour
     [Header("Event Callback")]
     public UnityEvent OnTaleStoneDialogueCompleted;
 
+    [Header("Decorations")]
+    [SerializeField] private List<Transform> _decorations = new List<Transform>();
+
+    [Header("Skill Unlock Tweens (New)")]
+    [SerializeField] private Animator _animator;             
+    [SerializeField] private float _elevateYOffset = 1.5f;     
+    [SerializeField] private float _elevateDuration = 2.5f;    
+    [SerializeField] private float _stoneFloatOffset = 0.2f; 
+    [SerializeField] private float _stoneFloatDuration = 1.8f;
     PlayerController _player;
     private bool _canInteract = false;
     private AudioSource _audioSource;
+    private float _originalY;                              
+    private Tweener _stoneFloatTween;
+
+    public static event Action<Transform> OnTaleStoneActivated;
 
     private void Awake()
     {
@@ -35,6 +51,29 @@ public class TaleStoneTrigger : MonoBehaviour
         if (_spriteRenderer == null) _spriteRenderer = GetComponent<SpriteRenderer>();
         _allIn1Material = _spriteRenderer.material;
         _allIn1Material.SetFloat(_shaderProperty, 0f);
+
+        _originalY = transform.position.y;
+
+        if (_type == TaleStoneType.SkillUnlock)
+        {
+            StartDecorationsFloating();
+
+            // nếu đã mở khóa skill ở tale stone này rồi
+            if (_taleStoneData != null && _taleStoneData.IsActivated)
+            {
+                transform.position = new Vector3(transform.position.x, _originalY + _elevateYOffset, transform.position.z);
+                if (_animator != null) _animator.Play("Activated");
+                StartStoneFloating(); 
+            }
+            else
+            {
+                if (_animator != null) _animator.Play("Idle");
+            }
+        }
+
+        _interactMark.transform.DOMoveY(_interactMark.transform.position.y + _stoneFloatOffset, 0.25f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
     }
 
     [System.Obsolete]
@@ -62,6 +101,12 @@ public class TaleStoneTrigger : MonoBehaviour
             CameraManager.Instance.SwitchRoom(_confiderCollider, 50, false, 80f, true);
             _canInteract = false;
             PlaySound();
+
+            if (_type == TaleStoneType.SkillUnlock)
+            {
+                ExecuteSkillUnlockSequence();
+            }
+
             TaleStoneManager.Instance.StartTale(
             _taleStoneData,
             _camCenterTransform,
@@ -82,13 +127,56 @@ public class TaleStoneTrigger : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        AudioManager.Instance.FadeOutAndStop(_audioSource);
-        _interactMark.SetActive(false);
-        _canInteract = false;
-        _allIn1Material.SetFloat(_shaderProperty, 0f);
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            AudioManager.Instance.FadeOutAndStop(_audioSource);
+            _interactMark.SetActive(false);
+            _canInteract = false;
+            _allIn1Material.SetFloat(_shaderProperty, 0f);
+        }
     }
+
+    #region Skill Unlock Visual Logic
+    private void StartDecorationsFloating()
+    {
+        foreach (var decor in _decorations)
+        {
+            if (decor == null) continue;
+
+            float randomOffset = UnityEngine.Random.Range(0.15f, 0.35f);
+            float randomDuration = UnityEngine.Random.Range(1.2f, 2f);
+
+            decor.DOMoveY(decor.position.y + randomOffset, randomDuration)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine)
+                .SetDelay(UnityEngine.Random.Range(0f, 0.5f));
+        }
+    }
+
+    private void ExecuteSkillUnlockSequence()
+    {
+        if (_animator != null) _animator.Play("Activated");
+        CameraShakeManager.Instance.ShakeCustom(0.4f);
+        //OnTaleStoneActivated?.Invoke(transform);
+        transform.DOMoveY(_originalY + _elevateYOffset, _elevateDuration)
+            .SetEase(Ease.OutCubic)
+            .OnComplete(() =>
+            {
+                StartStoneFloating();
+            });
+    }
+
+    private void StartStoneFloating()
+    {
+        if (_stoneFloatTween != null) _stoneFloatTween.Kill();
+        float targetY = _originalY + _elevateYOffset;
+        _stoneFloatTween = transform.DOMoveY(targetY + _stoneFloatOffset, _stoneFloatDuration)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+    }
+    #endregion
 
     private void PlaySound()
     {
