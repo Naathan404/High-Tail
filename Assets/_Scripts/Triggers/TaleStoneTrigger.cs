@@ -11,6 +11,9 @@ public class TaleStoneTrigger : MonoBehaviour
     [SerializeField] private TaleStoneType _type;
     [SerializeField] private GameObject _light;
 
+    private SpriteRenderer _spriteRenderer;
+    private Material _allIn1Material;
+    private readonly string _shaderProperty = "_OutlineAlpha";
 
     [Header("Camera Collider")]
     [SerializeField] private BoxCollider2D _confiderCollider;
@@ -27,6 +30,13 @@ public class TaleStoneTrigger : MonoBehaviour
         _trigger = GetComponent<Collider2D>();
     }
 
+    private void Start()
+    {
+        if (_spriteRenderer == null) _spriteRenderer = GetComponent<SpriteRenderer>();
+        _allIn1Material = _spriteRenderer.material;
+        _allIn1Material.SetFloat(_shaderProperty, 0f);
+    }
+
     [System.Obsolete]
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -34,6 +44,7 @@ public class TaleStoneTrigger : MonoBehaviour
         {
             if(_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) return;
             _canInteract = true;
+            _allIn1Material.SetFloat(_shaderProperty, 1f);
             collision.TryGetComponent<PlayerController>(out _player);
         }
     }
@@ -76,6 +87,7 @@ public class TaleStoneTrigger : MonoBehaviour
         AudioManager.Instance.FadeOutAndStop(_audioSource);
         _interactMark.SetActive(false);
         _canInteract = false;
+        _allIn1Material.SetFloat(_shaderProperty, 0f);
     }
 
     private void PlaySound()
