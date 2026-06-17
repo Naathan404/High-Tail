@@ -64,8 +64,6 @@ public class AstralGift : MonoBehaviour
 
         OnCollected?.Invoke(transform);
         StartCoroutine(HandleCollect(_hitStopDuration));
-
-
     }
 
     private IEnumerator HandleCollect(float duration)

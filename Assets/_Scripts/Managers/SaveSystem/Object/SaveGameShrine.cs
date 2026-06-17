@@ -1,6 +1,10 @@
 using System;
+using AllIn1SpriteShader;
+using DG.Tweening;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SaveGameShrine : MonoBehaviour, IInteractable
 {
@@ -18,18 +22,32 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     [Header("Interact")]
     [SerializeField] private TextMeshPro saveInstruction;
 
+    [Header("Floating Setting")]
+    [SerializeField] private float _floatingDuration = 1.5f;
+    [SerializeField] private float _floatingYOffset = 1.5f;
+    
+    public static event Action<Transform> OnGameSaved;
+
     // 1. CHUYỂN START() THÀNH AWAKE()
     private void Awake()
     {
         EnableShrine(); // Mặc định mở lúc khởi tạo, SaveManager sẽ quyết định đóng hay mở sau
         _id = IDGenerator.GenerateUniqueID(gameObject);
-
         if (_visualIndicator != null) _visualIndicator.SetActive(false);
         if (saveInstruction != null)
         {
-            saveInstruction.SetText("Press up arrow to save");
+            saveInstruction.SetText("Press [E] to write your journey");
             saveInstruction.gameObject.SetActive(false);
         }
+    }
+
+    private void Start()
+    {
+        float originalY = this.transform.position.y;
+
+        this.transform.DOMoveY(originalY + _floatingYOffset, _floatingDuration)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
     }
 
     private void Update()
@@ -81,20 +99,23 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
         if (!CanInteract()) return;
         SaveManager.Instance.activeShrine = on ? this : null;
         UIHelper.AnimateZoom(saveInstruction.gameObject, on);
-        UIHelper.AnimateZoom(_visualIndicator, !on);
+        //UIHelper.AnimateZoom(_visualIndicator, !on);
     }
 
     public void Interact()
     {
         if (!CanInteract()) return;
         SaveManager.Instance.ExcuteSave();
+        OnGameSaved?.Invoke(transform);
+        CameraShakeManager.Instance.ShakeCustom(0.5f);
+        GameManager.Instance.DoTimeFreeze(0.1f, 0.5f);
     }
     #endregion
 
     public void DisableShrine()
     {
         _canInteract = false;
-        GetComponent<SpriteRenderer>().color = Color.gray;
+        //GetComponent<SpriteRenderer>().color = Color.gray;
         UIHelper.AnimateZoom(saveInstruction.gameObject, false);
         ShowIndicator(false);
     }
@@ -141,10 +162,10 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     private void ShowIndicator(bool show)
     {
         // Chỉ hiện bảng khi Shrine đang hoạt động và có player ở gần
-        if (_visualIndicator != null)
-        {
-            UIHelper.AnimateZoom(_visualIndicator, show && _canInteract);
-        }
+        // if (_visualIndicator != null)
+        // {
+        //     UIHelper.AnimateZoom(_visualIndicator, show && _canInteract);
+        // }
     }
 
     private void OnDrawGizmosSelected()

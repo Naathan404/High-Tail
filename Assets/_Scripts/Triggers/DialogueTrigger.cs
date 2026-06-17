@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,11 +19,20 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Event Callback")]
     public UnityEvent OnDialogueCompleted;
 
+    private float _iconFloatOffset = 0.2f;
+
     PlayerController _player;
 
     private void Awake()
     {
         _collider = GetComponent<BoxCollider2D>();
+    }
+
+    private void Start()
+    {
+        _interactMark.transform.DOMoveY(_interactMark.transform.position.y + _iconFloatOffset, 0.25f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
     }
 
     [System.Obsolete]

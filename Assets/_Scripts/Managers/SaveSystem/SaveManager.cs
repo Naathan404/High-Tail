@@ -56,6 +56,7 @@ public class SaveManager : Singleton<SaveManager>
     [Header("Playtime Tracking")]
     private float _sessionStartTime;
 
+
     public override void Awake()
     {
         base.Awake();
@@ -370,7 +371,7 @@ public class SaveManager : Singleton<SaveManager>
 
         activeShrine.DisableShrine();
         activeShrine = null;
-
+        
         SaveToDisk();
         RestoreShrinesState(currentNode);
         ShowOnGameNotification(_saveSuccessRef.GetLocalizedString());
