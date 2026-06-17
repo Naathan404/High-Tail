@@ -815,7 +815,7 @@ Transform:
   m_GameObject: {fileID: 160371528}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 386.1, y: 74.14202, z: -10}
+  m_LocalPosition: {x: 66.60001, y: -41.837982, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1514,9 +1514,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99874437ee7a05847b40eee606b49315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeneralSetting
+  currentLanguage: 0
   autoSave: 1
   MainCharacterName: Tale
-  currentLanguage: 0
+  masterVolume: 1
+  bgmVolume: 1
+  sfxVolume: 1
 --- !u!114 &279874937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1886,11 +1889,11 @@ PrefabInstance:
       objectReference: {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 68.1
+      value: -251.4
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 150.3
+      value: 34.32
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2946,11 +2949,68 @@ MonoBehaviour:
   _animationDuration: 0.5
   _closeDelayTime: 0
   _notificationDuration: 2
+  _saveMenuUI: {fileID: 2016304106}
   _saveGamePanel: {fileID: 675076628}
   _notifyText: {fileID: 805430352}
   _transitionCanvasGroup: {fileID: 1782792221}
   _transitionDuration: 2
-  _saveMenuUI: {fileID: 2016304106}
+  _errorDeletePlayingRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _confirmDeleteSaveRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _loadSuccessRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _loadFailRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _saveSuccessRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _deleteSuccessRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &551377928
 Transform:
   m_ObjectHideFlags: 0
@@ -4054,30 +4114,30 @@ Tilemap:
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: 3.6216735e+28
+      e00: 122743.625
       e01: 0
-      e02: -5.6707716e+34
-      e03: 1.4705675e-38
-      e10: 4.591e-41
+      e02: 122744.375
+      e03: -2.7105096e-19
+      e10: 2.94e-43
       e11: 0
-      e12: 2.97e-43
-      e13: 8.32e-43
-      e20: 1.2019473e+29
+      e12: 2.94e-43
+      e13: 9.77e-43
+      e20: 2.9721655e+16
       e21: 0
-      e22: -2.298984e+29
-      e23: -2.861087e-18
-      e30: 4.591e-41
+      e22: -5.311058e-10
+      e23: 1.505883e-17
+      e30: 4.5908e-41
       e31: 0
-      e32: 8.35e-43
-      e33: 8.32e-43
+      e32: 9.8e-43
+      e33: 9.78e-43
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: -5.670645e+34, g: -5.670645e+34, b: -5.670645e+34, a: -5.670645e+34}
+    m_Data: {r: 1e-45, g: 1e-45, b: 1e-45, a: 1e-45}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: 0, y: 0, z: 0}
-  m_Size: {x: 154, y: 36, z: 1}
+  m_Origin: {x: -216, y: 0, z: 0}
+  m_Size: {x: 370, y: 36, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -4829,6 +4889,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   _skillUnlockedPanel: {fileID: 1704269457}
+  _skillIcons: []
+  _skillImage: {fileID: 0}
   _skillUnlockedText: {fileID: 210625958}
   _howToUseText: {fileID: 1171800861}
   _panelCanvasGroup: {fileID: 1704269458}
@@ -6438,7 +6500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1236681960
 Transform:
   m_ObjectHideFlags: 0
@@ -7601,10 +7663,76 @@ MonoBehaviour:
   _savedGamePanel: {fileID: 2016304105}
   _settingsPanel: {fileID: 1351690071}
   _creditPanel: {fileID: 172813677}
+  _playStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _continueStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _exitStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _homeStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _selectSavedGameNotificationRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _settingsStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _creditStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   _titleText: {fileID: 82513776}
   _title: {fileID: 2040520971}
   _playerObject: {fileID: 1999383838}
   _mainCanvas: {fileID: 874906033}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1483103634
 GameObject:
   m_ObjectHideFlags: 0
@@ -7941,7 +8069,7 @@ Transform:
   m_GameObject: {fileID: 1494260824}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 386.1, y: 74.14202, z: -10}
+  m_LocalPosition: {x: 66.60001, y: -41.837982, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
