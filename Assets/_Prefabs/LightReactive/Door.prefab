@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7883566260621238896
 Transform:
   m_ObjectHideFlags: 0
@@ -29,8 +29,7 @@ Transform:
   m_LocalPosition: {x: -0.003, y: 0.204, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 7331219877020613929}
+  m_Children: []
   m_Father: {fileID: 5964910168236170985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8508517652339762392
@@ -117,12 +116,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2698445077224664508}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.04, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.002998352, y: 0.1959999, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7883566260621238896}
+  m_Father: {fileID: 5964910168236170985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1131944915388643552
 MonoBehaviour:
@@ -208,6 +207,7 @@ Transform:
   m_LocalScale: {x: 2, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7331219877020613929}
   - {fileID: 7883566260621238896}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -256,9 +256,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -1014729645
-  m_SortingLayer: 3
-  m_SortingOrder: -5
+  m_SortingLayerID: -1037348173
+  m_SortingLayer: 4
+  m_SortingOrder: 15
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.74663067, g: 0.74663067, b: 0.74663067, a: 1}
@@ -287,7 +287,8 @@ MonoBehaviour:
   _shakeStrenght: 0.2
   _waitTime: 1
   _objectsToFalse:
-  - {fileID: 2268343430826367466}
+  - {fileID: 2698445077224664508}
+  isHorizontal: 0
 --- !u!61 &3529538854371601854
 BoxCollider2D:
   m_ObjectHideFlags: 0

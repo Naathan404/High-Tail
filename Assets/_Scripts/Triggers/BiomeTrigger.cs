@@ -25,7 +25,7 @@ public class BiomeTrigger : MonoBehaviour
     [SerializeField] private Name _biomeName;
     [SerializeField] private Trigger _mainTrigger;
     [SerializeField] private Trigger _resetTrigger;
-    private bool _hasBeenTriggered = true;
+    private bool _hasBeenTriggered = false;
     private bool _hasBeenReset = false;
 
     private void Awake()
