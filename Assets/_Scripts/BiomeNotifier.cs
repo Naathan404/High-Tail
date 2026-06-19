@@ -13,13 +13,14 @@ public class BiomeNotifier : Singleton<BiomeNotifier>
     [SerializeField] private float _fadeInDuration = 2f;
     [SerializeField] private float _fadeOutDuration = 2f;
     private TextMeshProUGUI _text;
+    private CanvasGroup _canvasGroup;
 
     public override void Awake()
     {
         base.Awake();
         _text = GetComponentInChildren<TextMeshProUGUI>();
-
-        _text.DOFade(0f, 0f);
+        _canvasGroup = GetComponent<CanvasGroup>();
+        _canvasGroup.DOFade(0f, 0f);
     }
 
     public void ShowBiomeNotification(string biomeName)
@@ -30,8 +31,8 @@ public class BiomeNotifier : Singleton<BiomeNotifier>
     private IEnumerator ShowNotifyRoutine(string biomeName)
     {
         _text.text = biomeName;
-        _text.DOFade(1f, _fadeInDuration);
+        _canvasGroup.DOFade(1f, _fadeInDuration);
         yield return new WaitForSeconds(_displayDuration + _fadeInDuration);
-        _text.DOFade(0f, _fadeOutDuration);    
+        _canvasGroup.DOFade(0f, _fadeOutDuration);    
     }
 }

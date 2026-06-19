@@ -71,7 +71,18 @@ public class SimpleDoor : MonoBehaviour, ILightPulseReactive
 
                 foreach (var obj in _objectsToFalse)
                 {
-                    obj.SetActive(false);
+                    SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+                    if(sr != null)
+                    {
+                        sr.DOFade(0f, 1f).OnComplete(() =>
+                        {
+                            obj.SetActive(false);
+                        });
+                    }
+                    else
+                    {
+                        obj.SetActive(false);
+                    }
                 }
 
                 _isOpened = true;

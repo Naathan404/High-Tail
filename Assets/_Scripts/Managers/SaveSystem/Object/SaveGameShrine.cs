@@ -23,6 +23,8 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     [SerializeField] private TextMeshPro saveInstruction;
 
     [Header("Floating Setting")]
+    [SerializeField] private SpriteRenderer _visual;
+    [SerializeField] private SpriteRenderer _interactionMark;
     [SerializeField] private float _floatingDuration = 1.5f;
     [SerializeField] private float _floatingYOffset = 1.5f;
     
@@ -43,11 +45,17 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        float originalY = this.transform.position.y;
+        float originalY = _visual.transform.position.y;
 
-        this.transform.DOMoveY(originalY + _floatingYOffset, _floatingDuration)
+        _visual.transform.DOMoveY(originalY + _floatingYOffset, _floatingDuration)
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(Ease.InOutSine);
+        
+        _interactionMark.transform.DOMoveY(_interactionMark.transform.position.y + _floatingYOffset / 3f, _floatingDuration / 3f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
+
+        _interactionMark.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -123,7 +131,7 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
     public void EnableShrine()
     {
         _canInteract = true;
-        GetComponent<SpriteRenderer>().color = Color.white;
+        //GetComponent<SpriteRenderer>().color = Color.white;
     }
 
     #region Detection
@@ -166,6 +174,17 @@ public class SaveGameShrine : MonoBehaviour, IInteractable
         // {
         //     UIHelper.AnimateZoom(_visualIndicator, show && _canInteract);
         // }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (_canInteract)
+            _interactionMark.gameObject.SetActive(true);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        _interactionMark.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmosSelected()
