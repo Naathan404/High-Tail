@@ -54,6 +54,7 @@ public class AstralGift : MonoBehaviour
 
         _isCollected = true;
         _collider.enabled = false; 
+        AudioManager.Instance.PlaySFX(SoundName.Reward);
         DOTween.To
         (
             () => _light.intensity,

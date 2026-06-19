@@ -1291,7 +1291,7 @@ Transform:
   m_GameObject: {fileID: 160371528}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.7999821, y: 87.24201, z: -10}
+  m_LocalPosition: {x: -70.29998, y: 89.042015, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3770,15 +3770,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3426056720485397890, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: _footSize.x
-      value: 0.6
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 3426056720485397890, guid: fe076143b7fb1964397d9c2381402309, type: 3}
-      propertyPath: _castDistance
+      propertyPath: _footSize.y
       value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 3426056720485397890, guid: fe076143b7fb1964397d9c2381402309, type: 3}
+      propertyPath: _castDistance
+      value: 0.17
+      objectReference: {fileID: 0}
+    - target: {fileID: 3426056720485397890, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: _pogoRayLength
-      value: 0.4
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3426056720485397890, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: _wallCheckSize.x
@@ -3790,11 +3794,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -319.8
+      value: -388.3
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 163.4
+      value: 165.2
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3842,7 +3846,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5291285990448172348, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.03
+      value: -0.976
       objectReference: {fileID: 0}
     - target: {fileID: 7084073050358436855, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_Name
@@ -7599,8 +7603,8 @@ RectTransform:
   m_GameObject: {fileID: 1134573342}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 885502977}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7622,14 +7626,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.08894867, g: 0, b: 0.07468763, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5176471}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3821791876570597701, guid: 2332943279a29fa49b499efd5b62f655, type: 3}
+  m_Sprite: {fileID: -5760381824352239175, guid: 9a7132150371e754aa2bca2feafdc374, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -10276,7 +10280,7 @@ Transform:
   m_GameObject: {fileID: 1494260824}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.7999821, y: 87.24201, z: -10}
+  m_LocalPosition: {x: -70.29998, y: 89.042015, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11741,9 +11745,9 @@ MonoBehaviour:
   sounds:
   - name: 1
     clips:
-    - {fileID: 8300000, guid: c66ca2f7958220042a804450eb2a5544, type: 3}
+    - {fileID: 8300000, guid: 6ea06ba8e80ef04428340a9349935580, type: 3}
     type: 0
-    volume: 0.25
+    volume: 0.15
     pitch: 1
     randomPitchVariation: 0
   - name: 2
@@ -11896,7 +11900,7 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: f898b875b64aada46aa47c949683e646, type: 3}
     type: 1
-    volume: 0.368
+    volume: 1
     pitch: 1
     randomPitchVariation: 0
   - name: 22
@@ -11914,7 +11918,7 @@ MonoBehaviour:
     type: 1
     volume: 1
     pitch: 1
-    randomPitchVariation: 0
+    randomPitchVariation: 0.00017142334
   - name: 24
     clips:
     - {fileID: 0}
@@ -11954,7 +11958,7 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: 29c7ddcfe3b532e4ba7df6dcd26b8c0e, type: 3}
     type: 1
-    volume: 0.6
+    volume: 1
     pitch: 1
     randomPitchVariation: 0.22
   - name: 29
