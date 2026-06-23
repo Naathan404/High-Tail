@@ -158,7 +158,7 @@ public class TaleStoneTrigger : MonoBehaviour
     private void ExecuteSkillUnlockSequence()
     {
         if (_animator != null) _animator.Play("Activated");
-        CameraShakeManager.Instance.ShakeCustom(0.4f);
+        CameraShakeManager.Instance.ShakeCustom(0.5f);
         //OnTaleStoneActivated?.Invoke(transform);
         transform.DOMoveY(_originalY + _elevateYOffset, _elevateDuration)
             .SetEase(Ease.OutCubic)
