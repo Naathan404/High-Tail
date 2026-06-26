@@ -28,7 +28,19 @@ public class AstralPulseSkill : MonoBehaviour
         {
             SetupCircle();
         }
-        SkillUI.Instance.skillCoolDown = cooldownTime;
+        //SkillUI.Instance.skillDuration = cooldownTime; // Lỗi
+    }
+
+    private void Start()
+    {
+        if (SkillUI.Instance != null)
+        {
+            SkillUI.Instance.skillDuration = cooldownTime;
+        }
+        else
+        {
+            Debug.LogWarning("SkillUI Instance bị null trong Start!");
+        }
     }
 
     private void SetupCircle()
@@ -56,12 +68,14 @@ public class AstralPulseSkill : MonoBehaviour
     {
         if (isCooldown)
         {
-            SkillUI.Instance.ShowIcon();
             AudioManager.Instance.PlaySFX(SoundName.OutOfEnergy);
             return;
         }
+
         StartCoroutine(CooldownRoutine());
 
+        AudioManager.Instance.PlaySFX(SoundName.Player_ShockWave);
+        SkillUI.Instance.ShowIcon();
         PlayLineVFX();
 
         // Logic tìm và kích hoạt nấm (Giữ nguyên)

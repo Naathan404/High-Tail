@@ -145,6 +145,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pogo"",
+                    ""type"": ""Button"",
+                    ""id"": ""18cfb1ea-5379-43b0-9feb-4d8816e0acf7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -354,6 +363,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Light"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6d7943f8-b4f2-4f69-95b7-6e7d6aeb9dfb"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pogo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""18b77ff2-cbc0-4d47-bade-54213bfe6208"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pogo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -588,6 +619,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Movement_Glide = m_Movement.FindAction("Glide", throwIfNotFound: true);
         m_Movement_Grab = m_Movement.FindAction("Grab", throwIfNotFound: true);
         m_Movement_Light = m_Movement.FindAction("Light", throwIfNotFound: true);
+        m_Movement_Pogo = m_Movement.FindAction("Pogo", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
@@ -692,6 +724,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Movement_Glide;
     private readonly InputAction m_Movement_Grab;
     private readonly InputAction m_Movement_Light;
+    private readonly InputAction m_Movement_Pogo;
     /// <summary>
     /// Provides access to input actions defined in input action map "Movement".
     /// </summary>
@@ -727,6 +760,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Movement/Light".
         /// </summary>
         public InputAction @Light => m_Wrapper.m_Movement_Light;
+        /// <summary>
+        /// Provides access to the underlying input action "Movement/Pogo".
+        /// </summary>
+        public InputAction @Pogo => m_Wrapper.m_Movement_Pogo;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -771,6 +808,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Light.started += instance.OnLight;
             @Light.performed += instance.OnLight;
             @Light.canceled += instance.OnLight;
+            @Pogo.started += instance.OnPogo;
+            @Pogo.performed += instance.OnPogo;
+            @Pogo.canceled += instance.OnPogo;
         }
 
         /// <summary>
@@ -800,6 +840,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Light.started -= instance.OnLight;
             @Light.performed -= instance.OnLight;
             @Light.canceled -= instance.OnLight;
+            @Pogo.started -= instance.OnPogo;
+            @Pogo.performed -= instance.OnPogo;
+            @Pogo.canceled -= instance.OnPogo;
         }
 
         /// <summary>
@@ -1288,6 +1331,13 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pogo" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPogo(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.

@@ -54,6 +54,7 @@ public class AstralGift : MonoBehaviour
 
         _isCollected = true;
         _collider.enabled = false; 
+        AudioManager.Instance.PlaySFX(SoundName.Reward);
         DOTween.To
         (
             () => _light.intensity,
@@ -64,8 +65,6 @@ public class AstralGift : MonoBehaviour
 
         OnCollected?.Invoke(transform);
         StartCoroutine(HandleCollect(_hitStopDuration));
-
-
     }
 
     private IEnumerator HandleCollect(float duration)
