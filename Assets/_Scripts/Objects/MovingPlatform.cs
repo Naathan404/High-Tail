@@ -9,6 +9,8 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] private Transform _endTransform;
     [SerializeField] private float _moveSpeed;
     [SerializeField] private LineRenderer _lineRenderer;
+    [ColorUsage(true, true)] [SerializeField] private Color _pathColor = Color.white; 
+    [SerializeField] private float _lineWidth = 0.15f;
     
     private Rigidbody2D _rb;
     private Transform _currentTarget;
@@ -33,9 +35,10 @@ public class MovingPlatform : MonoBehaviour
         {
             _lineRenderer.SetPosition(0, _startTransform.position);
             _lineRenderer.SetPosition(1, _endTransform.position);
-            _lineRenderer.startWidth = _lineRenderer.endWidth = 0.3f;
-            _lineRenderer.startColor = Color.white;
-            _lineRenderer.endColor = Color.white;
+            _lineRenderer.startWidth = _lineRenderer.endWidth = _lineWidth;
+            _lineRenderer.startColor = _pathColor;
+            _lineRenderer.endColor = _pathColor;
+
         }
     }
 
@@ -50,35 +53,6 @@ public class MovingPlatform : MonoBehaviour
             _currentTarget = (_currentTarget == _startTransform) ? _endTransform : _startTransform;
         }
     }
-
-    // private void MovePlatform(Vector2 newPos)
-    // {
-    //     transform.DOMove(_endTransform.position, move
-    // }
-
-    // private void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     if (collision.gameObject.CompareTag("Player"))
-    //     {
-    //         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-    //         if(player != null)
-    //         {
-    //             player.transform.SetParent(this.transform);    
-    //         }
-    //     } 
-    // }
-
-    // private void OnCollisionExit2D(Collision2D collision)
-    // {
-    //     if (collision.gameObject.CompareTag("Player"))
-    //     {
-    //         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
-    //         if(player != null)
-    //         {
-    //             player.ReturnToCoreScene();    
-    //         }
-    //     } 
-    // }
 
     private void OnDrawGizmos()
     {
