@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New TaleStone Data", menuName = "High Tail/TaleStoneData")]
@@ -8,6 +9,9 @@ public class TaleStoneData : ScriptableObject
     public float TypingSpeed = 0.05f;
 
     public bool IsActivated = false;
+
+    public bool IsKingMonolith = false;
+    public bool IsHeroMonolith = false;
     
     [System.Serializable]
     public struct DialogueLine

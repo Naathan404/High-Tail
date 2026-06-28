@@ -34,11 +34,21 @@ public class TaleStoneManager : Singleton<TaleStoneManager>
     {
         if(GeneralSetting.Instance.currentLanguage == GeneralSetting.Language.Vietnamese)
         {
-            _titleText.text = "Thư thạch";
+            if (data.IsKingMonolith)
+                _titleText.text = "Tượng Đá Của Nhà Vua";
+            else if (data.IsHeroMonolith)
+                _titleText.text = "Tượng Đá Của Vị Anh Hùng";
+            else
+                _titleText.text = "Thư Thạch";
         }
         else
         {
-            _titleText.text = "Tale Stone";
+            if (data.IsKingMonolith)
+                _titleText.text = "Monolith of the King";
+            else if (data.IsHeroMonolith)
+                _titleText.text = "Monolith of the Hero";
+            else
+                _titleText.text = "Tale Stone";
         }
         _numberText.transform.DOMoveY(_originalNumberTextTransform.y + _numberTextFloatingOffset, _numberTextFloatingDuration)
             .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.OutSine);
