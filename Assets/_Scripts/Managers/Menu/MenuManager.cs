@@ -1,16 +1,17 @@
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 
 public class MenuManager : Singleton<MenuManager>
 {
     [Header("Button")]
-    //[SerializeField] private Button _pauseButton;
     [SerializeField] private Button _backButton;
     [SerializeField] private float _switchDuration = 0.25f;
 
@@ -36,7 +37,16 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private GameObject _savedGamePanel;
     [SerializeField] private GameObject _settingsPanel;
     [SerializeField] private GameObject _creditPanel;
-    
+
+    [Header("Localization Keys")]
+    [SerializeField] private LocalizedString _playStringRef;
+    [SerializeField] private LocalizedString _continueStringRef;
+    [SerializeField] private LocalizedString _exitStringRef;
+    [SerializeField] private LocalizedString _homeStringRef;
+    [SerializeField] private LocalizedString _selectSavedGameNotificationRef;
+    [SerializeField] private LocalizedString _settingsStringRef;
+    [SerializeField] private LocalizedString _creditStringRef;
+
     [Header("Title Bar")]
     [SerializeField] private TextMeshProUGUI _titleText; 
     [SerializeField] private GameObject _title;
@@ -66,89 +76,6 @@ public class MenuManager : Singleton<MenuManager>
         UpdateGameplayVisibility();
         OpenPauseMenu(instant: true);
     }
-
-    private void InitializeUI()
-    {
-        _sidePanelButtons = new List<Button> {
-            _playButton,
-            _settingButton,
-            _creditButton,
-            _exitButton
-        };
-
-        foreach (var btn in _sidePanelButtons)
-        {
-            Navigation nav = new Navigation();
-            nav.mode = Navigation.Mode.None; 
-            btn.navigation = nav;
-        }
-    }
-
-    private void SetupButtonListeners()
-    {
-        // Bọc OpenPauseMenu trong () => để xử lý lỗi tham số
-        //_pauseButton.onClick.AddListener(() => OpenPauseMenu());
-        _backButton.onClick.AddListener(() => OnBackClicked());
-
-        _playButton.onClick.AddListener(() => OnPlayOrContinueClicked());
-        _settingButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Settings));
-        _creditButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Credit));
-
-        _exitButton.onClick.AddListener(() => OnExitOrHomeClicked());
-    }
-
-    #region Gameplay Elements Visibility
-    public void UpdateGameplayVisibility()
-    {
-        // Chỉ hiện Player và Canvas nếu đã có màn chơi được chọn
-        bool isPlaying = CanResumeGame();
-
-        if (_playerObject != null)
-        {
-            _playerObject.SetActive(isPlaying);
-        }
-
-        if (_mainCanvas != null)
-        {
-            _mainCanvas.SetActive(isPlaying);
-        }
-    }
-
-    private void UpdateSidePanelButtons()
-    {
-        bool isInGame = CanResumeGame();
-
-        // 1. Đổi Text của nút Play thành "Continue" hoặc "Play"
-        TextMeshProUGUI playText = _playButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (playText != null)
-        {
-            playText.text = isInGame ? "Continue" : "Play";
-        }
-
-        // 2. Bật/Tắt nút Credit (Vào game thì ẩn đi)
-        _creditButton.gameObject.SetActive(!isInGame);
-
-        // 3. Đổi Text của nút Exit thành "Home" hoặc ngược lại
-        TextMeshProUGUI exitText = _exitButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (exitText != null)
-        {
-            exitText.text = isInGame ? "Home" : "Exit";
-        }
-
-        // 4. Làm mới danh sách điều hướng Phím (bỏ qua các nút đang bị ẩn)
-        _sidePanelButtons.Clear();
-        if (_playButton.gameObject.activeSelf) _sidePanelButtons.Add(_playButton);
-        if (_settingButton.gameObject.activeSelf) _sidePanelButtons.Add(_settingButton);
-        if (_creditButton.gameObject.activeSelf) _sidePanelButtons.Add(_creditButton);
-        if (_exitButton.gameObject.activeSelf) _sidePanelButtons.Add(_exitButton);
-
-        // 5. Chống lỗi out-of-index khi ấn phím Up/Down
-        if (_currentButtonIndex >= _sidePanelButtons.Count)
-        {
-            _currentButtonIndex = 0;
-        }
-    }
-    #endregion
 
     void Update()
     {
@@ -199,6 +126,139 @@ public class MenuManager : Singleton<MenuManager>
         }
     }
 
+    private void OnEnable()
+    {
+        LocalizationSettings.SelectedLocaleChanged += OnLanguageChanged;
+    }
+
+    private void OnDisable()
+    {
+        LocalizationSettings.SelectedLocaleChanged -= OnLanguageChanged;
+    }
+
+    #region Initialization
+    private void InitializeUI()
+    {
+        _sidePanelButtons = new List<Button> {
+            _playButton,
+            _settingButton,
+            _creditButton,
+            _exitButton
+        };
+
+        foreach (var btn in _sidePanelButtons)
+        {
+            Navigation nav = new Navigation();
+            nav.mode = Navigation.Mode.None; 
+            btn.navigation = nav;
+        }
+    }
+
+    private void SetupButtonListeners()
+    {
+        _backButton.onClick.AddListener(() => OnBackClicked());
+
+        _playButton.onClick.AddListener(() => OnPlayOrContinueClicked());
+        _settingButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Settings));
+        _creditButton.onClick.AddListener(() => OpenSubPanel(SubPanelType.Credit));
+
+        _exitButton.onClick.AddListener(() => OnExitOrHomeClicked());
+    }
+    #endregion
+
+    #region Localization
+    private void OnLanguageChanged(Locale newLocale)
+    {
+        if (_isSidePanelOpen)
+        {
+            UpdateSidePanelButtons();
+        }
+
+        if (_isSubPanelOpen)
+        {
+            if (_settingsPanel.activeSelf)
+                SetPanelTitleAsync(_settingsStringRef);
+            else if (_creditPanel.activeSelf)
+                SetPanelTitleAsync(_creditStringRef);
+            else if (_savedGamePanel.activeSelf)
+                SetPanelTitleAsync(_selectSavedGameNotificationRef);
+        }
+    }
+    #endregion
+
+    #region Async Localization Helpers
+    private void SetPanelTitleAsync(LocalizedString stringRef)
+    {
+        stringRef.GetLocalizedStringAsync().Completed += (handle) =>
+        {
+            SetPanelTitle(handle.Result);
+        };
+    }
+
+    private void ShowTitleNotificationAsync(LocalizedString stringRef)
+    {
+        stringRef.GetLocalizedStringAsync().Completed += (handle) =>
+        {
+            ShowTitleNotification(handle.Result);
+        };
+    }
+    #endregion
+
+    #region Gameplay Elements Visibility
+    public void UpdateGameplayVisibility()
+    {
+        // Chỉ hiện Player và Canvas nếu đã có màn chơi được chọn
+        bool isPlaying = CanResumeGame();
+
+        if (_playerObject != null)
+        {
+            _playerObject.SetActive(isPlaying);
+        }
+
+        if (_mainCanvas != null)
+        {
+            _mainCanvas.SetActive(isPlaying);
+        }
+    }
+
+    private void UpdateSidePanelButtons()
+    {
+        bool isInGame = CanResumeGame();
+
+        // 1. Đổi Text của nút Play thành "Continue" hoặc "Play"
+        TextMeshProUGUI playText = _playButton.GetComponentInChildren<TextMeshProUGUI>();
+        if (playText != null)
+        {
+            var playString = isInGame ? _continueStringRef : _playStringRef;
+            playString.GetLocalizedStringAsync().Completed += (handle) => { playText.text = handle.Result; };
+        }
+
+        // 2. Bật/Tắt nút Credit (Vào game thì ẩn đi)
+        _creditButton.gameObject.SetActive(!isInGame);
+
+        // 3. Đổi Text của nút Exit thành "Home" hoặc ngược lại
+        TextMeshProUGUI exitText = _exitButton.GetComponentInChildren<TextMeshProUGUI>();
+        if (exitText != null)
+        {
+            var exitString = isInGame ? _homeStringRef : _exitStringRef;
+            exitString.GetLocalizedStringAsync().Completed += (handle) => { exitText.text = handle.Result; };
+        }
+
+        // 4. Làm mới danh sách điều hướng Phím (bỏ qua các nút đang bị ẩn)
+        _sidePanelButtons.Clear();
+        if (_playButton.gameObject.activeSelf) _sidePanelButtons.Add(_playButton);
+        if (_settingButton.gameObject.activeSelf) _sidePanelButtons.Add(_settingButton);
+        if (_creditButton.gameObject.activeSelf) _sidePanelButtons.Add(_creditButton);
+        if (_exitButton.gameObject.activeSelf) _sidePanelButtons.Add(_exitButton);
+
+        // 5. Chống lỗi out-of-index khi ấn phím Up/Down
+        if (_currentButtonIndex >= _sidePanelButtons.Count)
+        {
+            _currentButtonIndex = 0;
+        }
+    }
+    #endregion
+
     #region Open menu
     public void OpenPauseMenu(bool instant = false)
     {
@@ -217,26 +277,24 @@ public class MenuManager : Singleton<MenuManager>
         UpdateTopLeftButtonState(instant); // Truyền cờ instant xuống
     }
 
-    public void ClosePauseMenu() 
+    public void ClosePauseMenu()
     {
         if (!CanResumeGame())
         {
             OpenSubPanel(SubPanelType.SavedGame);
-            ShowTitleNotification("Select a saved game to play");
+            ShowTitleNotificationAsync(_selectSavedGameNotificationRef); // Đã sửa thành Async
             return;
         }
 
-        CloseAllSubPanels(); 
+        CloseAllSubPanels();
         EventSystem.current.SetSelectedGameObject(null);
         ShowTitleBar(false);
 
-        PauseGameManager.SetPause(false); 
+        PauseGameManager.SetPause(false);
 
         if (_isSidePanelOpen) OpenSideMenu(false);
 
         UpdateTopLeftButtonState();
-
-        //UpdateGameplayVisibility();
     }
 
     public void ShowGameplayElements()
@@ -296,7 +354,7 @@ public class MenuManager : Singleton<MenuManager>
         if (_isSidePanelOpen) OpenSideMenu(false);
 
         CloseAllSubPanels();
-        _isSubPanelOpen = true; // Thêm dòng này SAU KHI CloseAllSubPanels
+        _isSubPanelOpen = true;
 
         ShowTitleBar(true);
 
@@ -304,15 +362,15 @@ public class MenuManager : Singleton<MenuManager>
         {
             case SubPanelType.Settings:
                 OpenPanel(_settingsPanel, true);
-                SetPanelTitle("Settings");
+                SetPanelTitleAsync(_settingsStringRef);
                 break;
             case SubPanelType.Credit:
                 OpenPanel(_creditPanel, true);
-                SetPanelTitle("Credits");
+                SetPanelTitleAsync(_creditStringRef);
                 break;
             case SubPanelType.SavedGame:
                 OpenPanel(_savedGamePanel, true);
-                SetPanelTitle("Saved Games");
+                SetPanelTitleAsync(_selectSavedGameNotificationRef);
                 break;
         }
 
@@ -349,14 +407,14 @@ public class MenuManager : Singleton<MenuManager>
             ShowTitleBar(false);
             OpenSideMenu(true);
 
-            UpdateTopLeftButtonState(); // Sẽ tự động ẩn nút Back
+            UpdateTopLeftButtonState();
         }
         // 2. Đang ở Side Navigation -> Muốn thoát Menu về Game
         else if (_isSidePanelOpen)
         {
             if (!CanResumeGame())
             {
-                ShowTitleNotification("Please select or create a game to play!");
+                ShowTitleNotificationAsync(_selectSavedGameNotificationRef); // Đã sửa thành Async
             }
             else
             {

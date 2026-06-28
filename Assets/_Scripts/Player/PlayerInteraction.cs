@@ -7,17 +7,44 @@ public class PlayerInteraction : MonoBehaviour
     //Để dành sau này làm button Interact, hiện tại thì bấm phím E
     //[SerializeField] private GameObject interactionIcon;
 
-    private void Start()
+    // private void Start()
+    // {
+    //     InputManager.Instance.Inputs.Interaction.Interact.started += OnInteract;
+    // }
+
+    // private void OnDestroy()
+    // {
+    //     InputManager.Instance.Inputs.Interaction.Interact.started -= OnInteract;
+    // }
+
+    // private void OnEnable()
+    // {
+    //     InputManager.Instance.Inputs.Interaction.Interact.started += OnInteract;
+    // }
+
+    // private void OnDisable()
+    // {
+    //     InputManager.Instance.Inputs.Interaction.Interact.started -= OnInteract;
+    // }
+
+    private void Update()
     {
-        InputManager.Instance.Inputs.Interaction.Interact.started += OnInteract;
+        if (InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
+            OnPlayerInteract();
     }
 
-    private void OnDestroy()
+    private void OnPlayerInteract()
     {
-        InputManager.Instance.Inputs.Interaction.Interact.started -= OnInteract;
+        if (interactableInRange != null)
+        {
+            interactableInRange.Interact();
+            if (!interactableInRange.CanInteract())
+            {
+                //if (interactionIcon != null)
+                //    interactionIcon.SetActive(false);
+            }
+        }
     }
-
-
 
     public void OnInteract(InputAction.CallbackContext context)//Dùng PlayerInput để gọi hàm này khi bấm phím Interact (E)
     {

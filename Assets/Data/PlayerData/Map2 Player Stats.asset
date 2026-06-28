@@ -16,10 +16,10 @@ MonoBehaviour:
   WallSlideUnlocked: 1
   DashUnlocked: 1
   AirGlideUnlocked: 1
-  PogoUnlocked: 0
+  PogoUnlocked: 1
   GlowUnlocked: 0
   DoubleJumpUnlocked: 0
-  AstralPulseUnlocked: 0
+  AstralPulseUnlocked: 1
   maxMoveSpeed: 11
   acceleration: 50
   deceleration: 90
@@ -34,9 +34,9 @@ MonoBehaviour:
   dashDuration: 0.15
   bounceHorizontalForce: 10
   bounceVerticalForce: 5
-  glideAcceleration: 5
-  airGlideGravityScale: 0.4
-  maxGlideSpeed: 4
+  glideAcceleration: 10
+  airGlideGravityScale: 0.3
+  maxGlideSpeed: 6
   wallSlideGravityScale: 0.5
   wallSlideBufferTime: 0.1
   pogoForce: 30

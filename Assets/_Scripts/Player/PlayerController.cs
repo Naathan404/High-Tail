@@ -19,6 +19,7 @@ public partial class PlayerController : MonoBehaviour
     public PlayerIdleState IdleState { get; private set; }
     public PlayerRunState RunState { get; private set; }
     public PlayerDashState DashState { get; private set; }
+    public PlayerJumpSquatState JumpSquatState { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerFallState FallState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
@@ -43,6 +44,7 @@ public partial class PlayerController : MonoBehaviour
     public bool DashPressed { get; private set; }
     public bool GlideHeld { get; private set; }
     public bool GrabHeld { get; private set; }
+    public bool PogoPressed { get; private set; }
 
     [Header("Player Variables")]
     [SerializeField] private float _jumpBufferCounter;
@@ -132,6 +134,7 @@ public partial class PlayerController : MonoBehaviour
         VineClimbState = new PlayerVineClimbState(this, _stateMachine);
         VineSwingState = new PlayerVineSwingState(this, _stateMachine);
         BounceState = new PlayerBounceState(this, _stateMachine);
+        JumpSquatState = new PlayerJumpSquatState(this, _stateMachine);
 
         _coreScene = gameObject.scene;
     }
@@ -195,6 +198,7 @@ public partial class PlayerController : MonoBehaviour
         DashPressed = Inputs.Movement.Dash.WasPressedThisFrame();    // dash
         GlideHeld = Inputs.Movement.Glide.IsPressed();     // giữ nút để air glide
         GrabHeld = Inputs.Movement.Grab.IsPressed();        // bám vào tường hoặc dây leo
+        PogoPressed = Inputs.Movement.Pogo.WasPressedThisFrame();   // pogo
 
         if (IsBlocked)
         {

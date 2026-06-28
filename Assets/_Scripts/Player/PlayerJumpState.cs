@@ -28,13 +28,15 @@ public class PlayerJumpState : PlayerState
         _player.Rb.linearVelocity = new Vector2(horizontalSpeed, jumpForce);
 
         _player.Visual.Anim.Play("pJump");
+        //_player.Visual.Anim.Play("InAirBlendTree");
         _player.Visual.JumpDustParticle.Play();
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked && _player.Rb.linearVelocity.y <= 0f)
+        _player.Visual.Anim.SetFloat("yVelocity", _player.Rb.linearVelocity.y);
+        if (/*_player.MoveY < -0.5f*/ _player.PogoPressed && !_player.IsOnGround() && _player.Data.PogoUnlocked /*&& _player.Rb.linearVelocity.y <= 0f*/)
         {
             _stateMachine.ChangeState(_player.PogoState);
             return;

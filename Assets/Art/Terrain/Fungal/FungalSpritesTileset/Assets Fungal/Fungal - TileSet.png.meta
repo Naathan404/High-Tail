@@ -72,7 +72,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -93,7 +93,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -125,16 +125,20 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 2076
-        width: 1508
-        height: 1480
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: 52281c3239902bb00800000000000000
       internalID: 842746607836430885
@@ -146,17 +150,21 @@ TextureImporter:
       name: Fungal - TileSet_1
       rect:
         serializedVersion: 2
-        x: 1534
-        y: 2075
-        width: 486
-        height: 1475
+        x: 512
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -256, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -256, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: 3b95b29f8f4cffd80800000000000000
       internalID: -8214630621689194061
@@ -168,17 +176,21 @@ TextureImporter:
       name: Fungal - TileSet_2
       rect:
         serializedVersion: 2
-        x: 2046
-        y: 1535
-        width: 1538
-        height: 2049
+        x: 1024
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -256, y: -256}
+        - {x: 168, y: -256}
+        - {x: 172, y: 181}
+        - {x: -256, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: 961deaf7ffdffd640800000000000000
       internalID: 5107079776262082921
@@ -190,17 +202,21 @@ TextureImporter:
       name: Fungal - TileSet_3
       rect:
         serializedVersion: 2
-        x: 0
-        y: 1564
-        width: 1505
-        height: 456
+        x: 1536
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: f6374409e4e5c7800800000000000000
       internalID: 611467340936409967
@@ -212,17 +228,21 @@ TextureImporter:
       name: Fungal - TileSet_4
       rect:
         serializedVersion: 2
-        x: 1534
-        y: 1570
-        width: 483
-        height: 444
+        x: 2048
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: 1b3101bec283ea830800000000000000
       internalID: 4084263677645034417
@@ -234,17 +254,21 @@ TextureImporter:
       name: Fungal - TileSet_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2049
-        height: 1537
+        x: 2560
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: 444e53e28c3102730800000000000000
       internalID: 3972196621830448196
@@ -256,17 +280,21 @@ TextureImporter:
       name: Fungal - TileSet_6
       rect:
         serializedVersion: 2
-        x: 1023
-        y: 540
-        width: 1027
-        height: 968
+        x: 3072
+        y: 3072
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
       bones: []
       spriteID: 59c18fd8d85bff6a0800000000000000
       internalID: -6413207724775433067
@@ -278,20 +306,1090 @@ TextureImporter:
       name: Fungal - TileSet_7
       rect:
         serializedVersion: 2
-        x: 2076
-        y: 28
-        width: 1508
-        height: 1480
+        x: 0
+        y: 2560
+        width: 512
+        height: 512
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape: []
-      tessellationDetail: -1
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 256}
+        - {x: -163, y: 256}
+      tessellationDetail: 0
       bones: []
       spriteID: ebdabf7475d2a1b90800000000000000
       internalID: -7270448795543163458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_8
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 2560
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -256, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 256}
+        - {x: -256, y: 256}
+      tessellationDetail: 0
+      bones: []
+      spriteID: adf0eb006ae8b1142af7571b57225432
+      internalID: 1702782651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_9
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 2560
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -256, y: -256}
+        - {x: 168, y: -256}
+        - {x: 168, y: 256}
+        - {x: -256, y: 256}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0090790bb8e7694bb8bd8767c6fa0cf
+      internalID: -240966438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_10
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 2560
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8826583232674e348972b412f2f33158
+      internalID: -410637628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_11
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 2560
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5c720fb24befe5e4481713190accee7d
+      internalID: 1878953233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_12
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 2560
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff694aa429b4a854b97b9fce25f9c627
+      internalID: -1749205844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_13
+      rect:
+        serializedVersion: 2
+        x: 3072
+        y: 2560
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 404233fa24df4104bb963f2a0c8ac0b1
+      internalID: -208122943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_14
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -154, y: -177}
+        - {x: 256, y: -181}
+        - {x: 256, y: 256}
+        - {x: -154, y: 256}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 26b77c9e7ec9f1d459fbbc7e460ba7aa
+      internalID: 2105242648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_15
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -256, y: -177}
+        - {x: 256, y: -168}
+        - {x: 256, y: 256}
+        - {x: -256, y: 256}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2281c9f24b376ff47bef84a0cbe53723
+      internalID: -203325135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_16
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -256, y: -177}
+        - {x: 160, y: -163}
+        - {x: 154, y: 256}
+        - {x: -256, y: 256}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c9b98e481f59e445a09f084c529e239
+      internalID: 1656186528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_17
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 990a743591677184d8686dc6beaad190
+      internalID: 339126470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_18
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 878428d1049cd794895b018edc2457f3
+      internalID: -1127401555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_19
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f41817c417a379b4dbf0d4d767edbd36
+      internalID: -1653945219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_20
+      rect:
+        serializedVersion: 2
+        x: 3072
+        y: 2048
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: c09e793a854e2c34ba875b92890cb582
+      internalID: 1887513035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 177da553d044ab14396fadb2116e7c28
+      internalID: 1619781654
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_22
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 590df66d4acab2d4e97652742ced25d5
+      internalID: 1688733217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_23
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 124663ca97fb1444eae328d9383bf5bf
+      internalID: -1645769375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_24
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 119c9a9be9a4c344f882d5256a09070e
+      internalID: -1453780370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_25
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8bd63e0741385a48ab959c4e392e0df
+      internalID: 1664543128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_26
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 116723134b62133418b27df9dc324c57
+      internalID: -590758135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_27
+      rect:
+        serializedVersion: 2
+        x: 3072
+        y: 1536
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68041de8398f6c64da1e2185ba8a0a82
+      internalID: 839302959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 989c6260209335e4f8ea7b16aafbde08
+      internalID: -1579684962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_29
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f06aa511035aac24e85eb58e7c46a6d2
+      internalID: 1760788290
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_30
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78e5b20042049a0498c5da7c64cb3905
+      internalID: -584996748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_31
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: fde2be611ac3c0641974c7679c9460dd
+      internalID: -2098682666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_32
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3cb74fa8dd1fde4e95318275ac2c9bc
+      internalID: -14670952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_33
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5e9b3b2b8098c4b40ab761fc54819566
+      internalID: 1435649396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_34
+      rect:
+        serializedVersion: 2
+        x: 3072
+        y: 1024
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd140b2f2efe61e43b682635756048d1
+      internalID: -1968815967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_35
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: c650363fc124ee3439e24072ba70e77a
+      internalID: -1376752132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_36
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c6d2f6b111464b40a929463fc5f306b
+      internalID: -383266733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_37
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9849435137ca6634cb6e8899ecf3302c
+      internalID: 163330436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_38
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 209728525d6036247912ce58731cef54
+      internalID: -1434492237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_39
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee0a47ce82092f849935157dcfdf4bb1
+      internalID: 2137797583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_40
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0817ff88417dc75418a28863c48688d9
+      internalID: -2025372019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_41
+      rect:
+        serializedVersion: 2
+        x: 3072
+        y: 512
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f5a7ea2682acb4428caf4bb89d980e5
+      internalID: -1287255443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_42
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7ef933bd3c2fe1c4ca486017030ba9c6
+      internalID: 1530916756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_43
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: a692941329868584fba2b437100e6da4
+      internalID: 1792392386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_44
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66a098ad5c70df14ca5e4f822e077837
+      internalID: 20330629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_45
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4009bb5b70b6a1244a9c645bc021336e
+      internalID: -1861529445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_46
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d3413b3713ecc84fb1d9227270e313f
+      internalID: 2014956197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_47
+      rect:
+        serializedVersion: 2
+        x: 2560
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea6c88b37a08287428752627a1e8d3d3
+      internalID: 1268884265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fungal - TileSet_48
+      rect:
+        serializedVersion: 2
+        x: 3072
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape:
+      - - {x: -163, y: -256}
+        - {x: 256, y: -256}
+        - {x: 256, y: 181}
+        - {x: -163, y: 181}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e8ae41fe560d7a49bbf4879e555f105
+      internalID: 1592684631
       vertices: []
       indices: 
       edges: []
@@ -300,7 +1398,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: fe91f4ffce2773540b35d915f392f30d
     internalID: 0
     vertices: []
     indices: 
@@ -308,16 +1406,59 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":7.0,"y":7.0},"gridSpriteSize":{"x":512.0,"y":512.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       Fungal - TileSet_0: 842746607836430885
       Fungal - TileSet_1: -8214630621689194061
+      Fungal - TileSet_10: -410637628
+      Fungal - TileSet_11: 1878953233
+      Fungal - TileSet_12: -1749205844
+      Fungal - TileSet_13: -208122943
+      Fungal - TileSet_14: 2105242648
+      Fungal - TileSet_15: -203325135
+      Fungal - TileSet_16: 1656186528
+      Fungal - TileSet_17: 339126470
+      Fungal - TileSet_18: -1127401555
+      Fungal - TileSet_19: -1653945219
       Fungal - TileSet_2: 5107079776262082921
+      Fungal - TileSet_20: 1887513035
+      Fungal - TileSet_21: 1619781654
+      Fungal - TileSet_22: 1688733217
+      Fungal - TileSet_23: -1645769375
+      Fungal - TileSet_24: -1453780370
+      Fungal - TileSet_25: 1664543128
+      Fungal - TileSet_26: -590758135
+      Fungal - TileSet_27: 839302959
+      Fungal - TileSet_28: -1579684962
+      Fungal - TileSet_29: 1760788290
       Fungal - TileSet_3: 611467340936409967
+      Fungal - TileSet_30: -584996748
+      Fungal - TileSet_31: -2098682666
+      Fungal - TileSet_32: -14670952
+      Fungal - TileSet_33: 1435649396
+      Fungal - TileSet_34: -1968815967
+      Fungal - TileSet_35: -1376752132
+      Fungal - TileSet_36: -383266733
+      Fungal - TileSet_37: 163330436
+      Fungal - TileSet_38: -1434492237
+      Fungal - TileSet_39: 2137797583
       Fungal - TileSet_4: 4084263677645034417
+      Fungal - TileSet_40: -2025372019
+      Fungal - TileSet_41: -1287255443
+      Fungal - TileSet_42: 1530916756
+      Fungal - TileSet_43: 1792392386
+      Fungal - TileSet_44: 20330629
+      Fungal - TileSet_45: -1861529445
+      Fungal - TileSet_46: 2014956197
+      Fungal - TileSet_47: 1268884265
+      Fungal - TileSet_48: 1592684631
       Fungal - TileSet_5: 3972196621830448196
       Fungal - TileSet_6: -6413207724775433067
       Fungal - TileSet_7: -7270448795543163458
+      Fungal - TileSet_8: 1702782651
+      Fungal - TileSet_9: -240966438
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -14,6 +14,8 @@ public class PlayerAirGlideState : PlayerState
         _originalGravityScale = _player.Rb.gravityScale;
         _player.Rb.gravityScale = _player.Data.airGlideGravityScale;
         _player.Rb.linearVelocity = Vector2.zero;
+        _player.Visual.Anim.Play("pGlide");
+
 
     }
 
@@ -44,7 +46,7 @@ public class PlayerAirGlideState : PlayerState
         {
             _player.Rb.linearVelocity += _player.CurrentWindForce * Time.fixedDeltaTime;
 
-            float maxWindSpeedX = 15f;
+            float maxWindSpeedX = 20f;
             float maxWindSpeedY = 12f;
 
             float clampedX = Mathf.Clamp(_player.Rb.linearVelocity.x, -maxWindSpeedX, maxWindSpeedX);

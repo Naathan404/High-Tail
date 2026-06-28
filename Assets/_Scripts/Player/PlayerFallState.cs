@@ -25,13 +25,14 @@ public class PlayerFallState : PlayerState
                 return;
             }
         }
-        _player.Visual.Anim.Play("pFall");
+        //_player.Visual.Anim.Play("pFall");
+        _player.Visual.Anim.Play("InAirBlendTree");
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        
+        _player.Visual.Anim.SetFloat("yVelocity", _player.Rb.linearVelocity.y);
         // timer timer timer
         _timer += Time.deltaTime;
         _player.CheckFlip(_player.MoveX);
@@ -80,7 +81,7 @@ public class PlayerFallState : PlayerState
     {
         base.HandleInput();
 
-        if (_player.MoveY < -0.5f && !_player.IsOnGround() && _player.Data.PogoUnlocked && _player.Rb.linearVelocity.y <= 0f)
+        if (/*_player.MoveY < -0.5f*/ _player.PogoPressed && !_player.IsOnGround() && _player.Data.PogoUnlocked /*&& _player.Rb.linearVelocity.y <= 0f*/)
         {
             _stateMachine.ChangeState(_player.PogoState);
             return;

@@ -17,39 +17,32 @@ public class EndDialogueCallbackHelper : MonoBehaviour
             case(int)Skill.WallSlide:
                 _player.UnlockWallSlide();
                 break;
+            case (int)Skill.AirGlide:
+                _player.UnlockAirGlide();       
+                break;     
             case (int)Skill.Dash:
                 _player.UnlockDash();
                 break;      
-            case (int)Skill.AirGlide:
-                _player.UnlockAirGlide();
-                break;            
-            case (int)Skill.Glow:
-                _player.UnlockGlow();
-                break;     
-            case (int)Skill.Pogo:
-                _player.UnlockPogo();
-                break;               
-            case (int)Skill.DoubleJump:
-                _player.UnlockDoubleJump();
-                break;                
             case (int)Skill.AstralLight:
                 _player.UnlockAstralLight();  
                 break;
+            case (int)Skill.Pogo:
+                _player.UnlockPogo();
+                break;                         
             default:
                 break;                    
         }
+        UIManager.Instance.SetSkillIcon(skill);
     }
 
     [System.Serializable]
     public enum Skill
     {
         WallJump, // 0
-        Dash,               // 1
+        WallSlide,       // 1
         AirGlide,           // 2
-        Glow,              // 3 
-        Pogo,              // 4
-        DoubleJump,          // 5
-        AstralLight,         // 6
-        WallSlide       // 7
+        Dash,               // 3
+        AstralLight,         // 4
+        Pogo,              // 5
     }
 }
