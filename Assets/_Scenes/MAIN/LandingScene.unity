@@ -417,7 +417,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 253029136}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransitionHandler
   _canvasGroup: {fileID: 253029140}
   _fadeDuration: 0.5
-  _waitTime: 5
+  _waitTime: 3
   _loadingIcon: {fileID: 2031857918}
 --- !u!114 &459634342
 MonoBehaviour:
@@ -782,8 +782,9 @@ GameObject:
   m_Component:
   - component: {fileID: 679453256}
   - component: {fileID: 679453258}
-  - component: {fileID: 679453257}
   - component: {fileID: 679453259}
+  - component: {fileID: 679453257}
+  - component: {fileID: 679453260}
   m_Layer: 5
   m_Name: '> Press Any Key <'
   m_TagString: Untagged
@@ -925,6 +926,18 @@ MonoBehaviour:
   waveSpeed: 2
   waveHeight: 2
   waveFrequency: 1
+--- !u!225 &679453260
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 679453255}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1285413046
 GameObject:
   m_ObjectHideFlags: 0
@@ -1043,8 +1056,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d771e1d878445644e9a040495a1c7b8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LandingScene
-  _pressAnyKeyText: {fileID: 679453257}
-  _fadeAmount: 0.3
+  _pressAnyKeyTextCanvasGroup: {fileID: 679453260}
+  _fadeAmount: 0.05
   _fadeDuration: 1
 --- !u!1 &1596379409
 GameObject:

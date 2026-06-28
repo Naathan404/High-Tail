@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class LandingScene : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI _pressAnyKeyText;
+    [SerializeField] CanvasGroup _pressAnyKeyTextCanvasGroup;
     [SerializeField] private float _fadeAmount = 0.5f;
     [SerializeField] private float _fadeDuration = 0.5f;
 
     private void Start()
     {
-        _pressAnyKeyText.DOFade(_fadeAmount, _fadeDuration)
+        _pressAnyKeyTextCanvasGroup.DOFade(_fadeAmount, _fadeDuration)
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(Ease.InOutSine);
     }
