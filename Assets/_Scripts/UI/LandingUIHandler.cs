@@ -20,8 +20,10 @@ public class LandingScene : MonoBehaviour
     {
         bool isKeyPressed = UnityEngine.InputSystem.Keyboard.current != null && 
                             UnityEngine.InputSystem.Keyboard.current.anyKey.wasPressedThisFrame;
+        bool isMousePressed = UnityEngine.InputSystem.Mouse.current != null &&
+                            UnityEngine.InputSystem.Mouse.current.leftButton.wasPressedThisFrame;
 
-        if (isKeyPressed)
+        if (isKeyPressed || isMousePressed)
         {
             this.enabled = false; 
             

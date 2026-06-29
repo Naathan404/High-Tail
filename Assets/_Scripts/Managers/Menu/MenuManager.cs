@@ -272,6 +272,8 @@ public class MenuManager : Singleton<MenuManager>
         _currentButtonIndex = 0;
         _lastSelectedButton = _sidePanelButtons[0].gameObject;
 
+        InputManager.Instance.DisableControl();
+
         OpenSideMenu(open: true);
 
         UpdateTopLeftButtonState(instant); // Truyền cờ instant xuống
@@ -291,6 +293,7 @@ public class MenuManager : Singleton<MenuManager>
         ShowTitleBar(false);
 
         PauseGameManager.SetPause(false);
+        InputManager.Instance.EnableControl();
 
         if (_isSidePanelOpen) OpenSideMenu(false);
 
@@ -451,6 +454,9 @@ public class MenuManager : Singleton<MenuManager>
         }
         else
         {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
             // Chưa chơi game -> Nút có chức năng Exit (Thoát App)
             Application.Quit();
         }

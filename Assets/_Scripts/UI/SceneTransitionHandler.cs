@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
@@ -20,20 +21,21 @@ public class SceneTransitionHandler : Singleton<SceneTransitionHandler>
 
         _loadingIcon.DORotate(new Vector3(0f, 0f, -360f), 1f, RotateMode.FastBeyond360)
                 .SetLoops(-1, LoopType.Restart)
-                .SetEase(Ease.Linear);
+                .SetEase(Ease.Linear)
+                .SetUpdate(true);
     }
 
-    public void LoadSceneAsync(string sceneToLoad, string sceneToLoadAdditive = null, string sceneToUnload = null)
+    public void LoadSceneAsync(string sceneToLoad, string sceneToLoadAdditive = null, string sceneToUnload = null, Action onMidpoint = null, Action onComplete = null)
     {
         if (_isTransitioning) return; 
         _isTransitioning = true;
-        StartCoroutine(LoadSceneAsyncRoutine(sceneToLoad, sceneToLoadAdditive, sceneToUnload));
+        StartCoroutine(LoadSceneAsyncRoutine(sceneToLoad, sceneToLoadAdditive, sceneToUnload, onMidpoint, onComplete));
     }
 
-    IEnumerator LoadSceneAsyncRoutine(string sceneToLoad, string sceneToLoadAdditive = null, string sceneToUnload = null)
+    IEnumerator LoadSceneAsyncRoutine(string sceneToLoad, string sceneToLoadAdditive = null, string sceneToUnload = null, Action onMidpoint = null, Action onComplete = null)
     {
         _canvasGroup.blocksRaycasts = true;
-        yield return _canvasGroup.DOFade(1f, _fadeDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
+        yield return _canvasGroup.DOFade(1f, _fadeDuration).SetEase(Ease.InOutQuad).SetUpdate(true).WaitForCompletion();
 
         if (!string.IsNullOrEmpty(sceneToLoad))
         {
@@ -63,9 +65,14 @@ public class SceneTransitionHandler : Singleton<SceneTransitionHandler>
             }
         }
 
-        yield return new WaitForSeconds(_waitTime);
-        yield return _canvasGroup.DOFade(0f, _fadeDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
+        Debug.Log(">>> BẮT ĐẦU GỌI ON MIDPOINT <<<");
+        onMidpoint?.Invoke();
+
+        yield return new WaitForSecondsRealtime(_waitTime);
+        yield return _canvasGroup.DOFade(0f, _fadeDuration).SetEase(Ease.InOutQuad).SetUpdate(true).WaitForCompletion();
         _canvasGroup.blocksRaycasts = false;
         _isTransitioning = false;
+
+        onComplete?.Invoke();
     }
 }
