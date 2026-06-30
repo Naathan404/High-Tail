@@ -74,7 +74,12 @@ public class MenuManager : Singleton<MenuManager>
         InitializeUI();
         SetupButtonListeners();
         UpdateGameplayVisibility();
-        OpenPauseMenu(instant: true);
+        OpenMenu(instant: true);
+
+        if (AudioManager.Instance.CurrentMusic != SoundName.Menu)
+        {
+            AudioManager.Instance.PlayMusic(SoundName.Menu);
+        }
     }
 
     void Update()
@@ -260,6 +265,25 @@ public class MenuManager : Singleton<MenuManager>
     #endregion
 
     #region Open menu
+    public void OpenMenu(bool instant = false)
+    {
+        if (CanResumeGame())
+        {
+            PauseGameManager.SetPause(true);
+        }
+        CloseAllSubPanels();
+        ShowTitleBar(false);
+
+        _currentButtonIndex = 0;
+        _lastSelectedButton = _sidePanelButtons[0].gameObject;
+
+        InputManager.Instance.EnableControl();
+
+        OpenSideMenu(open: true);
+
+        UpdateTopLeftButtonState(instant); 
+    }
+
     public void OpenPauseMenu(bool instant = false)
     {
         if (CanResumeGame())
@@ -271,6 +295,8 @@ public class MenuManager : Singleton<MenuManager>
 
         _currentButtonIndex = 0;
         _lastSelectedButton = _sidePanelButtons[0].gameObject;
+
+        InputManager.Instance.DisableControl();
 
         OpenSideMenu(open: true);
 
@@ -291,6 +317,7 @@ public class MenuManager : Singleton<MenuManager>
         ShowTitleBar(false);
 
         PauseGameManager.SetPause(false);
+        InputManager.Instance.EnableControl();
 
         if (_isSidePanelOpen) OpenSideMenu(false);
 
@@ -346,6 +373,9 @@ public class MenuManager : Singleton<MenuManager>
 
     public void OpenSubPanel(SubPanelType type)
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
+
+        InputManager.Instance.DisableControl();
         if (CanResumeGame())
         {
             PauseGameManager.SetPause(true);
@@ -400,6 +430,7 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnBackClicked()
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
         // 1. Đang ở Sub-panel -> Tắt Sub-panel, lùi về Side Navigation
         if (_isSubPanelOpen)
         {
@@ -414,7 +445,7 @@ public class MenuManager : Singleton<MenuManager>
         {
             if (!CanResumeGame())
             {
-                ShowTitleNotificationAsync(_selectSavedGameNotificationRef); // Đã sửa thành Async
+                ShowTitleNotificationAsync(_selectSavedGameNotificationRef); 
             }
             else
             {
@@ -425,22 +456,28 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnPlayOrContinueClicked()
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
+
         if (CanResumeGame())
         {
             // ĐÃ VÀO GAME: Nút đóng vai trò là Continue
             // -> Đóng luôn Menu, nhả Pause, quay lại chơi tiếp (y chang nhấn ESC)
+            InputManager.Instance.EnableControl();
             ClosePauseMenu();
         }
         else
         {
             // CHƯA VÀO GAME (Ở Main Menu): Nút đóng vai trò là Play
             // -> Mở bảng chọn Save Slot
+            InputManager.Instance.DisableControl();
             OpenSubPanel(SubPanelType.SavedGame);
         }
     }
 
     private void OnExitOrHomeClicked()
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
+
         if (CanResumeGame())
         {
             // Đang chơi game -> Nút có chức năng Home (Quay về Menu gốc)
@@ -451,6 +488,9 @@ public class MenuManager : Singleton<MenuManager>
         }
         else
         {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
             // Chưa chơi game -> Nút có chức năng Exit (Thoát App)
             Application.Quit();
         }

@@ -18,4 +18,6 @@ public class SettingsData
     public float masterVolume = 1.0f;
     public float bgmVolume = 1.0f;
     public float sfxVolume = 1.0f;
+
+    public string keyBindings = "";
 }
