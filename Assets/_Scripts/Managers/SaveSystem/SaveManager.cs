@@ -81,6 +81,11 @@ public class SaveManager : Singleton<SaveManager>
         {
             _player = FindAnyObjectByType<PlayerController>();
         }
+
+        if (MainData != null && MainData.settings != null && !string.IsNullOrEmpty(MainData.settings.keyBindings))
+        {
+            InputManager.Instance.LoadBindingOverrides(MainData.settings.keyBindings);
+        }
     }
 
     private void OnApplicationQuit()
@@ -589,6 +594,7 @@ public class SaveManager : Singleton<SaveManager>
             onComplete: () =>
             {
                 _isLoading = false;
+                InputManager.Instance.EnableControl();
             }
         );
     }

@@ -74,7 +74,7 @@ public class MenuManager : Singleton<MenuManager>
         InitializeUI();
         SetupButtonListeners();
         UpdateGameplayVisibility();
-        OpenPauseMenu(instant: true);
+        OpenMenu(instant: true);
     }
 
     void Update()
@@ -260,6 +260,25 @@ public class MenuManager : Singleton<MenuManager>
     #endregion
 
     #region Open menu
+    public void OpenMenu(bool instant = false)
+    {
+        if (CanResumeGame())
+        {
+            PauseGameManager.SetPause(true);
+        }
+        CloseAllSubPanels();
+        ShowTitleBar(false);
+
+        _currentButtonIndex = 0;
+        _lastSelectedButton = _sidePanelButtons[0].gameObject;
+
+        InputManager.Instance.EnableControl();
+
+        OpenSideMenu(open: true);
+
+        UpdateTopLeftButtonState(instant); 
+    }
+
     public void OpenPauseMenu(bool instant = false)
     {
         if (CanResumeGame())
@@ -349,6 +368,7 @@ public class MenuManager : Singleton<MenuManager>
 
     public void OpenSubPanel(SubPanelType type)
     {
+        InputManager.Instance.DisableControl();
         if (CanResumeGame())
         {
             PauseGameManager.SetPause(true);
@@ -417,7 +437,7 @@ public class MenuManager : Singleton<MenuManager>
         {
             if (!CanResumeGame())
             {
-                ShowTitleNotificationAsync(_selectSavedGameNotificationRef); // Đã sửa thành Async
+                ShowTitleNotificationAsync(_selectSavedGameNotificationRef); 
             }
             else
             {
@@ -432,12 +452,14 @@ public class MenuManager : Singleton<MenuManager>
         {
             // ĐÃ VÀO GAME: Nút đóng vai trò là Continue
             // -> Đóng luôn Menu, nhả Pause, quay lại chơi tiếp (y chang nhấn ESC)
+            InputManager.Instance.EnableControl();
             ClosePauseMenu();
         }
         else
         {
             // CHƯA VÀO GAME (Ở Main Menu): Nút đóng vai trò là Play
             // -> Mở bảng chọn Save Slot
+            InputManager.Instance.DisableControl();
             OpenSubPanel(SubPanelType.SavedGame);
         }
     }

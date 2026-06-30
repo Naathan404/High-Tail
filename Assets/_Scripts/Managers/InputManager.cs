@@ -64,4 +64,9 @@ public class InputManager : MonoBehaviour
     {
         return Inputs.asset.SaveBindingOverridesAsJson();
     }
+
+    public void ResetAllBindingsToDefault()
+    {
+        Inputs.asset.RemoveAllBindingOverrides();
+    }
 }
