@@ -42,6 +42,7 @@ public class RebindButtonUI : MonoBehaviour
     private void StartRebinding()
     {
         if (_targets == null || _targets.Count == 0) return;
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Button);
 
         var primaryLiveAction = GetLiveAction(_targets[0].actionRef);
         if (primaryLiveAction == null) return;

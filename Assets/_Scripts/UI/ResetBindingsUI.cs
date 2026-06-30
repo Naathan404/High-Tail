@@ -16,6 +16,7 @@ public class ResetBindingsUI : MonoBehaviour
     private void ResetToDefault()
     {
         InputManager.Instance.ResetAllBindingsToDefault();
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Button);
 
         foreach (var btn in FindObjectsByType<RebindButtonUI>(FindObjectsInactive.Include, FindObjectsSortMode.None))
         {

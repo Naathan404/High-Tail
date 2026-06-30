@@ -188,6 +188,7 @@ public class SaveManager : Singleton<SaveManager>
     public bool LoadGameFromSlot(string targetSlotID)
     {
         if (_isLoading) return false;
+        if (AudioManager.Instance.CurrentMusic != SoundName.None) AudioManager.Instance.StopMusic();
 
         SaveSlot targetNode = MainData.allSlots.Find(n => n.saveID == targetSlotID);
         if (targetNode != null)
