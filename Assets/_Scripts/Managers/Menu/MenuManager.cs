@@ -75,6 +75,11 @@ public class MenuManager : Singleton<MenuManager>
         SetupButtonListeners();
         UpdateGameplayVisibility();
         OpenMenu(instant: true);
+
+        if (AudioManager.Instance.CurrentMusic != SoundName.Menu)
+        {
+            AudioManager.Instance.PlayMusic(SoundName.Menu);
+        }
     }
 
     void Update()
@@ -368,6 +373,8 @@ public class MenuManager : Singleton<MenuManager>
 
     public void OpenSubPanel(SubPanelType type)
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
+
         InputManager.Instance.DisableControl();
         if (CanResumeGame())
         {
@@ -423,6 +430,7 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnBackClicked()
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
         // 1. Đang ở Sub-panel -> Tắt Sub-panel, lùi về Side Navigation
         if (_isSubPanelOpen)
         {
@@ -448,6 +456,8 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnPlayOrContinueClicked()
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
+
         if (CanResumeGame())
         {
             // ĐÃ VÀO GAME: Nút đóng vai trò là Continue
@@ -466,6 +476,8 @@ public class MenuManager : Singleton<MenuManager>
 
     private void OnExitOrHomeClicked()
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
+
         if (CanResumeGame())
         {
             // Đang chơi game -> Nút có chức năng Home (Quay về Menu gốc)

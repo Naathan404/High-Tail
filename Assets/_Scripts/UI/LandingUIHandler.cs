@@ -14,6 +14,9 @@ public class LandingScene : MonoBehaviour
         _pressAnyKeyTextCanvasGroup.DOFade(_fadeAmount, _fadeDuration)
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(Ease.InOutSine);
+        
+
+        AudioManager.Instance.PlayMusic(SoundName.Menu);
     }
 
     private void Update()
@@ -27,6 +30,7 @@ public class LandingScene : MonoBehaviour
         {
             this.enabled = false; 
             
+            AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
             Debug.Log("Chuyển scene an toàn!");
             SceneTransitionHandler.Instance.LoadSceneAsync("_CoreScene", "MainMenu", "LandingScene");
         }

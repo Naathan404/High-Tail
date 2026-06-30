@@ -41,6 +41,14 @@ public enum SoundName
     Player_Pogo_Mushroom,
     BiomeNotifier,
     OutOfEnergy,
+    Menu,
+    UI_Click_Keycap,
+    UI_Click_Button,
+    Typing,
+    BGM_1,
+    BGM_2,
+    BGM_3,
+    BGM_4
 }
 
 [System.Serializable]
@@ -70,10 +78,12 @@ public class AudioManager : Singleton<AudioManager>
     [Header("Volumn")]
     private float _currentMusicBaseVolume = 1f;
 
+    public SoundName CurrentMusic = SoundName.None;
+
     private void Start()
     {
         SyncVolumeWithSettings();
-        PlayMusic(SoundName.Music1);
+        //PlayMusic(SoundName.Music1);
     }
 
     public void PlayMusic(SoundName name)
@@ -91,6 +101,8 @@ public class AudioManager : Singleton<AudioManager>
             musicSource.volume = _currentMusicBaseVolume * master * bgm;
             musicSource.pitch = sound.pitch;
             musicSource.Play();
+
+            CurrentMusic = name;
         }
     }
 
@@ -118,6 +130,7 @@ public class AudioManager : Singleton<AudioManager>
     public void StopMusic()
     {
         musicSource.Stop();
+        CurrentMusic = SoundName.None;
     }
 
     public void StopSFX()

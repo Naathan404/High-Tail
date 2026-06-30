@@ -70,6 +70,7 @@ public class SceneTransitionHandler : Singleton<SceneTransitionHandler>
 
         yield return new WaitForSecondsRealtime(_waitTime);
         yield return _canvasGroup.DOFade(0f, _fadeDuration).SetEase(Ease.InOutQuad).SetUpdate(true).WaitForCompletion();
+        InputManager.Instance.EnableControl();
         _canvasGroup.blocksRaycasts = false;
         _isTransitioning = false;
 

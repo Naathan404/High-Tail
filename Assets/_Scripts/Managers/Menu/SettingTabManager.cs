@@ -41,6 +41,7 @@ public class SettingsTabManager : MonoBehaviour
 
     public void SwitchTab(int tabIndex)
     {
+        AudioManager.Instance.PlaySFX(SoundName.UI_Click_Button);
         for (int i = 0; i < _tabs.Count; i++)
         {
             bool isActive = (i == tabIndex);
