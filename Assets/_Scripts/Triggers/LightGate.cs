@@ -17,8 +17,25 @@ public class LightGate : MonoBehaviour
     [SerializeField] private Transform _gateCenterPoint;   
     [SerializeField] private CanvasGroup _whiteFlashGroup;   
     [SerializeField] private ParticleSystem _gateIdleParticles;   
+
+    [Header("Absorb Effect")]
     [SerializeField] private ParticleSystem _absorbParticles;     
-    [SerializeField] private Light2D _gateLight;            
+    [SerializeField] private float _absorbTravelDuration = 1f;
+
+    [Header("Player Dissolve")]
+    [SerializeField] private SpriteRenderer _playerSprite;
+    [SerializeField] private float _dissolveDuration = 0.5f;
+
+    
+
+    [Header("Gate Charge (Nhịp 1 - anticipation)")]
+    [SerializeField] private Light2D _gateLight;
+    [SerializeField] private float _chargeUpDuration = 2.5f;      // thời gian cổng "kéo" trước khi nhân vật tan biến
+    [SerializeField] private float _gateLightMaxIntensity = 3f;
+    [SerializeField] private float _playerPullStrength = 1.5f;    // lực nhỏ hút nhân vật về phía cổng (tạo cảm giác bị kéo)
+    [SerializeField] private float _playerShakeStrength = 0.08f;  // rung nhẹ nhân vật lúc bị kéo
+
+
     //[SerializeField] private SpriteRenderer _playerSprite;    
 
     [Header("Lore Text")]
@@ -29,26 +46,26 @@ public class LightGate : MonoBehaviour
     [SerializeField] private float _loreLineFadeOut = 0.3f;
 
     [Header("Timing")]
-    [SerializeField] private float _approachZoomDuration = 0.5f;
-    [SerializeField] private float _moveToCenterDuration = 3f;
-    [SerializeField] private float _absorbDuration = 1.0f;
+    // [SerializeField] private float _approachZoomDuration = 0.5f;
+    // [SerializeField] private float _moveToCenterDuration = 3f;
+    // [SerializeField] private float _absorbDuration = 1.0f;
     [SerializeField] private float _flashDuration = 0.15f;
     [SerializeField] private float _holdWhiteBeforeLore = 0.3f;
     [SerializeField] private float _holdWhiteAfterLore = 0.5f;
 
-    [Header("Camera")]
-    //[SerializeField] private Camera _mainCamera;
-    [SerializeField] private float _zoomedOrthoSize = 4f;
-    private float _defaultOrthoSize;
-
     private PlayerController _player;
+    private Rigidbody2D _rb;
     private bool _triggered = false;
 
     private void Start()
     {
         _player = FindAnyObjectByType<PlayerController>();
-        // if (_mainCamera != null)
-        //     _defaultOrthoSize = _mainCamera.orthographicSize;
+
+        if (_player != null)
+        {
+            _rb = _player.GetComponent<Rigidbody2D>();
+            _playerSprite = FindAnyObjectByType<PlayerVisual>().GetComponent<SpriteRenderer>();
+        }
 
         if (_whiteFlashGroup != null)
         {
@@ -70,73 +87,122 @@ public class LightGate : MonoBehaviour
 
     private IEnumerator GateSequence()
     {
+        Debug.Log($"[LightGate] Time.timeScale = {Time.timeScale}");
         InputManager.Instance.DisableControl();
         _player.enabled = false;
-        _player.StateMachine.ChangeState(_player.IdleState);
 
-        if (_player.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
-        {
-            rb.linearVelocity = Vector2.zero; 
-            rb.gravityScale = 0f;             
-        }
+        if (_player.IsOnGround())
+            _player.StateMachine.ChangeState(_player.IdleState);
+        else
+            _player.StateMachine.ChangeState(_player.FallState);
+
+        if (_gateLight != null)
+            DOTween.To(() => _gateLight.intensity, x => _gateLight.intensity = x,
+                _gateLightMaxIntensity, _chargeUpDuration).SetEase(Ease.InQuad);
 
         if (_gateIdleParticles != null)
         {
             var emission = _gateIdleParticles.emission;
-            emission.rateOverTimeMultiplier = 0f;
             DOTween.To(() => emission.rateOverTimeMultiplier,
                 x => emission.rateOverTimeMultiplier = x,
-                30f, _approachZoomDuration);
+                30f, _chargeUpDuration);
         }
 
-        if (_gateLight != null)
-            DOTween.To(() => _gateLight.intensity, x => _gateLight.intensity = x, 2.5f, _approachZoomDuration);
+        CameraShakeManager.Instance.ShakeCustom(0.5f);
+        FilterManager.Instance.FlashVignette(FilterManager.Instance.FlashColor, 1f, _chargeUpDuration);
 
+        StartCoroutine(PullPlayerRoutine(_chargeUpDuration));
 
-        yield return new WaitForSeconds(_approachZoomDuration);
+        yield return new WaitForSeconds(_chargeUpDuration);
 
-        if (_gateCenterPoint != null)
-        {
-            _player.transform.DOMove(_gateCenterPoint.position, _moveToCenterDuration).SetEase(Ease.InQuad);
-        }
-        yield return new WaitForSeconds(_moveToCenterDuration);
-
+        // ── NHỊP 2: Nhân vật tan biến thành particle ──────────────────────────
+        // Đặt _absorbParticles tại vị trí nhân vật rồi burst
+        CameraShakeManager.Instance.ShakeCustom(0.3f);
         if (_absorbParticles != null)
+        {
+            _absorbParticles.transform.position = _player.transform.position;
+            var main = _absorbParticles.main;
+            main.useUnscaledTime = true;
             _absorbParticles.Play();
+        }
 
+        // Fade nhân vật ra
+        if (_playerSprite != null)
+            _playerSprite.DOFade(0f, _dissolveDuration);
 
-        CameraShakeManager.Instance.ShakeCustom(0.4f);
+        yield return new WaitForSeconds(_dissolveDuration);
+
+        // Hút đống particle về tâm cổng
+        if (_absorbParticles != null && _gateCenterPoint != null)
+            _absorbParticles.transform.DOMove(_gateCenterPoint.position, _absorbTravelDuration)
+                .SetEase(Ease.InQuad);
+
+        // Camera shake khi particle bay về
+
+        yield return new WaitForSeconds(_absorbTravelDuration);
+
+        // ── NHỊP 3: Flash + Lore + Load scene ────────────────────────────────
         FilterManager.Instance.FlashScreen(FilterManager.Instance.FlashColor);
 
         if (_whiteFlashGroup != null)
-            _whiteFlashGroup.DOFade(1f, _absorbDuration).SetEase(Ease.InQuad);
+            _whiteFlashGroup.DOFade(1f, _flashDuration).SetEase(Ease.OutQuad);
 
-        yield return new WaitForSeconds(_absorbDuration);
+        yield return new WaitForSeconds(_flashDuration);
 
         if (_whiteFlashGroup != null)
             _whiteFlashGroup.blocksRaycasts = true;
-        yield return new WaitForSeconds(_flashDuration);
+
         yield return new WaitForSeconds(_holdWhiteBeforeLore);
 
         if (_loreLines != null && _loreLines.Count > 0 && _loreText != null)
-        {
             yield return StartCoroutine(TypewriterLoreSequence());
-        }
- 
+
         yield return new WaitForSeconds(_holdWhiteAfterLore);
 
-        UnityEngine.SceneManagement.Scene currentScene = SceneManager.GetActiveScene();
-        string currentSceneName = currentScene.name;
+        // Reset trước khi load
         _player.transform.position = _targetPosition;
         _player.enabled = true;
-        rb.gravityScale = _player.BaseGravity;
+        // if (_rb != null)
+        //     _rb.gravityScale = _player.BaseGravity;
+
+        // Restore sprite alpha cho scene mới (SceneLoader sẽ fade in từ trắng)
+        if (_playerSprite != null)
+        {
+            Color c = _playerSprite.color;
+            _playerSprite.color = new Color(c.r, c.g, c.b, 1f);
+        }
+
         SceneTransitionHandler.Instance.LoadSceneAsync(null, _targetSceneName, "M0");
-
-
-        yield return new WaitForSeconds(_flashDuration);
     }
 
-        private IEnumerator TypewriterLoreSequence()
+    private IEnumerator PullPlayerRoutine(float duration)
+    {
+        float elapsed = 0f;
+        _player.StateMachine.ChangeState(_player.FallState);
+        if (_rb != null)
+        {
+            _rb.linearVelocity = Vector2.zero; 
+            _rb.gravityScale = 0f;             
+        }
+        _player.transform.DOPunchScale(
+            Vector3.one * _playerShakeStrength, duration, vibrato: 15, elasticity: 0.5f);
+
+        while (elapsed < duration)
+        {
+            if (_rb != null && _gateCenterPoint != null)
+            {
+                Vector2 dir = ((Vector2)_gateCenterPoint.position - _rb.position).normalized;
+
+                float t = elapsed / duration;
+                _rb.MovePosition(_rb.position + dir * _playerPullStrength * t * Time.deltaTime);
+            }
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private IEnumerator TypewriterLoreSequence()
     {
         foreach (var line in _loreLines)
         {
