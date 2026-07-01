@@ -88,7 +88,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5385686685355625932}
   - component: {fileID: 5665649274527141873}
-  - component: {fileID: 7563257974998030193}
   m_Layer: 0
   m_Name: InteractMark
   m_TagString: Untagged
@@ -137,7 +136,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f0eb87d3bc5aa854d935ffd01b7066b6, type: 2}
+  - {fileID: 2100000, guid: 6ce511affabe52642973e80f0f8fd98b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -170,22 +169,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &7563257974998030193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3338026195022293090}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee158225ee1e59f4791627785501d950, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: AllIn1SpriteShaderAssembly::AllIn1SpriteShader.AllIn1Shader
-  currentShaderType: 0
-  normalStrength: 5
-  normalSmoothing: 1
-  computingNormal: 0
 --- !u!1 &6865580242757417020
 GameObject:
   m_ObjectHideFlags: 0

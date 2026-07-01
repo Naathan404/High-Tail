@@ -61,7 +61,7 @@ public class PlayerSpawnEffect : MonoBehaviour
         {
             _spawnLight.intensity = _spawnLightMaxIntensity;
             DOTween.To(() => _spawnLight.intensity, x => _spawnLight.intensity = x,
-                0f, _gatherDuration * 3f).SetEase(Ease.InQuad);
+                0f, _gatherDuration * 2).SetEase(Ease.InQuad);
         }
 
         yield return new WaitForSeconds(_gatherDuration);
