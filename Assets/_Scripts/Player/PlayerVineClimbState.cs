@@ -10,7 +10,7 @@ public class PlayerVineClimbState : PlayerState
     public override void Enter()
     {
         base.Enter();
-        _player.Visual.Anim.Play("playerIdle");
+        _player.Visual.Anim.Play("pJump");
         _player.CanDash = true;
 
         if (_player.CurrentVineRb != null)

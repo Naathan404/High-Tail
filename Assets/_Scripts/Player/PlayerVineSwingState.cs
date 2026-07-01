@@ -12,7 +12,7 @@ public class PlayerVineSwingState : PlayerState
     {
         base.Enter();
         _player.CanDash = true;
-        _player.Visual.Anim.Play("playerIdle");
+        _player.Visual.Anim.Play("pJump");
         _player.Rb.gravityScale = _player.BaseGravity;
 
         _grabJoint = _player.gameObject.AddComponent<HingeJoint2D>();

@@ -14,7 +14,7 @@ public class FilterManager : Singleton<FilterManager>
     
     private ColorAdjustments _colorAdjustments;
     private Vignette _vignette;
-    private float _vignetteIntensity;
+    private float _vignetteIntensity = 0.4f;
     private Color _vignetteColor;
 
     private void Start()
