@@ -74,20 +74,9 @@ public class SpinningPlatform : MonoBehaviour
         {
             if (platform != null)
             {
-                // Adjust the platform's rotation so its gonna look like the Z Axis is locked
                 platform.transform.Rotate(Vector3.forward, -rotationAmount);
             }
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Handles.color = Color.hotPink;
-        Handles.DrawWireDisc(transform.position, Vector3.forward, _radius);
-        //Gizmos.color = Color.greenYellow;
-        //for (int i = 0; i < _platformCount; i++)
-        //{
-        //    Gizmos.DrawLine(transform.position, transform.position + CalculatePosition(i * (360 / _platformCount)));
-        //}
-    }
 }

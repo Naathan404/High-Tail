@@ -2,10 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.UIElements;
-
 public class SimpleDoor : MonoBehaviour, ILightPulseReactive
 {
     [SerializeField] private Vector2 _targetPos;
