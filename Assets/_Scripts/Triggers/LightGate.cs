@@ -71,7 +71,14 @@ public class LightGate : MonoBehaviour
     private IEnumerator GateSequence()
     {
         InputManager.Instance.DisableControl();
+        _player.enabled = false;
+        _player.StateMachine.ChangeState(_player.IdleState);
 
+        if (_player.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
+        {
+            rb.linearVelocity = Vector2.zero; 
+            rb.gravityScale = 0f;             
+        }
 
         if (_gateIdleParticles != null)
         {
@@ -93,14 +100,6 @@ public class LightGate : MonoBehaviour
             _player.transform.DOMove(_gateCenterPoint.position, _moveToCenterDuration).SetEase(Ease.InQuad);
         }
         yield return new WaitForSeconds(_moveToCenterDuration);
-
-        _player.enabled = false;
-
-        if (_player.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
-        {
-            rb.linearVelocity = Vector2.zero; 
-            rb.gravityScale = 0f;             
-        }
 
         if (_absorbParticles != null)
             _absorbParticles.Play();
