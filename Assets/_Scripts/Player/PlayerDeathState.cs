@@ -15,7 +15,7 @@ public class PlayerDeathState : PlayerState
         //CameraShaker.Instance.OneTimeShake(Vector2.right, 0.2f);
         
         _player.Visual.DeathParticle.Play();
-        FilterManager.Instance.FlashScreen(FilterManager.Instance.HazardColor);
+        FilterManager.Instance.FlashVignette(FilterManager.Instance.HazardColor, 0.9f);
         _player.Visual.Anim.Play("pNone");
     }
 
