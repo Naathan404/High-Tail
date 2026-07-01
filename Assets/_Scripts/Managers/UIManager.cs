@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Localization;
 using UnityEngine.UI;
 
@@ -47,8 +48,21 @@ public class UIManager : Singleton<UIManager>
         _skillImage.sprite = _skillIcons[num];
     }
 
-    public void ShowSkillUnlocked(LocalizedString skillName, LocalizedString skillDes, params object[] desArgs)
+    // public void ShowSkillUnlocked(LocalizedString skillName, LocalizedString skillDes, params object[] desArgs)
+    // {
+    //     StartCoroutine(SkillUnlockRoutine(skillName, skillDes, desArgs));
+    // }
+
+    public void ShowSkillUnlocked(LocalizedString skillName, LocalizedString skillDes, 
+        InputActionReference skillActionRef, int bindingIndex = 0, params object[] extraArgs)
     {
+        string keyName = InputDisplayUtils.GetBindingDisplayString(skillActionRef, bindingIndex);
+
+        object[] desArgs = new object[1 + (extraArgs?.Length ?? 0)];
+        desArgs[0] = keyName;
+        if (extraArgs != null)
+            extraArgs.CopyTo(desArgs, 1);
+
         StartCoroutine(SkillUnlockRoutine(skillName, skillDes, desArgs));
     }
 

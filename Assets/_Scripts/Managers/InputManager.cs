@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
@@ -49,5 +50,23 @@ public class InputManager : MonoBehaviour
         Inputs.Camera.Enable();
         Inputs.Interaction.Enable();
         Inputs.Testing.Enable();
+    }
+
+    public void LoadBindingOverrides(string json)
+    {
+        if (!string.IsNullOrEmpty(json))
+        {
+            Inputs.asset.LoadBindingOverridesFromJson(json);
+        }
+    }
+
+    public string GetBindingOverridesJson()
+    {
+        return Inputs.asset.SaveBindingOverridesAsJson();
+    }
+
+    public void ResetAllBindingsToDefault()
+    {
+        Inputs.asset.RemoveAllBindingOverrides();
     }
 }
