@@ -55,7 +55,10 @@ public class LightGate : MonoBehaviour
 
     private PlayerController _player;
     private Rigidbody2D _rb;
-    private bool _triggered = false;
+
+
+    [SerializeField] private GameObject _interactMark;
+    private bool _canInteract = false;
 
     private void Start()
     {
@@ -74,15 +77,36 @@ public class LightGate : MonoBehaviour
         }
 
         _loreText.text = "";
+
+
+        _interactMark.transform.DOMoveY(_interactMark.transform.position.y + 0.2f, 0.25f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (_triggered) return;
         if (!other.CompareTag("Player")) return;
 
-        _triggered = true;
-        StartCoroutine(GateSequence());
+        _canInteract = true;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            _canInteract = false;
+        }
+    }
+
+    private void Update()
+    {
+        _interactMark.SetActive(_canInteract);
+        if (_canInteract && InputManager.Instance.Inputs.Interaction.Interact.WasPressedThisFrame())
+        {
+            _canInteract = false;
+            StartCoroutine(GateSequence());
+        }
     }
 
     private IEnumerator GateSequence()

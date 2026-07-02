@@ -57,6 +57,7 @@ public class TaleStoneTrigger : MonoBehaviour
         _originalY = transform.position.y;
 
         _player = FindAnyObjectByType<PlayerController>();
+        _player.UpdateSkillStatus();
         
         if (_type == TaleStoneType.SkillUnlock)
         {
