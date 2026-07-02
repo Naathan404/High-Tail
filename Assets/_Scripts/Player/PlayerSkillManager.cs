@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Localization;
@@ -34,6 +35,8 @@ public partial class PlayerController : MonoBehaviour
     // [SerializeField] private InputActionReference _doubleJumpActionRef;
     [SerializeField] private InputActionReference _astralPulseActionRef;
     [SerializeField] private InputActionReference _grabActionRef;
+
+    [HideInInspector] public bool[] PlayerSkillUnlockStatus = new bool[7];
 
 
     public void UnlockWallJump()

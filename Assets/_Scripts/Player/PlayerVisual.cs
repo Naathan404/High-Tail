@@ -48,9 +48,9 @@ public class PlayerVisual : MonoBehaviour
         s.Append(transform.DOScale(_originalScale, scaleDuration)).SetEase(Ease.OutQuad);
     }
 
-    public void ToggleSpotLight(InputAction.CallbackContext context)
-    {
-        if(!GetComponentInParent<PlayerController>().Data.GlowUnlocked) return;
-        _spotLight.gameObject.SetActive(!_spotLight.gameObject.activeInHierarchy);
-    }
+    // public void ToggleSpotLight(InputAction.CallbackContext context)
+    // {
+    //     if(!GetComponentInParent<PlayerController>().Data.GlowUnlocked) return;
+    //     _spotLight.gameObject.SetActive(!_spotLight.gameObject.activeInHierarchy);
+    // }
 }
