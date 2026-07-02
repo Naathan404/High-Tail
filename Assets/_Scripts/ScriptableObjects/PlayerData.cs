@@ -11,6 +11,7 @@ public struct SkillSaveData
     public bool GlowUnlocked;
     public bool DoubleJumpUnlocked;
     public bool AstralPulseUnlocked;
+    public bool GrabUnlocked;
 }
 
 
@@ -29,6 +30,7 @@ public class PlayerData : ScriptableObject
     public bool GlowUnlocked = false;
     public bool DoubleJumpUnlocked = false;
     public bool AstralPulseUnlocked = false;
+    public bool GrabUnlocked = false;
     public SkillSaveData GetSkillSaveData()
     {
         return new SkillSaveData
@@ -40,7 +42,8 @@ public class PlayerData : ScriptableObject
             PogoUnlocked = this.PogoUnlocked,
             GlowUnlocked = this.GlowUnlocked,
             DoubleJumpUnlocked = this.DoubleJumpUnlocked,
-            AstralPulseUnlocked = this.AstralPulseUnlocked
+            AstralPulseUnlocked = this.AstralPulseUnlocked,
+            GrabUnlocked = this.GrabUnlocked
         };
     }
     public void LoadSkillSaveData(SkillSaveData data)
@@ -53,6 +56,7 @@ public class PlayerData : ScriptableObject
         this.GlowUnlocked = data.GlowUnlocked;
         this.DoubleJumpUnlocked = data.DoubleJumpUnlocked;
         this.AstralPulseUnlocked = data.AstralPulseUnlocked;
+        this.GrabUnlocked = data.GrabUnlocked;
     }
 
     [Header("Run")]

@@ -23,6 +23,9 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private LocalizedString _astralPulseName;
     [SerializeField] private LocalizedString _astralPulseDes;
 
+    [SerializeField] private LocalizedString _grabName;
+    [SerializeField] private LocalizedString _grabDes;
+
     [Header("Skill Key Bindings")]
     [SerializeField] private InputActionReference _wallJumpActionRef;
     [SerializeField] private InputActionReference _dashActionRef;
@@ -30,6 +33,8 @@ public partial class PlayerController : MonoBehaviour
     [SerializeField] private InputActionReference _pogoActionRef;
     // [SerializeField] private InputActionReference _doubleJumpActionRef;
     [SerializeField] private InputActionReference _astralPulseActionRef;
+    [SerializeField] private InputActionReference _grabActionRef;
+
 
     public void UnlockWallJump()
     {
@@ -75,5 +80,11 @@ public partial class PlayerController : MonoBehaviour
     {
         Data.AstralPulseUnlocked = true;
         UIManager.Instance.ShowSkillUnlocked(_astralPulseName, _astralPulseDes, _astralPulseActionRef);
+    }
+
+    public void UnlockGrab()
+    {
+        Data.GrabUnlocked = true;
+        UIManager.Instance.ShowSkillUnlocked(_grabName, _grabDes, _grabActionRef);
     }
 }
