@@ -85,7 +85,7 @@ public class TaleStoneTrigger : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if((_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex])) return;
+            if(_type == TaleStoneType.SkillUnlock &&  (_taleStoneData.IsActivated || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex]))) return;
             _canInteract = true;
             _allIn1Material.SetFloat(_shaderProperty, 1f);
             collision.TryGetComponent<PlayerController>(out _player);
