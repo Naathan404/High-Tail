@@ -352,6 +352,19 @@ public class SaveManager : Singleton<SaveManager>
         if (_player != null)
         {
             _player.Data.LoadSkillSaveData(node.unlockedSkills);
+
+            // for(int i = 0; i < 7; i++)
+            // {
+            //     if(_player.Data.WallJumpUnlocked && i == 0) _player.PlayerSkillUnlockStatus[i] = true;
+            //     else if(_player.Data.WallSlideUnlocked && i == 1) _player.PlayerSkillUnlockStatus[i] = true;
+            //     else if(_player.Data.AirGlideUnlocked && i == 2) _player.PlayerSkillUnlockStatus[i] = true;
+            //     else if(_player.Data.DashUnlocked && i == 3) _player.PlayerSkillUnlockStatus[i] = true;
+            //     else if(_player.Data.AstralPulseUnlocked && i == 4) _player.PlayerSkillUnlockStatus[i] = true;
+            //     else if(_player.Data.PogoUnlocked && i == 5) _player.PlayerSkillUnlockStatus[i] = true;
+            //     else if(_player.Data.GrabUnlocked && i == 6) _player.PlayerSkillUnlockStatus[i] = true;
+            // }
+
+            _player.UpdateSkillStatus();
         }
     }
 

@@ -63,7 +63,7 @@ public class TaleStoneTrigger : MonoBehaviour
             StartDecorationsFloating();
 
             // nếu đã mở khóa skill ở tale stone này rồi
-            if ((_taleStoneData != null && _taleStoneData.IsActivated) || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex]))
+            if ((_taleStoneData != null && _taleStoneData.IsActivated) || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex] == true))
             {
                 transform.position = new Vector3(transform.position.x, _originalY + _elevateYOffset, transform.position.z);
                 if (_animator != null) _animator.Play("Activated");
@@ -85,7 +85,7 @@ public class TaleStoneTrigger : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if((_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex])) return;
+            if(_type == TaleStoneType.SkillUnlock &&  (_taleStoneData.IsActivated || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex] == true))) return;
             _canInteract = true;
             _allIn1Material.SetFloat(_shaderProperty, 1f);
             collision.TryGetComponent<PlayerController>(out _player);
