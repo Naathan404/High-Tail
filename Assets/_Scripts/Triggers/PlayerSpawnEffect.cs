@@ -32,24 +32,17 @@ public class PlayerSpawnEffect : MonoBehaviour
         if (_playerSprite == null)
             _playerSprite = FindAnyObjectByType<PlayerVisual>().GetComponent<SpriteRenderer>();
 
+        if (_playerSprite != null)
+        {
+            Color c = _playerSprite.color;
+            _playerSprite.color = new Color(c.r, c.g, c.b, 0f);
+        }
+
         if (_rb == null)
             _rb = _player.GetComponent<Rigidbody2D>();
 
         InputManager.Instance.EnableControl();
-        //StartCoroutine(SpawnSequence());
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            if (_playerSprite != null)
-            {
-                Color c = _playerSprite.color;
-                _playerSprite.color = new Color(c.r, c.g, c.b, 0f);
-            }
-            StartCoroutine(SpawnSequence());
-        }
+        StartCoroutine(SpawnSequence());
     }
 
     private IEnumerator SpawnSequence()
@@ -68,7 +61,7 @@ public class PlayerSpawnEffect : MonoBehaviour
         {
             _spawnLight.intensity = _spawnLightMaxIntensity;
             DOTween.To(() => _spawnLight.intensity, x => _spawnLight.intensity = x,
-                0f, _gatherDuration * 1.25f).SetEase(Ease.InQuad);
+                0f, _gatherDuration * 2).SetEase(Ease.InQuad);
         }
 
         yield return new WaitForSeconds(_gatherDuration);

@@ -103,10 +103,6 @@ public partial class PlayerController : MonoBehaviour
     public bool CanSlide = false;
     private float _canSlideTimer = 0f;
 
-    private bool _isOnDippingPlatform = false;
-
-    public void SetOnDippingPlatform(bool value) => _isOnDippingPlatform = value;
-
 
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
@@ -382,7 +378,6 @@ public partial class PlayerController : MonoBehaviour
 
     public bool GroundCheck()
     {
-        if (_isOnDippingPlatform) return true;
         float actualCastDist = (CurrentSwingPlatform != null) ? _castDistance * 3f : _castDistance;
 
         ContactFilter2D groundFilter = new ContactFilter2D();

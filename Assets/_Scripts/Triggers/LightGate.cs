@@ -172,8 +172,6 @@ public class LightGate : MonoBehaviour
             _playerSprite.color = new Color(c.r, c.g, c.b, 1f);
         }
 
-        AudioManager.Instance.StopSFX();
-
         SceneTransitionHandler.Instance.LoadSceneAsync(null, _targetSceneName, "M0");
     }
 
@@ -181,7 +179,6 @@ public class LightGate : MonoBehaviour
     {
         float elapsed = 0f;
         _player.StateMachine.ChangeState(_player.FallState);
-        AudioManager.Instance.PlaySFX(SoundName.Reward);
         if (_rb != null)
         {
             _rb.linearVelocity = Vector2.zero; 

@@ -44,6 +44,5 @@ public class EndDialogueCallbackHelper : MonoBehaviour
         Dash,               // 3
         AstralLight,         // 4
         Pogo,              // 5
-        Grab,            // 6
     }
 }

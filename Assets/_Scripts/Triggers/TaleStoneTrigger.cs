@@ -158,7 +158,6 @@ public class TaleStoneTrigger : MonoBehaviour
     private void ExecuteSkillUnlockSequence()
     {
         if (_animator != null) _animator.Play("Activated");
-        AudioManager.Instance.PlaySFX(SoundName.Stone_Activated);
         CameraShakeManager.Instance.ShakeCustom(0.5f);
         //OnTaleStoneActivated?.Invoke(transform);
         transform.DOMoveY(_originalY + _elevateYOffset, _elevateDuration)

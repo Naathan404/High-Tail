@@ -48,8 +48,7 @@ public enum SoundName
     BGM_1,
     BGM_2,
     BGM_3,
-    BGM_4,
-    Stone_Activated
+    BGM_4
 }
 
 [System.Serializable]
