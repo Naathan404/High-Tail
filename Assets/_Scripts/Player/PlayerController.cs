@@ -154,16 +154,7 @@ public partial class PlayerController : MonoBehaviour
 
         _canSlideTimer = Data.wallSlideBufferTime;
 
-        for(int i = 0; i < 7; i++)
-        {
-            if(Data.WallJumpUnlocked && i == 0) PlayerSkillUnlockStatus[i] = true;
-            else if(Data.WallSlideUnlocked && i == 1) PlayerSkillUnlockStatus[i] = true;
-            else if(Data.AirGlideUnlocked && i == 2) PlayerSkillUnlockStatus[i] = true;
-            else if(Data.DashUnlocked && i == 3) PlayerSkillUnlockStatus[i] = true;
-            else if(Data.AstralPulseUnlocked && i == 4) PlayerSkillUnlockStatus[i] = true;
-            else if(Data.PogoUnlocked && i == 5) PlayerSkillUnlockStatus[i] = true;
-            else if(Data.GrabUnlocked && i == 6) PlayerSkillUnlockStatus[i] = true;
-        }
+        UpdateSkillStatus();
     }
 
     private void OnEnable()
@@ -179,6 +170,20 @@ public partial class PlayerController : MonoBehaviour
     private void OnDestroy()
     {
         // InputManager.Instance.Inputs.Movement.Light.started -= Visual.ToggleSpotLight;
+    }
+
+    public void UpdateSkillStatus()
+    {
+        for(int i = 0; i < 7; i++)
+        {
+            if(Data.WallJumpUnlocked && i == 0) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.WallSlideUnlocked && i == 1) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.AirGlideUnlocked && i == 2) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.DashUnlocked && i == 3) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.AstralPulseUnlocked && i == 4) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.PogoUnlocked && i == 5) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.GrabUnlocked && i == 6) PlayerSkillUnlockStatus[i] = true;
+        }
     }
 
     private void Update()
