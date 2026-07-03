@@ -1,15 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class CrumblingPlatform : MonoBehaviour
 {
     [Header("Crumbling Settings")]
     [SerializeField] private float _recoveryTime = 3f;
     [SerializeField] private float _brokenDelay = 2f; // Thoi gian delay tu khi cham chan vao platform den khi bat dau roi
+    [SerializeField] private ParticleSystem _breakEffect;
 
     private Renderer _renderer;
     private Collider2D _collider;
-    private Animator _animator;
     private Trigger _trigger;
     private bool _isSteppedOn;
 
@@ -17,9 +18,7 @@ public class CrumblingPlatform : MonoBehaviour
     {
         _renderer = GetComponent<Renderer>();
         _collider = GetComponent<Collider2D>();
-        _animator = GetComponent<Animator>();
         _trigger = GetComponentInChildren<Trigger>();
-        _animator.speed = 1f / _brokenDelay;
     }
 
     private void OnEnable()
@@ -46,16 +45,29 @@ public class CrumblingPlatform : MonoBehaviour
 
     private IEnumerator BreakCoroutine() // BreakCoroutine the platform -> disappear -> Reset
     {
-        // Turn crumbling animation
-        _animator.SetTrigger("Break");
+        // Shaking effect
+        Shake();
 
         yield return new WaitForSeconds(_brokenDelay);
+
+        // Spawn particle
+        if (_breakEffect != null)
+        {
+            _breakEffect.transform.position = transform.position;
+            _breakEffect.Play();
+        }
 
         _isSteppedOn = true;
         _renderer.enabled = false;
         _collider.enabled = false;
-        SetChildrenActive(false);
+        //SetChildrenActive(false);
         StartCoroutine(ResetPlatform());
+    }
+
+    private void Shake()
+    {
+        // Shaking
+        this.transform.DOShakePosition(_brokenDelay, 0.1f, 10, 90f, false, false);
     }
 
     private void Reset()
