@@ -10,45 +10,37 @@ public enum AudioType
 public enum SoundName
 {
     None,
-    Music1,
-    Music2,
-    Music3,
-    Music4,
+    BGM_1,
+    BGM_2,
+    BGM_3,
+    BGM_4,
     Boss1,
     Boss2,
     Player_RunGrass,
-    Player_RunRock,
     Player_JumpGrass,
-    Player_JumpRock,
     Player_JumpMushroom,
     Player_Stomp,
     Player_LandGrass,
-    Player_LandRock,
+    Player_HardLanding,
     Player_Dash,
     Player_ShockWave,
     Player_Death,
     Player_SlideDownGrass,
-    Player_SlideDownRock,
+    Player_Pogo_Mushroom,
     Player_Respawn,
     Reward,
     TaleStone,
-    FallingRock,
     Platform_Crumbling,
     Platform_Falling,
+    FallingRock,
     Door_Open,
     Text,
-    HardLanding,
-    Player_Pogo_Mushroom,
     BiomeNotifier,
     OutOfEnergy,
     Menu,
     UI_Click_Keycap,
     UI_Click_Button,
     Typing,
-    BGM_1,
-    BGM_2,
-    BGM_3,
-    BGM_4,
     Stone_Activated
 }
 
@@ -84,7 +76,7 @@ public class AudioManager : Singleton<AudioManager>
     private void Start()
     {
         SyncVolumeWithSettings();
-        //PlayMusic(SoundName.Music1);
+        //PlayMusic(SoundName.BGM_1);
     }
 
     public void PlayMusic(SoundName name)

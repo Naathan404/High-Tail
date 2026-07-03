@@ -574,7 +574,7 @@ public partial class PlayerController : MonoBehaviour
     private System.Collections.IEnumerator HardLandingRoutine()
     {
         CanMove = false;
-        AudioManager.Instance.PlaySFX(SoundName.HardLanding);
+        AudioManager.Instance.PlaySFX(SoundName.Player_HardLanding);
         yield return new WaitForEndOfFrame();
         if(_stateMachine.CurrentState == DeathState) yield break;
 
