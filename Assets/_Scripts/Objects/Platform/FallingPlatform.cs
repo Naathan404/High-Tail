@@ -33,7 +33,7 @@ public class FallingPlatform : MonoBehaviour
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if(player != null) player.transform.parent = this.transform;
-            transform.DOMoveY(_targetPosition.position.y, _fallDuration, false);
+            transform.DOMoveY(_targetPosition.position.y, _fallDuration);
             if(_fallingEffect != null) _fallingEffect.Play();
         }
     }
@@ -44,7 +44,7 @@ public class FallingPlatform : MonoBehaviour
         {
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if(player != null) player.ReturnToCoreScene();
-            transform.DOMoveY(_defaultPosition.y, _returnDuration, false);
+            transform.DOMoveY(_defaultPosition.y, _returnDuration);
             if(_fallingEffect != null) _fallingEffect.Stop();
         }
     }
