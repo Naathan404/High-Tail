@@ -4969,13 +4969,17 @@ PrefabInstance:
       value: -6.8199234
       objectReference: {fileID: 0}
     - target: {fileID: 1898610083822578632, guid: ffbc6a7a977cbca4ab6dcfea0b1f977f, type: 3}
+      propertyPath: _canInteract
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1898610083822578632, guid: ffbc6a7a977cbca4ab6dcfea0b1f977f, type: 3}
       propertyPath: _dialogueData
       value: 
       objectReference: {fileID: 11400000, guid: 7ff1db7c2aac560468a8de628cc78f91, type: 2}
     - target: {fileID: 1898610083822578632, guid: ffbc6a7a977cbca4ab6dcfea0b1f977f, type: 3}
       propertyPath: _secondDaryDialogueData
       value: 
-      objectReference: {fileID: 11400000, guid: 7ff1db7c2aac560468a8de628cc78f91, type: 2}
+      objectReference: {fileID: 11400000, guid: 7b1e7d5b7175ab14c9b76fe454bfb699, type: 2}
     - target: {fileID: 2401846561659120304, guid: ffbc6a7a977cbca4ab6dcfea0b1f977f, type: 3}
       propertyPath: m_Size.y
       value: 13.383569
@@ -69129,6 +69133,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2374074921546363411, guid: 398de71f166971c46af59cefbb6deb17, type: 3}
+      propertyPath: _taleStoneData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6217a48c51732dd468e4c2974e0cca18, type: 2}
     - target: {fileID: 6865580242757417020, guid: 398de71f166971c46af59cefbb6deb17, type: 3}
       propertyPath: m_Name
       value: TaleStone_Lore_1
@@ -100607,6 +100615,10 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: -1.1218042
       objectReference: {fileID: 0}
+    - target: {fileID: 2374074921546363411, guid: 398de71f166971c46af59cefbb6deb17, type: 3}
+      propertyPath: _taleStoneData
+      value: 
+      objectReference: {fileID: 11400000, guid: 5c51653711eed5b4884dfc3cf7ea2e81, type: 2}
     - target: {fileID: 6865580242757417020, guid: 398de71f166971c46af59cefbb6deb17, type: 3}
       propertyPath: m_Name
       value: TaleStone_Lore
