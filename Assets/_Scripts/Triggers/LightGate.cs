@@ -10,6 +10,7 @@ using UnityEngine.Localization;
 public class LightGate : MonoBehaviour
 {
     [Header("Scene Transition")]
+    [SerializeField] private string _currentSceneName = "M0";
     [SerializeField] private string _targetSceneName;
     [SerializeField] private Vector2 _targetPosition;
 
@@ -198,7 +199,7 @@ public class LightGate : MonoBehaviour
 
         AudioManager.Instance.StopSFX();
 
-        SceneTransitionHandler.Instance.LoadSceneAsync(null, _targetSceneName, "M0");
+        SceneTransitionHandler.Instance.LoadSceneAsync(null, _targetSceneName, _currentSceneName);
     }
 
     private IEnumerator PullPlayerRoutine(float duration)
