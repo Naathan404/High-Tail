@@ -103,6 +103,10 @@ public partial class PlayerController : MonoBehaviour
     public bool CanSlide = false;
     private float _canSlideTimer = 0f;
 
+    private bool _isOnDippingPlatform = false;
+
+    public void SetOnDippingPlatform(bool value) => _isOnDippingPlatform = value;
+
 
 
     private PlayerControls Inputs => InputManager.Instance.Inputs;
@@ -146,9 +150,11 @@ public partial class PlayerController : MonoBehaviour
         _isFacingRight = true;
         Rb.gravityScale = Data.gravityScale * Data.fallMultiplier;
         _originalScale = this.transform.localScale;
-        InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
+        // InputManager.Instance.Inputs.Movement.Light.started += Visual.ToggleSpotLight;
 
         _canSlideTimer = Data.wallSlideBufferTime;
+
+        UpdateSkillStatus();
     }
 
     private void OnEnable()
@@ -163,7 +169,21 @@ public partial class PlayerController : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputManager.Instance.Inputs.Movement.Light.started -= Visual.ToggleSpotLight;
+        // InputManager.Instance.Inputs.Movement.Light.started -= Visual.ToggleSpotLight;
+    }
+
+    public void UpdateSkillStatus()
+    {
+        for(int i = 0; i < 7; i++)
+        {
+            if(Data.WallJumpUnlocked && i == 0) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.WallSlideUnlocked && i == 1) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.AirGlideUnlocked && i == 2) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.DashUnlocked && i == 3) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.AstralPulseUnlocked && i == 4) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.PogoUnlocked && i == 5) PlayerSkillUnlockStatus[i] = true;
+            else if(Data.GrabUnlocked && i == 6) PlayerSkillUnlockStatus[i] = true;
+        }
     }
 
     private void Update()
@@ -378,6 +398,7 @@ public partial class PlayerController : MonoBehaviour
 
     public bool GroundCheck()
     {
+        if (_isOnDippingPlatform) return true;
         float actualCastDist = (CurrentSwingPlatform != null) ? _castDistance * 3f : _castDistance;
 
         ContactFilter2D groundFilter = new ContactFilter2D();

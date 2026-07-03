@@ -24,15 +24,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 527195652096
-    m_Localized: Tail Grid
+    m_Localized: Tail Grip
     m_Metadata:
       m_Items: []
   - m_Id: 746167681024
-    m_Localized: Tail Wind
+    m_Localized: Tail Dash
     m_Metadata:
       m_Items: []
   - m_Id: 775271956480
-    m_Localized: Press {0} to dash through the mist.
+    m_Localized: Press [{0}] to dash forward quickly.
     m_Metadata:
       m_Items:
       - rid: 3040156929586364498
@@ -41,16 +41,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 847372042240
-    m_Localized: Hold {0] while airbone to glide.
+    m_Localized: While airborne, hold [{0}] to glide down slowly.
     m_Metadata:
       m_Items:
       - rid: 3040156929586364498
   - m_Id: 927592300544
-    m_Localized: Tail Stomp
+    m_Localized: Tail Smash
     m_Metadata:
       m_Items: []
   - m_Id: 967249444864
-    m_Localized: When airborne, press the {0} key to execute a Tail Stomp.
+    m_Localized: While airborne, press [{0}] to slam down. Hitting certain objects
+      will bounce you upward.
     m_Metadata:
       m_Items:
       - rid: 3040156929586364498
@@ -59,7 +60,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1209126567936
-    m_Localized: Press {0} to ease the darkness.
+    m_Localized: Press [{0}] to release an energy wave that activates nearby objects.
+      Watch your cooldown between uses.
     m_Metadata:
       m_Items:
       - rid: 3040156929586364498
@@ -68,12 +70,20 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 331829166080
-    m_Localized: Press {0} to Wall Jump.
+    m_Localized: While touching a wall, press [{0}] to leap in the opposite direction.
     m_Metadata:
       m_Items:
       - rid: 3040156929586364498
   - m_Id: 663607001088
-    m_Localized: Hold direction key to Wall Slide
+    m_Localized: Hold movement towards the wall to slide down.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17220154435760128
+    m_Localized: Tail Hook
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17220425622679552
+    m_Localized: While touching a rope or vine, hold [{0}] to grab onto it.
     m_Metadata:
       m_Items: []
   references:

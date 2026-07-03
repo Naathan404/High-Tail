@@ -14,6 +14,8 @@ public class TaleStoneTrigger : MonoBehaviour
     [SerializeField] private TaleStoneType _type;
     [SerializeField] private GameObject _light;
 
+    [SerializeField] private int _skillIndex = -1; 
+
     private SpriteRenderer _spriteRenderer;
     private Material _allIn1Material;
     private readonly string _shaderProperty = "_OutlineAlpha";
@@ -54,12 +56,14 @@ public class TaleStoneTrigger : MonoBehaviour
 
         _originalY = transform.position.y;
 
+        _player = FindAnyObjectByType<PlayerController>();
+        
         if (_type == TaleStoneType.SkillUnlock)
         {
             StartDecorationsFloating();
 
             // nếu đã mở khóa skill ở tale stone này rồi
-            if (_taleStoneData != null && _taleStoneData.IsActivated)
+            if ((_taleStoneData != null && _taleStoneData.IsActivated) || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex] == true))
             {
                 transform.position = new Vector3(transform.position.x, _originalY + _elevateYOffset, transform.position.z);
                 if (_animator != null) _animator.Play("Activated");
@@ -81,7 +85,7 @@ public class TaleStoneTrigger : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            if(_type == TaleStoneType.SkillUnlock && _taleStoneData.IsActivated) return;
+            if(_type == TaleStoneType.SkillUnlock &&  (_taleStoneData.IsActivated || (_player != null && _player.PlayerSkillUnlockStatus[_skillIndex] == true))) return;
             _canInteract = true;
             _allIn1Material.SetFloat(_shaderProperty, 1f);
             collision.TryGetComponent<PlayerController>(out _player);
@@ -158,6 +162,7 @@ public class TaleStoneTrigger : MonoBehaviour
     private void ExecuteSkillUnlockSequence()
     {
         if (_animator != null) _animator.Play("Activated");
+        AudioManager.Instance.PlaySFX(SoundName.Stone_Activated);
         CameraShakeManager.Instance.ShakeCustom(0.5f);
         //OnTaleStoneActivated?.Invoke(transform);
         transform.DOMoveY(_originalY + _elevateYOffset, _elevateDuration)
