@@ -41,7 +41,10 @@ public enum SoundName
     UI_Click_Keycap,
     UI_Click_Button,
     Typing,
-    Stone_Activated
+    Stone_Activated,
+    Scene0, 
+    BGM_6, 
+    BGM_7
 }
 
 [System.Serializable]
