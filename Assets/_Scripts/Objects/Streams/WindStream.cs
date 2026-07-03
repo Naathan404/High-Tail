@@ -9,6 +9,8 @@ public class WindStream : MonoBehaviour
     public bool CustomColor;
     public Color WindColor;
 
+    public bool WindVisualCustom = false;
+
     private void Start()
     {
         InitParticleSettings();
@@ -52,7 +54,10 @@ public class WindStream : MonoBehaviour
         var velocityModule = _visual.velocityOverLifetime;
         var mainModule = _visual.main;
 
-        emissionModule.rateOverTime = WindForce * 1.5f;
+        if (!WindVisualCustom)
+        {
+            emissionModule.rateOverTime = WindForce * 3f; 
+        }
 
         velocityModule.x = WindDirection.x * WindForce;
         velocityModule.y = WindDirection.y * WindForce;
