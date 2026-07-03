@@ -23,6 +23,7 @@ public class BiomeTrigger : MonoBehaviour
     }
 
     [SerializeField] private Name _biomeName;
+    [SerializeField] private SoundName _bgm;
     [SerializeField] private Trigger _mainTrigger;
     [SerializeField] private Trigger _resetTrigger;
     private bool _hasBeenTriggered = false;
@@ -54,6 +55,7 @@ public class BiomeTrigger : MonoBehaviour
         }
         _hasBeenTriggered = true;
         BiomeNotifier.Instance.ShowBiomeNotification(_biomeName.GetName());
+        PlayerBiomeBGM();
     }
 
     private void ResetTrigger()
@@ -61,5 +63,11 @@ public class BiomeTrigger : MonoBehaviour
         if (_hasBeenReset) return;
         _hasBeenTriggered = false;
         _hasBeenReset = true;
+    }
+
+    private void PlayerBiomeBGM()
+    {
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlayMusic(_bgm);
     }
 }

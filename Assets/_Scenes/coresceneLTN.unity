@@ -782,10 +782,76 @@ MonoBehaviour:
   _savedGamePanel: {fileID: 834712124}
   _settingsPanel: {fileID: 585736333}
   _creditPanel: {fileID: 1501350049}
+  _playStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _continueStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _exitStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _homeStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _selectSavedGameNotificationRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _settingsStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _creditStringRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   _titleText: {fileID: 1841995061}
   _title: {fileID: 27815101}
   _playerObject: {fileID: 1999383838}
   _mainCanvas: {fileID: 874906033}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &97746189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,7 +1108,7 @@ Transform:
   m_GameObject: {fileID: 160371528}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 259.81, y: -69.32798, z: -10}
+  m_LocalPosition: {x: 319.8, y: -65.75798, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1699,9 +1765,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99874437ee7a05847b40eee606b49315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeneralSetting
+  currentLanguage: 1
   autoSave: 1
   MainCharacterName: Tale
-  currentLanguage: 1
+  masterVolume: 1
+  bgmVolume: 1
+  sfxVolume: 1
 --- !u!114 &279874937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2383,11 +2452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -58.19
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.83
+      value: 10.4
       objectReference: {fileID: 0}
     - target: {fileID: 4362468355755220092, guid: fe076143b7fb1964397d9c2381402309, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5166,6 +5235,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   _skillUnlockedPanel: {fileID: 1704269457}
+  _skillIcons: []
+  _skillImage: {fileID: 0}
   _skillUnlockedText: {fileID: 210625958}
   _howToUseText: {fileID: 1171800861}
   _panelCanvasGroup: {fileID: 1704269458}
@@ -5338,11 +5409,68 @@ MonoBehaviour:
   _animationDuration: 0.5
   _closeDelayTime: 0
   _notificationDuration: 2
+  _saveMenuUI: {fileID: 834712125}
   _saveGamePanel: {fileID: 97746189}
   _notifyText: {fileID: 1217998554}
   _transitionCanvasGroup: {fileID: 703935308}
   _transitionDuration: 2
-  _saveMenuUI: {fileID: 834712125}
+  _errorDeletePlayingRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _confirmDeleteSaveRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _loadSuccessRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _loadFailRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _saveSuccessRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _deleteSuccessRef:
+    m_TableReference:
+      m_TableCollectionName: 
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &924658668
 Transform:
   m_ObjectHideFlags: 0
@@ -8183,6 +8311,7 @@ MonoBehaviour:
     pitch: 1
     randomPitchVariation: 0.04
   musicFadeDuration: 1
+  CurrentMusic: 0
 --- !u!1 &1494260824
 GameObject:
   m_ObjectHideFlags: 0
@@ -8212,7 +8341,7 @@ Transform:
   m_GameObject: {fileID: 1494260824}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 259.81, y: -69.32798, z: -10}
+  m_LocalPosition: {x: 319.8, y: -65.75798, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10406,6 +10535,37 @@ Transform:
   - {fileID: 620052922}
   m_Father: {fileID: 1613544057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2046105073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2046105074}
+  m_Layer: 0
+  m_Name: 'BiomeNotififer (Missing Prefab with guid: b4c5eb4f06d644b4681a3051c0a14fcd)'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2046105074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046105073}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -36.4, y: 10.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2068756724
 GameObject:
   m_ObjectHideFlags: 0
@@ -11039,67 +11199,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2139979161}
   m_CullTransparentMesh: 1
---- !u!1001 &4136637899712398356
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3811472793345600125, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: _biomeText
-      value: 
-      objectReference: {fileID: 1119711211}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -30.93
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.39
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4357461324082055747, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6891750925044131585, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
-      propertyPath: m_Name
-      value: BiomeNotififer
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b4c5eb4f06d644b4681a3051c0a14fcd, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -11109,7 +11208,7 @@ SceneRoots:
   - {fileID: 874906035}
   - {fileID: 1474943092}
   - {fileID: 398165705}
-  - {fileID: 4136637899712398356}
+  - {fileID: 2046105074}
   - {fileID: 264651719}
   - {fileID: 87849368}
   - {fileID: 924658668}
