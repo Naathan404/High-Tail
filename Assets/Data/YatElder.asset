@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
+  m_Name: YatElder
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  Name:
+    textVI: "Yat Gi\xE0"
+    textEN: Yat Elder
+  CharSprite: {fileID: 5938750416960775255, guid: 0123a67d83e2e494d9186a8036194936, type: 3}
+  DialogueLines:
+  - IsYou: 0
+    textVI: "SInh v\u1EADt h\u1EA1 \u0111\u1EB3ng l\xF4ng l\xE1 kh\u1ED1n ki\u1EBFp,
+      mau bi\u1EBFn ra kh\u1ECFi v\xF9ng \u0111\u1EA5t n\xE0y!"
+    textEN: You filthy, furry subhuman creature!! Begone from this land at once!
+    autoSkip: 0
+  - IsYou: 1
+    textVI: "N\xE0y , l\xE3o gi\xE0. T\xF4i kh\xF4ng bi\u1EBFt ch\u1ED7 t\u1ED1i
+      t\u0103m n\xE0y v\u1EABn c\xF2n ng\u01B0\u1EDDi s\u1ED1ng \u0111\u1EA5y. Mau
+      cho t\xF4i bi\u1EBFt \u0111\xE2y l\xE0 \u0111\xE2u, n\u1EBFu kh\xF4ng t\xF4i
+      \u0111\u1EADp n\xE1t c\xE1i l\xE0ng n\xE0y ra \u0111\u1EA5y!"
+    textEN: Hey, old timer. I didn't know anyone actually lived in this dump. Tell
+      me where this is, or I'll tear this village to pieces!
+    autoSkip: 0
+  - IsYou: 0
+    textVI: "Ng\u01B0\u01A1i... H\u1EEB, l\u0169 sinh v\u1EADt h\u1EA1 \u0111\u1EB3ng
+      c\xE1c ng\u01B0\u01A1i l\xFAc n\xE0o c\u0169ng t\u1ECF v\u1EBB cao cao t\u1EA1i
+      th\u01B0\u1EE3ng. C\xE1i t\xEAn kh\u1ED1n ki\u1EBFp l\u1EA7n tr\u01B0\u1EDBc
+      c\xF2n kh\xF4ng cao ng\u1EA1o b\u1EB1ng ng\u01B0\u01A1i."
+    textEN: You... Damn you! You arrogant bastards always think you're above everyone
+      else. Even that bastard from before wasn't as arrogant as you.
+    autoSkip: 0
+  - IsYou: 1
+    textVI: "C\xF3 ng\u01B0\u1EDDi \u0111\xE3 t\u1EEBng \u0111\u1EBFn \u0111\xE2y
+      tr\u01B0\u1EDBc t\xF4i \xE0? N\xF3i \u0111i h\u1EAFn tr\xF4ng nh\u01B0 th\u1EBF
+      n\xE0o? V\xE0 \u0111\xE2y l\xE0 \u0111\xE2u?"
+    textEN: So someone else has been here before me... Tell me, what did that bastard
+      look like? And where are we?!
+    autoSkip: 0
+  - IsYou: 0
+    textVI: "H\u1EEB, t\xEAn kh\u1ED1n \u0111\xF3 \u0111\xE3 ph\xE1 h\u1EE7y m\u1ECDi
+      th\u1EE9, sau \u0111\xF3 bi\u1EBFn m\u1EA5t d\u1EA1ng. H\u1EAFn l\xE0 t\xEAn
+      \u0111i\xEAn!"
+    textEN: Humph! That jerk destroyed everything, then vanished into thin air..
+      He was a madman!
+    autoSkip: 0
+  EndDialogue: 
+  AutoProgressDelay: 1.5
+  TypingSpeed: 0.02
+  VoiceSound: {fileID: 0}
+  VoicePitch: 1
+  IsActivated: 0

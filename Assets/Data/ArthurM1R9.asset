@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4298c1582b1a1b6428acd6f21334c2fe, type: 3}
+  m_Name: ArthurM1R9
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  Name:
+    textVI: 
+    textEN: 
+  CharSprite: {fileID: -6470460504253458178, guid: 09567a5827d575b4e85f5589562c20df, type: 3}
+  DialogueLines:
+  - IsYou: 0
+    textVI: "Ch\xFAc m\u1EEBng! C\u1EADu \u0111\xE3 l\u1EF1a ch\u1ECDn \u0111\xFAng
+      con \u0111\u01B0\u1EDDng!"
+    textEN: Congratulations! You have walked the true path!
+    autoSkip: 0
+  - IsYou: 0
+    textVI: "Nh\u01B0ng \u0111\u1EEBng v\u1ED9i m\u1EEBng, c\u1EADu v\u1EABn c\xF2n
+      k\u1EBB th\xF9 tr\u01B0\u1EDBc m\u1EAFt ph\u1EA3i ng\u0103n ch\u1EB7n! Ch\u1EAFc
+      h\u1EB3n c\u1EADu c\u0169ng \u0111\xE3 \u0111o\xE1n ra h\u1EAFn l\xE0 ai."
+    textEN: But do not celebrate just yet. There is still a foe ahead that you must
+      thwart. Surely, you have already guessed who he is.
+    autoSkip: 0
+  - IsYou: 0
+    textVI: "H\u1EAFn ta \u0111\xE3 \u0111i qu\xE1 xa, kh\xF4ng bi\u1EBFt h\u1EAFn
+      \u0111\xE3 ch\u1EA1m t\u1EDBi c\xE1c h\u1EA1t b\u1ED5n nguy\xEAn c\xF2n l\u1EA1i
+      ch\u01B0a, n\u1EBFu h\u1EAFn \u0111\xE3 h\u1EE7y di\u1EC7t ch\xFAng, c\u1EA3
+      h\u1EC7 sinh th\xE1i c\u1EE7a th\u1EBF gi\u1EDBi s\u1EBD b\u1ECB \u0111\u1EA3o
+      l\u1ED9n."
+    textEN: He has gone too far. I wonder if he has already reached the remaining
+      Origin Seeds. If he has destroyed them, the entire world's ecosystem will be
+      thrown into chaos.
+    autoSkip: 0
+  - IsYou: 1
+    textVI: "T\xF4i s\u1EBD kh\xF4ng ch\xF9n b\u01B0\u1EDBc, \xE1nh s\xE1ng s\u1EBD
+      soi r\u1ECDi m\xE0n \u0111\xEAm \u0111en t\u1ED1i, cho c\u1EA3 h\u1EAFn v\xE0
+      c\u1EA3 v\u01B0\u01A1ng qu\u1ED1c n\xE0y. N\u1EBFu t\xF4i th\u1EA5t b\u1EA1i
+      th\xEC..."
+    textEN: I will not falter. The light will pierce the dark night, for both him
+      and this entire kingdom. If I should fail, then...
+    autoSkip: 0
+  - IsYou: 1
+    textVI: "Kh\xF4ng, t\xF4i s\u1EBD kh\xF4ng th\u1EA5t b\u1EA1i!"
+    textEN: No, I will not fail!
+    autoSkip: 0
+  EndDialogue: 
+  AutoProgressDelay: 1.5
+  TypingSpeed: 0.05
+  VoiceSound: {fileID: 0}
+  VoicePitch: 1
+  IsActivated: 0
