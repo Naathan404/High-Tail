@@ -86,9 +86,9 @@ public class AstralGift : MonoBehaviour
 
         // play anim 
         Sequence collectSequence = DOTween.Sequence();
-        collectSequence.Append(transform.DOScale(_maxScale, _scaleDuration * 0.4f).SetEase(Ease.OutBack));
-        collectSequence.Append(transform.DOScale(_maxScale * 0.4f, _scaleDuration * 3f).SetEase(Ease.InBack));
-        collectSequence.Join(transform.DOMove(ItemUI.Instance.IconPosition, _scaleDuration * 3f).SetEase(Ease.InExpo));
+        collectSequence.Append(transform.DOScale(_maxScale * 1.2f, _scaleDuration * 0.4f).SetEase(Ease.OutBack));
+        collectSequence.Append(transform.DOScale(0f, _scaleDuration * 3f).SetEase(Ease.InOutBack));
+        //collectSequence.Join(transform.DOMove(ItemUI.Instance.IconPosition, _scaleDuration * 3f).SetEase(Ease.InExpo));
         collectSequence.OnComplete(() => {
             // PlayerController.Instance.AddScore(1); 
             Destroy(gameObject);
