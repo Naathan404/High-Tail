@@ -32,7 +32,7 @@ public class LandingScene : MonoBehaviour
             
             AudioManager.Instance.PlaySFX(SoundName.UI_Click_Keycap);
             Debug.Log("Chuyển scene an toàn!");
-            SceneTransitionHandler.Instance.LoadSceneAsync("_CoreScene", "MainMenu", "LandingScene");
+            SceneTransitionHandler.Instance.LoadSceneAsync("MainMenu", "_CoreScene", "LandingScene");
         }
     }
 }

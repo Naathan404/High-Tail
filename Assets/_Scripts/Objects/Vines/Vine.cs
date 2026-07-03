@@ -27,27 +27,16 @@ public class Vine : MonoBehaviour
     private void Start()
     {
         GenerateVine();
-        // float disX = (_pointB.position.x - _pointA.position.x) / _numberOfSegments;
-        // float disY = (_pointB.position.y - _pointA.position.y) / _numberOfSegments;
+    }
 
-        // for(int i = 0; i < _numberOfSegments; i++)
-        // {
-        //     GameObject vineSeg = Instantiate(_vineSegPrefab, this.transform);
-        //     vineSeg.GetComponent<SpriteRenderer>()!.sprite = _vineSprites[Random.Range(0, _vineSprites.Count)];
-        //     vineSeg.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = true;
-            
-        //     if(i == 0)
-        //     {
-        //         vineSeg.GetComponent<HingeJoint2D>().connectedBody = _pointA.GetComponent<Rigidbody2D>();
-        //         vineSeg.transform.position = _pointA.position + new Vector3(disX * (i), disY * (i));
-        //     }
-        //     if(i > 0)
-        //     {
-        //         vineSeg.GetComponent<HingeJoint2D>().connectedBody = _segments[i - 1].GetComponent<Rigidbody2D>();
-        //         vineSeg.transform.position = _segments[i - 1].transform.position + new Vector3(disX * (i), disY * (i));
-        //     }
-        //     _segments.Add(vineSeg);
-        // }
+    private void OnEnable()
+    {
+        DeathScreenManager.OnDeathScreenTriggered += ResetVine;
+    }
+
+    private void OnDisable()
+    {
+        DeathScreenManager.OnDeathScreenTriggered -= ResetVine;
     }
 
     private void GenerateVine()
@@ -137,6 +126,18 @@ public class Vine : MonoBehaviour
             }
         }        
 
+    }
+
+    public void ResetVine()
+    {
+        for (int i = 0; i < _segments.Count; i++)
+        {
+            if (_segments[i] != null)
+                Destroy(_segments[i]);
+        }
+        _segments.Clear();
+
+        GenerateVine();
     }
 
     private void OnDrawGizmos()

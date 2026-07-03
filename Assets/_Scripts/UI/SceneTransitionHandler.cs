@@ -39,7 +39,13 @@ public class SceneTransitionHandler : Singleton<SceneTransitionHandler>
 
         if (!string.IsNullOrEmpty(sceneToLoad))
         {
+            Debug.Log($"[SceneTransition] Loading: '{sceneToLoad}'");
             AsyncOperation loadOp = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Additive);
+            if (loadOp == null)
+            {
+                Debug.LogError($"[SceneTransition] LoadSceneAsync trả về null — '{sceneToLoad}' không tồn tại trong Build Settings!");
+                yield break;
+            }
             while (!loadOp.isDone) yield return null;
             
             Scene targetScene = SceneManager.GetSceneByName(sceneToLoad);

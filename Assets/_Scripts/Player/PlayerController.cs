@@ -176,6 +176,11 @@ public partial class PlayerController : MonoBehaviour
     {
         for(int i = 0; i < 7; i++)
         {
+            PlayerSkillUnlockStatus[i] = false;
+        }
+
+        for(int i = 0; i < 7; i++)
+        {
             if(Data.WallJumpUnlocked && i == 0) PlayerSkillUnlockStatus[i] = true;
             else if(Data.WallSlideUnlocked && i == 1) PlayerSkillUnlockStatus[i] = true;
             else if(Data.AirGlideUnlocked && i == 2) PlayerSkillUnlockStatus[i] = true;
